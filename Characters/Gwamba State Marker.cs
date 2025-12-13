@@ -10,7 +10,7 @@ using NaughtyAttributes;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, SelectionBase, RequireComponent(typeof(Transform), typeof(Animator), typeof(SortingGroup))]
+	[DisallowMultipleComponent, SelectionBase, Icon("Assets/Huds/Designs/Gwamba Prime Series Logo.png"), RequireComponent(typeof(Transform), typeof(Animator), typeof(SortingGroup))]
 	[RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D), typeof(CircleCollider2D)), RequireComponent(typeof(CinemachineImpulseSource))]
 	public sealed class GwambaStateMarker : StateController, ILoader, IConnector
 	{
