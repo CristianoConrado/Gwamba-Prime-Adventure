@@ -49,9 +49,8 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnTriggerEnter2D(Collider2D other)
 		{
-			if (!_takeDamage && other.TryGetComponent<IDestructible>(out var destructible))
-				if (!damagedes.Contains(destructible))
-					DamagerAttack.Invoke(this, destructible);
+			if (!_takeDamage && other.TryGetComponent<IDestructible>(out var destructible) && !damagedes.Contains(destructible))
+				DamagerAttack.Invoke(this, destructible);
 		}
 	};
 };
