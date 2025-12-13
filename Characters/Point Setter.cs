@@ -4,7 +4,7 @@ using NaughtyAttributes;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, Icon("Assets/Huds/Designs/Gwamba Prime Series Logo.png"), RequireComponent(typeof(Transform), typeof(BoxCollider2D))]
+	[DisallowMultipleComponent, Icon("Assets/Huds/Designs/Gwamba Prime Series Logo Show.png"), RequireComponent(typeof(Transform), typeof(BoxCollider2D))]
 	internal sealed class PointSetter : StateController, IConnector
 	{
 		private static PointSetter _instance;
