@@ -4,7 +4,7 @@ using System.Collections;
 using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(UIDocument))]
+	[DisallowMultipleComponent, Icon("Assets/Huds/Designs/Gwamba Prime Series Logo.png"), RequireComponent(typeof(Transform), typeof(UIDocument))]
 	internal sealed class GwambaCanvas : MonoBehaviour
 	{
 		private static GwambaCanvas _instance;
