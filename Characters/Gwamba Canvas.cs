@@ -1,26 +1,23 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections;
-using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Character
 {
 	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(UIDocument))]
 	internal sealed class GwambaCanvas : MonoBehaviour
 	{
 		private static GwambaCanvas _instance;
-		[field: SerializeField, BoxGroup("Visual"), ColorUsage(true, true), Tooltip("The color of Gwamba's vitality bar background."), Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)]
-		internal Color BackgroundColor { get; private set; }
-		[field: SerializeField, BoxGroup("Visual"), ColorUsage(true, true), Tooltip("The color of Gwamba's vitality bar border.")] internal Color BorderColor { get; private set; }
-		[field: SerializeField, BoxGroup("Visual"), ColorUsage(true, true), Tooltip("The color of Gwamba's stun resistance bar.")] internal Color StunResistanceColor
-		{ get; private set; }
-		[field: SerializeField, BoxGroup("Visual"), ColorUsage(true, true), Tooltip("The color of Gwamba's bunny hop bar.")] internal Color BunnyHopColor { get; private set; }
-		[field: SerializeField, BoxGroup("Visual"), ColorUsage(true, true), Tooltip("The color of Gwamba's vitality bar missing vitality piece.")] internal Color MissingColor { get; private set; }
-		[SerializeField, BoxGroup("Visual"), Tooltip("The total of vitality that Gwamba have.")] private ushort _vitality;
-		[SerializeField, BoxGroup("Visual"), Tooltip("The total of recover vitality that Gwamba have.")] private ushort _recoverVitality;
-		[SerializeField, BoxGroup("Visual"), Tooltip("The total of stun resistance that Gwamba have.")] private ushort _stunResistance;
-		[SerializeField, BoxGroup("Visual"), Tooltip("The total of bunny hop that Gwamba have.")] private ushort _bunnyHop;
-		[SerializeField, BoxGroup("Visual"), Min(0F), Tooltip("The total width of Gwamba's vitality bar.")] private float _totalWidth;
-		[SerializeField, BoxGroup("Visual"), Min(0F), Tooltip("The norder width of Gwamba's vitality bar.")] private float _borderWidth;
+		[field: SerializeField, ColorUsage(true, true), Tooltip("The color of Gwamba's vitality bar background."), Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)] internal Color BackgroundColor { get; private set; }
+		[field: SerializeField, ColorUsage(true, true), Tooltip("The color of Gwamba's vitality bar border.")] internal Color BorderColor { get; private set; }
+		[field: SerializeField, ColorUsage(true, true), Tooltip("The color of Gwamba's stun resistance bar.")] internal Color StunResistanceColor { get; private set; }
+		[field: SerializeField, ColorUsage(true, true), Tooltip("The color of Gwamba's bunny hop bar.")] internal Color BunnyHopColor { get; private set; }
+		[field: SerializeField, ColorUsage(true, true), Tooltip("The color of Gwamba's vitality bar missing vitality piece.")] internal Color MissingColor { get; private set; }
+		[SerializeField, Tooltip("The total of vitality that Gwamba have.")] private ushort _vitality;
+		[SerializeField, Tooltip("The total of recover vitality that Gwamba have.")] private ushort _recoverVitality;
+		[SerializeField, Tooltip("The total of stun resistance that Gwamba have.")] private ushort _stunResistance;
+		[SerializeField, Tooltip("The total of bunny hop that Gwamba have.")] private ushort _bunnyHop;
+		[SerializeField, Min(0F), Tooltip("The total width of Gwamba's vitality bar.")] private float _totalWidth;
+		[SerializeField, Min(0F), Tooltip("The norder width of Gwamba's vitality bar.")] private float _borderWidth;
 		internal VisualElement RootElement { get; private set; }
 		internal VisualElement[] Vitality { get; private set; }
 		internal VisualElement[] RecoverVitality { get; private set; }
