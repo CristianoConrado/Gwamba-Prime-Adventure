@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure.Item
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(UIDocument))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(UIDocument))]
 	internal sealed class LevelGateHud : MonoBehaviour
 	{
 		internal UIDocument Document { get; private set; }
