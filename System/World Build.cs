@@ -4,7 +4,7 @@ namespace GwambaPrimeAdventure
 {
 	public static class WorldBuild
 	{
-		public const string PROJECT_ICON = "Assets/Huds/Designs/Gwamba Prime Series Logo Icon.png";
+		public const string PROJECT_ICON = "Assets/Huds/Designs/Gwamba Prime Series Icon.png";
 		public const float FIELD_SPACE_LENGTH = 8F;
 		public const float PIXELS_PER_UNIT = 16F;
 		public const float SNAP_LENGTH = 1F / PIXELS_PER_UNIT;
