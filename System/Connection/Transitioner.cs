@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 namespace GwambaPrimeAdventure.Connection
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform))]
 	public sealed class Transitioner : MonoBehaviour
 	{
 		[Header("Scene Interaction")]
