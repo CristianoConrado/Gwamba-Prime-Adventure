@@ -34,11 +34,12 @@
                     </ui:GroupBox>
                 </ui:GroupBox>
                 <ui:GroupBox name="Sliders">
+                    <ui:Slider label="Screen Brightness" name="ScreenBrightness" />
+                    <ui:SliderInt label="VSync" name="VSync" />
                     <ui:GroupBox name="FrameRateGroup">
                         <ui:SliderInt label="Frame Rate" name="FrameRate" />
                         <ui:Label text="120" name="FrameRateText" />
                     </ui:GroupBox>
-                    <ui:Slider label="Screen Brightness" name="ScreenBrightness" />
                 </ui:GroupBox>
             </ui:GroupBox>
             <ui:GroupBox name="RightPage" >
