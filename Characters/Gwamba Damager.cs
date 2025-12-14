@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, Icon("Assets/Huds/Designs/Gwamba Prime Series Logo Icon.png"), RequireComponent(typeof(Transform), typeof(SpriteRenderer), typeof(Collider2D))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(SpriteRenderer), typeof(Collider2D))]
 	internal sealed class GwambaDamager : StateController, IDestructible
 	{
 		private SpriteRenderer _spriteRenderer;
@@ -54,4 +54,3 @@ namespace GwambaPrimeAdventure.Character
 		}
 	};
 };
-
