@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 namespace GwambaPrimeAdventure
 {
+	[Icon(WorldBuild.PROJECT_ICON)]
 	public abstract class StateController : MonoBehaviour
 	{
 		protected static event UnityAction<bool> State;
