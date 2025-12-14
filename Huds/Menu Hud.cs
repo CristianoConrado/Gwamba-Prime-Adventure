@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure.Hud
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(UIDocument))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(UIDocument))]
 	internal sealed class MenuHud : MonoBehaviour
 	{
 		private static MenuHud _instance;
