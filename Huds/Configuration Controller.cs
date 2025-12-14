@@ -8,7 +8,7 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(Transitioner))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(Transitioner))]
 	internal sealed class ConfigurationController : MonoBehaviour, IConnector
 	{
 		private ConfigurationHud _configurationHud;
