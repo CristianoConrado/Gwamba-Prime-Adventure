@@ -17,6 +17,7 @@ namespace GwambaPrimeAdventure.Connection
 		public float EffectsVolume;
 		public float MusicVolume;
 		public ushort FrameRate;
+		public ushort VSync;
 	};
 	public static class SettingsController
 	{
@@ -41,7 +42,8 @@ namespace GwambaPrimeAdventure.Connection
 					GeneralVolume = 1F,
 					EffectsVolume = 1F,
 					MusicVolume = 1F,
-					FrameRate = 60
+					FrameRate = 60,
+					VSync = 1
 				};
 		}
 		public static void WriteSave(Settings settings) => FileEncoder.WriteData(settings, SettingsPath);
