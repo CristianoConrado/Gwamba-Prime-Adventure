@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 namespace GwambaPrimeAdventure
 {
+	[Icon(WorldBuild.PROJECT_ICON)]
 	internal sealed class ObjectLoader : MonoBehaviour
 	{
 		private static readonly List<ILoader> _loader = new();
