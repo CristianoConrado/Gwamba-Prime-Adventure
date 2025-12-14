@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 using System.Collections;
 namespace GwambaPrimeAdventure.Story
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform))]
 	internal sealed class StoryTeller : MonoBehaviour
 	{
 		private StorySceneHud _storySceneHud;
@@ -52,3 +52,4 @@ namespace GwambaPrimeAdventure.Story
 		}
 	};
 };
+
