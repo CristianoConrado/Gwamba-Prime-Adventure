@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(SpriteRenderer), typeof(Collider2D))]
+	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(SpriteRenderer), typeof(Collider2D))]
 	internal sealed class GwambaDamager : StateController, IDestructible
 	{
 		private SpriteRenderer _spriteRenderer;
