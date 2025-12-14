@@ -4,7 +4,7 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Story
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(Collider2D))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(Collider2D))]
 	internal sealed class InteractiveDialog : MonoBehaviour, IInteractable, IConnector
 	{
 		private DialogHud _dialogHud;
@@ -132,3 +132,4 @@ namespace GwambaPrimeAdventure.Story
 		}
 	};
 };
+
