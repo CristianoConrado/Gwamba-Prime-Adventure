@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(UIDocument))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(UIDocument))]
 	public sealed class TransicionHud : MonoBehaviour
 	{
 		private static TransicionHud _instance;
