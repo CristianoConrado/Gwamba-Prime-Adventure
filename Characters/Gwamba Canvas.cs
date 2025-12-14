@@ -68,6 +68,7 @@ namespace GwambaPrimeAdventure.Character
 				Vitality[i] = vitality[i + 1];
 			}
 			vitality.Remove(VitalityPiece);
+			yield return null;
 			VisualElement recoverVitality = RootElement.Q<VisualElement>(nameof(RecoverVitality));
 			recoverVitality.style.width = _totalWidth;
 			VisualElement RecoverVitalityPiece = RootElement.Q<VisualElement>(nameof(RecoverVitalityPiece));
@@ -81,6 +82,7 @@ namespace GwambaPrimeAdventure.Character
 				RecoverVitality[i] = recoverVitality[i + 1];
 			}
 			recoverVitality.Remove(RecoverVitalityPiece);
+			yield return null;
 			VisualElement stunResistance = RootElement.Q<VisualElement>(nameof(StunResistance));
 			stunResistance.style.width = _totalWidth;
 			VisualElement StunResistancePiece = RootElement.Q<VisualElement>(nameof(StunResistancePiece));
@@ -94,6 +96,7 @@ namespace GwambaPrimeAdventure.Character
 				StunResistance[i] = stunResistance[i + 1];
 			}
 			stunResistance.Remove(StunResistancePiece);
+			yield return null;
 			VisualElement bunnyHop = RootElement.Q<VisualElement>(nameof(BunnyHop));
 			bunnyHop.style.width = _totalWidth;
 			VisualElement BunnyHopPiece = RootElement.Q<VisualElement>(nameof(BunnyHopPiece));
