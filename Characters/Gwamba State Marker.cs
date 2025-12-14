@@ -232,9 +232,9 @@ namespace GwambaPrimeAdventure.Character
 		public IEnumerator StartLoad()
 		{
 			DisableInputs();
-			transform.TurnScaleX(EffectsController.TurnToLeft);
-			transform.position = EffectsController.BeginingPosition;
 			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
+			transform.TurnScaleX(EffectsController.TurnToLeft);
+			transform.position = PointSetter.CheckedPoint;
 			if (_animator.GetBool(Death))
 			{
 				Reanimate();
@@ -743,18 +743,17 @@ namespace GwambaPrimeAdventure.Character
 		public void Receive(MessageData message)
 		{
 			if (MessageFormat.Event == message.Format && message.ToggleValue.HasValue)
-				if (message.ToggleValue.Value)
+				if (!message.ToggleValue.Value)
 				{
 					Reanimate();
 					transform.TurnScaleX(EffectsController.TurnToLeft);
+					transform.position = PointSetter.CheckedPoint;
 				}
-				else if (message.AdditionalData is Vector2 position)
-					transform.position = position;
-			if (MessageFormat.State == message.Format && message.ToggleValue.HasValue && message.ToggleValue.Value)
-			{
-				OnEnable();
-				(_timerOfInvencibility, _invencibility) = (_invencibilityTime, true);
-			}
+				else if (message.ToggleValue.Value)
+				{
+					OnEnable();
+					(_timerOfInvencibility, _invencibility) = (_invencibilityTime, true);
+				}
 		}
 	};
 };
