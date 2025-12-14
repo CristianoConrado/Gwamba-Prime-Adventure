@@ -16,7 +16,6 @@ namespace GwambaPrimeAdventure.Connection
 		[SerializeField, Tooltip("The source where the sounds came from.")] private AudioSource _sourceObject;
 		[SerializeField, Tooltip("The begining position where the level starts.")] private Vector2 _beginingPosition;
 		[SerializeField, Tooltip("If the sentient objects will turn to the left instead of the right.")] private bool _turnToLeft;
-		public static Vector2 BeginingPosition => _instance._beginingPosition;
 		public static bool TurnToLeft => _instance._turnToLeft;
 		private new void Awake()
 		{
