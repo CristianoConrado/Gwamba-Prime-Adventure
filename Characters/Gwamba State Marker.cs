@@ -696,8 +696,7 @@ namespace GwambaPrimeAdventure.Character
 							_localOfAny.z = _localOfStart.y - _localOfEnd.y / 2F;
 							_localOfStart.Set(Local.x + _localOfAny.x, Local.y + _collider.bounds.extents.y);
 							_localOfEnd.Set(Local.x + _localOfAny.x, Local.y - _collider.bounds.extents.y);
-							_castHit = Physics2D.Linecast(_localOfStart, _localOfEnd, WorldBuild.SCENE_LAYER_MASK);
-							if (_castHit && _localOfAny.y >= _castHit.point.y && _localOfAny.z <= _castHit.point.y)
+							if ((_castHit = Physics2D.Linecast(_localOfStart, _localOfEnd, WorldBuild.SCENE_LAYER_MASK)) && _localOfAny.y >= _castHit.point.y && _localOfAny.z <= _castHit.point.y)
 							{
 								_localOfAny.y = Mathf.Abs(_castHit.point.y - (transform.position.y - _collider.bounds.extents.y));
 								_localOfSurface.Set(transform.position.x + WorldBuild.SNAP_LENGTH * (0F < transform.localScale.x ? 1F : -1F), transform.position.y + _localOfAny.y);
