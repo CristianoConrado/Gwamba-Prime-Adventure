@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform))]
 	public sealed class SceneInitiator : MonoBehaviour
 	{
 		private static SceneInitiator _instance;
