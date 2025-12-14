@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(Transitioner))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(Transitioner))]
 	internal sealed class MenuController : MonoBehaviour
 	{
 		private static MenuController _instance;
