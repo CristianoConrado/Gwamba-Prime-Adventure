@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(BoxCollider2D))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(BoxCollider2D))]
 	public sealed class OcclusionObject : MonoBehaviour, IConnector
 	{
 		[Header("Interactions")]
