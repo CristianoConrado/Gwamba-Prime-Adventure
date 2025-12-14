@@ -5,7 +5,7 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(UIDocument))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(UIDocument))]
 	internal sealed class ConfigurationHud : MonoBehaviour
 	{
 		private static ConfigurationHud _instance;
@@ -25,6 +25,7 @@ namespace GwambaPrimeAdventure.Hud
 		internal Slider EffectsVolume { get; private set; }
 		internal Slider MusicVolume { get; private set; }
 		internal SliderInt FrameRate { get; private set; }
+		internal SliderInt VSync { get; private set; }
 		internal Button Close { get; private set; }
 		internal Button OutLevel { get; private set; }
 		internal Button SaveGame { get; private set; }
@@ -55,6 +56,7 @@ namespace GwambaPrimeAdventure.Hud
 			EffectsVolume = RootElement.Q<Slider>(nameof(EffectsVolume));
 			MusicVolume = RootElement.Q<Slider>(nameof(MusicVolume));
 			FrameRate = RootElement.Q<SliderInt>(nameof(FrameRate));
+			VSync = RootElement.Q<SliderInt>(nameof(VSync));
 			Close = RootElement.Q<Button>(nameof(Close));
 			OutLevel = RootElement.Q<Button>(nameof(OutLevel));
 			SaveGame = RootElement.Q<Button>(nameof(SaveGame));
@@ -73,12 +75,14 @@ namespace GwambaPrimeAdventure.Hud
 			EffectsVolume.highValue = 1F;
 			MusicVolume.highValue = 1F;
 			FrameRate.highValue = 240;
+			VSync.highValue = 2;
 			DialogSpeed.lowValue = 0F;
 			ScreenBrightness.lowValue = 0F;
 			GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			EffectsVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			MusicVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			FrameRate.lowValue = 10;
+			VSync.lowValue = 0;
 			for (ushort i = 0; WorldBuild.PixelPerfectResolutions().Length > i; i++)
 				ScreenResolution.choices.Add($@"{WorldBuild.PixelPerfectResolutions()[i].width} x {WorldBuild.PixelPerfectResolutions()[i].height}");
 			foreach (FullScreenMode mode in Enum.GetValues(typeof(FullScreenMode)))
@@ -92,10 +96,11 @@ namespace GwambaPrimeAdventure.Hud
 			InfinityFPS.value = settings.InfinityFPS;
 			DialogSpeed.value = settings.DialogSpeed;
 			ScreenBrightness.value = settings.ScreenBrightness;
-			FrameRate.value = settings.FrameRate;
 			GeneralVolume.value = settings.GeneralVolume;
 			EffectsVolume.value = settings.EffectsVolume;
 			MusicVolume.value = settings.MusicVolume;
+			FrameRate.value = settings.FrameRate;
+			VSync.value = settings.VSync;
 			FrameRateText.text = settings.FrameRate.ToString();
 			yield return null;
 		}
