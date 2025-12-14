@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure.Story
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(UIDocument))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(UIDocument))]
 	internal sealed class DialogHud : MonoBehaviour
 	{
 		static private DialogHud _instance;
@@ -27,3 +27,4 @@ namespace GwambaPrimeAdventure.Story
 		}
 	};
 };
+
