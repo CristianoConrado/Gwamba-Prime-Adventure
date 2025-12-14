@@ -49,10 +49,11 @@ namespace GwambaPrimeAdventure.Hud
 			_configurationHud.InfinityFPS.UnregisterValueChangedCallback(InfinityFPS);
 			_configurationHud.DialogSpeed.UnregisterValueChangedCallback(DialogSpeed);
 			_configurationHud.ScreenBrightness.UnregisterValueChangedCallback(ScreenBrightness);
-			_configurationHud.FrameRate.UnregisterValueChangedCallback(FrameRate);
 			_configurationHud.GeneralVolume.UnregisterValueChangedCallback(GeneralVolume);
 			_configurationHud.EffectsVolume.UnregisterValueChangedCallback(EffectsVolume);
 			_configurationHud.MusicVolume.UnregisterValueChangedCallback(MusicVolume);
+			_configurationHud.FrameRate.UnregisterValueChangedCallback(FrameRate);
+			_configurationHud.VSync.UnregisterValueChangedCallback(VSync);
 			_configurationHud.Yes.clicked -= YesBackLevel;
 			_configurationHud.No.clicked -= NoBackLevel;
 			SceneManager.sceneLoaded -= SceneLoaded;
@@ -92,10 +93,11 @@ namespace GwambaPrimeAdventure.Hud
 			_configurationHud.InfinityFPS.RegisterValueChangedCallback(InfinityFPS);
 			_configurationHud.ScreenBrightness.RegisterValueChangedCallback(ScreenBrightness);
 			_configurationHud.DialogSpeed.RegisterValueChangedCallback(DialogSpeed);
-			_configurationHud.FrameRate.RegisterValueChangedCallback(FrameRate);
 			_configurationHud.GeneralVolume.RegisterValueChangedCallback(GeneralVolume);
 			_configurationHud.EffectsVolume.RegisterValueChangedCallback(EffectsVolume);
 			_configurationHud.MusicVolume.RegisterValueChangedCallback(MusicVolume);
+			_configurationHud.FrameRate.RegisterValueChangedCallback(FrameRate);
+			_configurationHud.VSync.RegisterValueChangedCallback(VSync);
 			_configurationHud.Yes.clicked += YesBackLevel;
 			_configurationHud.No.clicked += NoBackLevel;
 			SettingsController.Load(out Settings settings);
@@ -206,6 +208,12 @@ namespace GwambaPrimeAdventure.Hud
 			if (!settings.InfinityFPS)
 				Application.targetFrameRate = settings.FrameRate;
 			_configurationHud.FrameRateText.text = frameRate.newValue.ToString();
+			SettingsController.WriteSave(settings);
+		}
+		private void VSync(ChangeEvent<int> vsync)
+		{
+			SettingsController.Load(out Settings settings);
+			QualitySettings.vSyncCount = settings.VSync = (ushort)vsync.newValue;
 			SettingsController.WriteSave(settings);
 		}
 		private void YesBackLevel()
