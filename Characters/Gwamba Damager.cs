@@ -14,12 +14,11 @@ namespace GwambaPrimeAdventure.Character
 		internal event UnityAction<ushort, float> DamagerStun;
 		internal event UnityAction<GwambaDamager, IDestructible> DamagerAttack;
 		private Color _alphaChanger = new();
-		[SerializeField, BoxGroup("Statistics"), Tooltip("If this Gwamba's part will take damage."), Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)] private bool _takeDamage;
-		[field: SerializeField, BoxGroup("Statistics"), HideIf(nameof(_takeDamage)), Tooltip("The velocity of the screen shake on the attack.")] internal Vector2 AttackShake { get; private set; }
-		[field: SerializeField, BoxGroup("Statistics"), HideIf(nameof(_takeDamage)), Tooltip("The amount of damage that the attack of Gwamba hits.")] internal ushort AttackDamage { get; private set; }
-		[field: SerializeField, BoxGroup("Statistics"), HideIf(nameof(_takeDamage)), Min(0F), Tooltip("The amount of time the attack screen shake will be applied.")]
-		internal float AttackShakeTime { get; private set; }
-		[field: SerializeField, BoxGroup("Statistics"), HideIf(nameof(_takeDamage)), Min(0F), Tooltip("The amount of time that this Gwamba's attack stun does.")] internal float StunTime { get; private set; }
+		[SerializeField, Tooltip("If this Gwamba's part will take damage."), Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)] private bool _takeDamage;
+		[field: SerializeField, HideIf(nameof(_takeDamage)), Tooltip("The velocity of the screen shake on the attack.")] internal Vector2 AttackShake { get; private set; }
+		[field: SerializeField, HideIf(nameof(_takeDamage)), Tooltip("The amount of damage that the attack of Gwamba hits.")] internal ushort AttackDamage { get; private set; }
+		[field: SerializeField, HideIf(nameof(_takeDamage)), Min(0F), Tooltip("The amount of time the attack screen shake will be applied.")] internal float AttackShakeTime { get; private set; }
+		[field: SerializeField, HideIf(nameof(_takeDamage)), Min(0F), Tooltip("The amount of time that this Gwamba's attack stun does.")] internal float StunTime { get; private set; }
 		internal float Alpha
 		{
 			get => _spriteRenderer.color.a;
