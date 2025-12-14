@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Linq;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(BoxCollider2D))]
@@ -20,19 +21,13 @@ namespace GwambaPrimeAdventure
 		{
 			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
 			StateController[] states = GetComponentsInChildren<StateController>(true);
-			yield return new WaitUntil(() =>
-			{
-				for (ushort i = 0; states.Length > i; i++)
-					if (states[i] && !states[i].enabled)
-						return false;
-				return true;
-			});
+			yield return new WaitUntil(() => states.All(state => state && state.enabled));
 			Execution(_initialActive);
 		}
 		internal void Execution(bool activate)
 		{
-			for (ushort i = 0; transform.childCount > i; i++)
-				transform.GetChild(i).gameObject.SetActive(activate);
+			foreach (Transform child in transform)
+				child.gameObject.SetActive(activate);
 		}
 		private void OnTriggerEnter2D(Collider2D other)
 		{
