@@ -5,7 +5,7 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(Transitioner))]
+	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(Transitioner))]
 	internal sealed class DeathScreenController : MonoBehaviour, IConnector
 	{
 		private static DeathScreenController _instance;
@@ -79,14 +79,15 @@ namespace GwambaPrimeAdventure.Hud
 				_deathScreenHud.Curtain.style.display = DisplayStyle.Flex;
 				for (float i = 0F; 1F > _deathScreenHud.Curtain.style.opacity.value; i += 5E-2F)
 					yield return _deathScreenHud.Curtain.style.opacity = i;
-				_sender.SetToggle(true);
+				_sender.SetToggle(false);
 				_sender.SetFormat(MessageFormat.Event);
 				_sender.Send(MessagePath.System);
 				_sender.Send(MessagePath.Character);
-				_sender.SetFormat(MessageFormat.State);
 				_sender.Send(MessagePath.Item);
 				for (float i = 1F; 0F < _deathScreenHud.Curtain.style.opacity.value; i -= 5E-2F)
 					yield return _deathScreenHud.Curtain.style.opacity = i;
+				_sender.SetToggle(true);
+				_sender.Send(MessagePath.System);
 				_sender.Send(MessagePath.Character);
 				_sender.SetFormat(MessageFormat.None);
 				_sender.Send(MessagePath.Enemy);
