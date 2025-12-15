@@ -383,15 +383,14 @@ namespace GwambaPrimeAdventure.Character
 			(_timerOfInvencibility, _invencibility) = (_invencibilityTime, true);
 			if (0 >= _vitality)
 			{
-				EffectsController.SoundEffect(_deathSound, transform.position);
-				SaveController.Load(out SaveFile saveFile);
-				_gwambaCanvas.LifeText.text = $"X {saveFile.Lifes -= 1}";
-				SaveController.WriteSave(saveFile);
-				_invencibility = false;
-				for (ushort i = 0; _gwambaDamagers.Length > i; i++)
-					_gwambaDamagers[i].Alpha = 1F;
 				OnDisable();
 				StopAllCoroutines();
+				EffectsController.SoundEffect(_deathSound, transform.position);
+				SaveController.Load(out SaveFile saveFile);
+				(_gwambaCanvas.LifeText.text, _guardedLinearVelocity, _rigidbody.gravityScale, _invencibility) = ($"X {saveFile.Lifes -= 1}", Vector2.zero, _gravityScale, false);
+				SaveController.WriteSave(saveFile);
+				for (ushort i = 0; _gwambaDamagers.Length > i; i++)
+					_gwambaDamagers[i].Alpha = 1F;
 				_animator.SetBool(Idle, false);
 				_animator.SetBool(Walk, false);
 				_animator.SetBool(Jump, false);
@@ -403,7 +402,6 @@ namespace GwambaPrimeAdventure.Character
 				_animator.SetBool(AttackSlide, false);
 				_animator.SetBool(Stun, false);
 				_animator.SetBool(Death, true);
-				_rigidbody.gravityScale = _fallGravityMultiply * _gravityScale;
 				_sender.SetToggle(false);
 				_sender.SetFormat(MessageFormat.State);
 				_sender.Send(MessagePath.Hud);
@@ -421,6 +419,8 @@ namespace GwambaPrimeAdventure.Character
 				_gwambaCanvas.StunResistance[i - 1].style.backgroundColor = _gwambaCanvas.MissingColor;
 			if (0 >= _stunResistance && !_animator.GetBool(Death))
 			{
+				DisableInputs();
+				(_guardedLinearVelocity, _rigidbody.gravityScale, _stunTimer) = (Vector2.zero, _gravityScale, stunTime);
 				_animator.SetBool(AirJump, false);
 				_animator.SetBool(DashSlide, false);
 				_animator.SetBool(AttackJump, false);
@@ -429,11 +429,9 @@ namespace GwambaPrimeAdventure.Character
 				_animator.SetBool(Stun, !(_invencibility = false));
 				for (ushort i = 0; _gwambaDamagers.Length > i; i++)
 					_gwambaDamagers[i].Alpha = 1F;
-				_stunTimer = stunTime;
 				for (ushort i = 0; (_stunResistance = (short)_gwambaCanvas.StunResistance.Length) > i; i++)
 					_gwambaCanvas.StunResistance[i].style.backgroundColor = _gwambaCanvas.StunResistanceColor;
 				EffectsController.SoundEffect(_stunSound, transform.position);
-				DisableInputs();
 			}
 		}
 		private void DamagerAttack(GwambaDamager gwambaDamager, IDestructible destructible)
@@ -475,6 +473,8 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void Update()
 		{
+			if (!_instance || _instance != this || _animator.GetBool(Death))
+				return;
 			if (_invencibility)
 			{
 				_invencibility = 0F < (_timerOfInvencibility -= Time.deltaTime);
@@ -507,7 +507,7 @@ namespace GwambaPrimeAdventure.Character
 		private float BunnyHop(float callBackValue) => 0 < _bunnyHopBoost ? _bunnyHopBoost * callBackValue : 0F;
 		private void FixedUpdate()
 		{
-			if (!_instance || _instance != this)
+			if (!_instance || _instance != this || _animator.GetBool(Stun) || _animator.GetBool(Death))
 				return;
 			if (_animator.GetBool(DashSlide))
 				if (Mathf.Abs(transform.position.x - _localOfAny.x) > _dashDistance || !_isOnGround || _isJumping || _animator.GetBool(Stun) || _animator.GetBool(Death))
@@ -614,7 +614,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionStay2D(Collision2D collision)
 		{
-			if (!_instance || this != _instance || WorldBuild.SCENE_LAYER != collision.gameObject.layer)
+			if (!_instance || this != _instance || _animator.GetBool(Stun) || _animator.GetBool(Death) || WorldBuild.SCENE_LAYER != collision.gameObject.layer)
 				return;
 			if (_animator.GetBool(AirJump) || _animator.GetBool(DashSlide))
 			{
@@ -733,7 +733,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		public static bool EqualObject(params GameObject[] othersObjects)
 		{
-			if (_instance)
+			if (_instance || !_instance._animator.GetBool(_instance.Stun) || !_instance._animator.GetBool(_instance.Death))
 				for (ushort i = 0; othersObjects.Length > i; i++)
 					if (_instance.gameObject == othersObjects[i])
 						return true;
