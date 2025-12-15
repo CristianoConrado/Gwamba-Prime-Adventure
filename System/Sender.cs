@@ -1,5 +1,6 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
@@ -15,42 +16,38 @@ namespace GwambaPrimeAdventure
 				NumberValue = null
 			};
 		}
-		private static readonly Dictionary<MessagePath, List<IConnector>> _connectors = new();
+		private static readonly ConcurrentDictionary<MessagePath, HashSet<IConnector>> _connectors = new();
 		private MessageData _messageData;
-		private static bool _onSend = false;
-		public static async void Include(IConnector connector)
+		public static ValueTask Include(IConnector connector)
 		{
-			if (_onSend)
-				await Task.Yield();
-			if (!_connectors.ContainsKey(connector.Path))
-				_connectors.Add(connector.Path, new List<IConnector>() { connector });
-			else if (!_connectors[connector.Path].Contains(connector))
-				_connectors[connector.Path].Add(connector);
+			HashSet<IConnector> gettedConnectors = _connectors.GetOrAdd(connector.Path, _ => new HashSet<IConnector>());
+			gettedConnectors.Add(connector);
+			return new ValueTask(Task.CompletedTask);
 		}
-		public static async void Exclude(IConnector connector)
+		public static ValueTask Exclude(IConnector connector)
 		{
-			if (_onSend)
-				await Task.Yield();
-			if (_connectors.ContainsKey(connector.Path))
+			if (_connectors.TryGetValue(connector.Path, out HashSet<IConnector> gettedConnectors))
 			{
-				if (_connectors[connector.Path].Contains(connector))
-					_connectors[connector.Path].Remove(connector);
-				if (0 >= _connectors[connector.Path].Count)
-					_connectors.Remove(connector.Path);
+				gettedConnectors.Remove(connector);
+				if (0 == gettedConnectors.Count)
+					_connectors.TryRemove(connector.Path, out _);
 			}
+			return new ValueTask(Task.CompletedTask);
 		}
 		public static Sender Create() => new();
 		public void SetFormat(MessageFormat format) => _messageData.Format = format;
 		public void SetAdditionalData(object additionalData) => _messageData.AdditionalData = additionalData;
-		public void SetToggle(bool value) => _messageData.ToggleValue = value;
-		public void SetNumber(ushort value) => _messageData.NumberValue = (ushort)(Mathf.Abs(value));
+		public void SetToggle(bool toggle) => _messageData.ToggleValue = toggle;
+		public void SetNumber(ushort number) => _messageData.NumberValue = number;
 		public void Send(MessagePath path)
 		{
-			_onSend = true;
-			if (_connectors.ContainsKey(path))
-				for (ushort i = 0; _connectors[path].Count > i; i++)
-					_connectors[path][i]?.Receive(_messageData);
-			_onSend = false;
+			if (_connectors.TryGetValue(path, out var connectors))
+			{
+				IConnector[] snapshot = new IConnector[connectors.Count];
+				connectors.CopyTo(snapshot);
+				foreach (IConnector connector in snapshot.AsSpan())
+					connector?.Receive(_messageData);
+			}
 		}
 	};
 };
