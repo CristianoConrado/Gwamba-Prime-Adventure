@@ -4,10 +4,11 @@ namespace GwambaPrimeAdventure.Connection
 {
 	internal struct FilesArchive
 	{
-		public string SaveFile1;
-		public string SaveFile2;
-		public string SaveFile3;
-		public string SaveFile4;
+		public string
+			SaveFile1,
+			SaveFile2,
+			SaveFile3,
+			SaveFile4;
 	};
 	public static class FilesController
 	{
