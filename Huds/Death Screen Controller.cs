@@ -83,7 +83,7 @@ namespace GwambaPrimeAdventure.Hud
 				_sender.Send(MessagePath.Character);
 				_sender.SetFormat(MessageFormat.None);
 				_sender.Send(MessagePath.Enemy);
-				ConfigurationController.Instance.SetActive(true);
+				ConfigurationController.SetActive(true);
 				_deathScreenHud.RootElement.style.display = DisplayStyle.None;
 				_deathScreenHud.Text.text = "You have died";
 				_deathScreenHud.OutLevel.style.display = _deathScreenHud.Continue.style.display = _deathScreenHud.Text.style.display = DisplayStyle.Flex;
