@@ -19,8 +19,7 @@ namespace GwambaPrimeAdventure.Enemy
 		protected new void Awake()
 		{
 			base.Awake();
-			_controller = GetComponent<EnemyController>();
-			_collider = GetComponent<Collider2D>();
+			(_controller, _collider) = (GetComponent<EnemyController>(), GetComponent<Collider2D>());
 			_sender.SetAdditionalData(_enemiesToSend);
 		}
 		public bool Hurt(ushort damage)
@@ -46,8 +45,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if (0 >= (_controller.ArmorResistance -= (short)stunStength))
 			{
 				_controller.OnDisable();
-				_controller.StunTimer = _controller.ProvidenceStatistics.StunnedTime;
-				_controller.ArmorResistance = (short)_controller.ProvidenceStatistics.HitResistance;
+				(_controller.StunTimer, _controller.ArmorResistance) = (_controller.ProvidenceStatistics.StunnedTime, (short)_controller.ProvidenceStatistics.HitResistance);
 			}
 		}
 	};
