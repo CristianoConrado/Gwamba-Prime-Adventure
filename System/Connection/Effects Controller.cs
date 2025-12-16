@@ -14,8 +14,6 @@ namespace GwambaPrimeAdventure.Connection
 		private bool _canHitStop = true;
 		[SerializeField, Tooltip("The sounds of the surfaces that will be played.")] private SurfaceSound[] _surfaceSounds;
 		[SerializeField, Tooltip("The source where the sounds came from.")] private AudioSource _sourceObject;
-		[SerializeField, Tooltip("If the sentient objects will turn to the left instead of the right.")] private bool _turnToLeft;
-		public static bool TurnToLeft => _instance._turnToLeft;
 		private new void Awake()
 		{
 			base.Awake();
