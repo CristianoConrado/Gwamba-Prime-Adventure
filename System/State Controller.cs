@@ -24,12 +24,7 @@ namespace GwambaPrimeAdventure
 					return 0F < _time;
 				}
 			}
-			public WaitTime(StateController instance, float time, bool unscaled = false)
-			{
-				_instance = instance;
-				_time = time;
-				_unscaled = unscaled;
-			}
+			public WaitTime(StateController instance, float time, bool unscaled = false) => (_instance, _time, _unscaled) = (instance, time, unscaled);
 		};
 	};
 };
