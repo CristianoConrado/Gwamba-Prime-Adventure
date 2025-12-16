@@ -30,7 +30,7 @@ namespace GwambaPrimeAdventure.Character
 			_localOfStart = Vector2.zero,
 			_localOfEnd = Vector2.zero,
 			_localOfSurface = Vector2.zero,
-			_guardedLinearVelocity = Vector2.zero;
+			_localOfLinearVelocity = Vector2.zero;
 		private Vector3 _localOfAny = Vector3.zero;
 		private RaycastHit2D _castHit;
 		private readonly ContactFilter2D _interactionFilter = new()
@@ -213,7 +213,7 @@ namespace GwambaPrimeAdventure.Character
 			_inputController.Commands.Jump.Enable();
 			_inputController.Commands.AttackUse.Enable();
 			_inputController.Commands.Interaction.Enable();
-			(_rigidbody.linearVelocity, _rigidbody.gravityScale) = (_guardedLinearVelocity, _gravityScale);
+			(_rigidbody.linearVelocity, _rigidbody.gravityScale) = (_localOfLinearVelocity, _gravityScale);
 		}
 		private void DisableInputs()
 		{
@@ -221,7 +221,7 @@ namespace GwambaPrimeAdventure.Character
 			_inputController.Commands.Jump.Disable();
 			_inputController.Commands.AttackUse.Disable();
 			_inputController.Commands.Interaction.Disable();
-			(_guardedLinearVelocity, _rigidbody.linearVelocity, _rigidbody.gravityScale, _movementAction) = (_rigidbody.linearVelocity, Vector2.zero, 0F, 0F);
+			(_localOfLinearVelocity, _rigidbody.linearVelocity, _rigidbody.gravityScale, _movementAction) = (_rigidbody.linearVelocity, Vector2.zero, 0F, 0F);
 		}
 		private IEnumerator Start()
 		{
@@ -392,7 +392,7 @@ namespace GwambaPrimeAdventure.Character
 				StopAllCoroutines();
 				EffectsController.SoundEffect(_deathSound, transform.position);
 				SaveController.Load(out SaveFile saveFile);
-				(_gwambaCanvas.LifeText.text, _guardedLinearVelocity, _rigidbody.gravityScale, _invencibility) = ($"X {saveFile.Lifes -= 1}", Vector2.zero, _gravityScale, false);
+				(_gwambaCanvas.LifeText.text, _localOfLinearVelocity, _rigidbody.gravityScale, _invencibility) = ($"X {saveFile.Lifes -= 1}", Vector2.zero, _gravityScale, false);
 				SaveController.WriteSave(saveFile);
 				for (ushort i = 0; _gwambaDamagers.Length > i; i++)
 					_gwambaDamagers[i].Alpha = 1F;
@@ -425,7 +425,7 @@ namespace GwambaPrimeAdventure.Character
 			if (0 >= _stunResistance && !_animator.GetBool(Death))
 			{
 				DisableInputs();
-				(_guardedLinearVelocity, _rigidbody.gravityScale, _stunTimer) = (Vector2.zero, _gravityScale, stunTime);
+				(_localOfLinearVelocity, _rigidbody.gravityScale, _stunTimer) = (Vector2.zero, _gravityScale, stunTime);
 				_animator.SetBool(AirJump, false);
 				_animator.SetBool(DashSlide, false);
 				_animator.SetBool(AttackJump, false);
