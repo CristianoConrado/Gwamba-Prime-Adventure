@@ -30,7 +30,8 @@ namespace GwambaPrimeAdventure.Character
 			_localAtStart = Vector2.zero,
 			_localAtEnd = Vector2.zero,
 			_localAtSurface = Vector2.zero,
-			_localAtLinearVelocity = Vector2.zero;
+			_localAtLinearVelocity = Vector2.zero,
+			_localAtPosition = Vector2.zero;
 		private Vector3 _localAtAny = Vector3.zero;
 		private RaycastHit2D _castHit;
 		private readonly ContactFilter2D _interactionFilter = new()
@@ -75,6 +76,7 @@ namespace GwambaPrimeAdventure.Character
 		private readonly float _minimumVelocity = WorldBuild.MINIMUM_TIME_SPACE_LIMIT * 10F;
 		private bool
 			_isHubbyWorld = false,
+			_turnLeft = false,
 			_didStart = false,
 			_isOnGround = false,
 			_offGround = false,
@@ -86,6 +88,7 @@ namespace GwambaPrimeAdventure.Character
 			_offBunnyHop = false,
 			_fallStarted = false,
 			_invencibility = false,
+			_reloadTransform = false,
 			_deathLoad = false;
 		[Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)]
 		[SerializeField, BoxGroup("Control"), Tooltip("The scene of the hubby world.")] private SceneField _hubbyWorldScene;
@@ -93,6 +96,7 @@ namespace GwambaPrimeAdventure.Character
 		[SerializeField, BoxGroup("Control"), Tooltip("The sound to play when Gwamba gets hurt.")] private AudioClip _hurtSound;
 		[SerializeField, BoxGroup("Control"), Tooltip("The sound to play when Gwamba gets stunned.")] private AudioClip _stunSound;
 		[SerializeField, BoxGroup("Control"), Tooltip("The sound to play when Gwamba die.")] private AudioClip _deathSound;
+		[SerializeField, BoxGroup("Control"), Tooltip("The start position where Gwamba will be on the scene.")] private Vector2 _startPosition;
 		[SerializeField, BoxGroup("Control"), Tooltip("The velocity of the shake on the fall.")] private Vector2 _fallShake;
 		[SerializeField, BoxGroup("Control"), Tooltip("The amount of distance to get down stairs.")] private ushort _downStairsDistance;
 		[SerializeField, BoxGroup("Control"), Tooltip("The size of the detector to climb the stairs.")] private float _upStairsLength;
@@ -106,6 +110,7 @@ namespace GwambaPrimeAdventure.Character
 		[SerializeField, BoxGroup("Control"), Range(0F, 1F), Tooltip("The value applied to visual when a hit is taken.")] private float _invencibilityValue;
 		[SerializeField, BoxGroup("Control"), Min(0F), Tooltip("The amount of time that Gwamba has to stay before fade.")] private float _timeStep;
 		[SerializeField, BoxGroup("Control"), Min(0F), Tooltip("The amount of time taht Gwamba will be stunned after recover.")] private float _stunnedTime;
+		[SerializeField, BoxGroup("Control"), Tooltip("If Gwamba will be facing left on the begining of the scene.")] private bool _turnToLeft;
 		[Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)]
 		[SerializeField, BoxGroup("Movement"), Tooltip("The sound to play when Gwamba executes the air jump.")] private AudioClip _airJumpSound;
 		[SerializeField, BoxGroup("Movement"), Tooltip("The sound to play when Gwamba executes the dash slide.")] private AudioClip _dashSlideSound;
@@ -146,6 +151,12 @@ namespace GwambaPrimeAdventure.Character
 			base.Awake();
 			if (_instance)
 			{
+				if (!_instance._isHubbyWorld)
+				{
+					_instance._turnLeft = _turnToLeft;
+					_instance._localAtPosition = _startPosition;
+					_instance._reloadTransform = true;
+				}
 				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
 				return;
 			}
@@ -227,6 +238,9 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if (!_instance || this != _instance)
 				yield break;
+			_localAtPosition = _startPosition;
+			_turnLeft = _turnToLeft;
+			_reloadTransform = true;
 			yield return StartCoroutine(StartLoad());
 			_didStart = true;
 			DontDestroyOnLoad(gameObject);
@@ -234,9 +248,10 @@ namespace GwambaPrimeAdventure.Character
 		public IEnumerator StartLoad()
 		{
 			DisableInputs();
-			yield return new WaitUntil(() => PointSetter.IsSetted || !SceneInitiator.IsInTrancision());
-			transform.TurnScaleX(PointSetter.TurnToLeft);
-			transform.position = PointSetter.CheckedPoint;
+			yield return new WaitUntil(() => _reloadTransform);
+			_reloadTransform = false;
+			transform.TurnScaleX(_turnLeft);
+			transform.position = _localAtPosition;
 			if (_animator.GetBool(Death))
 			{
 				Reanimate();
@@ -272,7 +287,12 @@ namespace GwambaPrimeAdventure.Character
 				Destroy(gameObject);
 				return;
 			}
-			_isHubbyWorld = scene.name == _hubbyWorldScene;
+			if (_isHubbyWorld = scene.name == _hubbyWorldScene && _didStart)
+			{
+				_localAtPosition = PointSetter.CheckedPoint;
+				_turnLeft = PointSetter.TurnToLeft;
+				_reloadTransform = true;
+			}
 			if (_didStart)
 				StartCoroutine(StartLoad());
 		}
