@@ -85,7 +85,8 @@ namespace GwambaPrimeAdventure.Character
 			_bunnyHopUsed = false,
 			_offBunnyHop = false,
 			_fallStarted = false,
-			_invencibility = false;
+			_invencibility = false,
+			_deathLoad = false;
 		[Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)]
 		[SerializeField, BoxGroup("Control"), Tooltip("The scene of the hubby world.")] private SceneField _hubbyWorldScene;
 		[SerializeField, BoxGroup("Control"), Tooltip("The scene of the menu.")] private SceneField _menuScene;
@@ -236,12 +237,14 @@ namespace GwambaPrimeAdventure.Character
 			yield return new WaitUntil(() => PointSetter.IsSetted || !SceneInitiator.IsInTrancision());
 			transform.TurnScaleX(PointSetter.TurnToLeft);
 			transform.position = PointSetter.CheckedPoint;
-			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
 			if (_animator.GetBool(Death))
 			{
 				Reanimate();
-				OnEnable();
+				_deathLoad = true;
 			}
+			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
+			if (_deathLoad)
+				OnEnable();
 			else
 				EnableInputs();
 		}
