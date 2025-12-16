@@ -81,8 +81,6 @@ namespace GwambaPrimeAdventure.Hud
 			foreach (FullScreenMode mode in Enum.GetValues(typeof(FullScreenMode)))
 				FullScreenModes.choices.Add(mode.ToString());
 			ScreenResolution.value = $@"{settings.ScreenResolution.x} x {settings.ScreenResolution.y}";
-			foreach (Resolution resolution in Screen.resolutions)
-				InfoLogger.Informer.LogInfo(resolution);
 			FullScreenModes.value = settings.FullScreenMode.ToString();
 			DialogToggle.value = settings.DialogToggle;
 			GeneralVolumeToggle.value = settings.GeneralVolumeToggle;
