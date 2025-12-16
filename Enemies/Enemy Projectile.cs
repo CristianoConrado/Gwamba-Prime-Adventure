@@ -17,8 +17,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void Awake()
 		{
 			base.Awake();
-			_rigidbody = GetComponent<Rigidbody2D>();
-			_screenShaker = GetComponent<CinemachineImpulseSource>();
+			(_rigidbody, _screenShaker) = (GetComponent<Rigidbody2D>(), GetComponent<CinemachineImpulseSource>());
 		}
 		private new void OnDestroy()
 		{
@@ -45,19 +44,12 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					if (_pointToBreak >= _internalBreakPoint)
 						if (_pointToReturn++ >= _internalReturnPoint)
-						{
-							_pointToBreak = 0;
-							_breakInUse = _statistics.AlwaysBreak;
-						}
+							(_pointToBreak, _breakInUse) = (0, _statistics.AlwaysBreak);
 					if (!_breakInUse || _pointToBreak < _internalBreakPoint)
 					{
 						if (_breakInUse)
-						{
-							_pointToBreak++;
-							_pointToReturn = 0;
-						}
-						_pointToJump = _statistics.JumpPoints;
-						_projectileRotation = Quaternion.AngleAxis(_statistics.BaseAngle + _statistics.SpreadAngle * _angleMulti, Vector3.forward);
+							(_pointToBreak, _pointToReturn) = ((ushort)(_pointToBreak + 1), 0);
+						(_pointToJump, _projectileRotation) = (_statistics.JumpPoints, Quaternion.AngleAxis(_statistics.BaseAngle + _statistics.SpreadAngle * _angleMulti, Vector3.forward));
 						_projectilePosition.Set(_cellPosition.x + 5E-1F, _cellPosition.y + 5E-1F);
 						if (_statistics.UseQuantity)
 							_projectiles.Add(Instantiate(_statistics.SecondProjectile, _projectilePosition, _projectileRotation));
@@ -98,12 +90,8 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Start()
 		{
-			_vitality = (short)_statistics.Vitality;
-			_pointToJump = _statistics.JumpPoints;
-			_breakInUse = _statistics.UseBreak;
-			_internalBreakPoint = _statistics.BreakPoint;
-			_internalReturnPoint = _statistics.ReturnPoint;
-			_deathTimer = _statistics.TimeToFade;
+			(_vitality, _pointToJump, _breakInUse, _internalBreakPoint) = ((short)_statistics.Vitality, _statistics.JumpPoints, _statistics.UseBreak, _statistics.BreakPoint);
+			(_internalReturnPoint, _deathTimer) = (_statistics.ReturnPoint, _statistics.TimeToFade);
 			if (_statistics.RandomBreak)
 			{
 				_internalBreakPoint = (ushort)Random.Range(_statistics.BreakPoint, _statistics.ReturnPoint - _statistics.MinimumRandomValue);
