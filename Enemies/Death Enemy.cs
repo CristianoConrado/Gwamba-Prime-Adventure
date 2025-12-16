@@ -29,8 +29,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_sender.SetFormat(MessageFormat.State);
 				_sender.SetToggle(false);
 				_sender.Send(MessagePath.Enemy);
-				_deathTime = _statistics.TimeToDie;
-				_isDead = true;
+				(_deathTime, _isDead) = (_statistics.TimeToDie, true);
 			}
 		}
 		public new bool Hurt(ushort damage)
@@ -42,8 +41,8 @@ namespace GwambaPrimeAdventure.Enemy
 				_sender.SetFormat(MessageFormat.State);
 				_sender.SetToggle(false);
 				_sender.Send(MessagePath.Enemy);
-				_deathTime = _statistics.TimeToDie;
-				return _isDead = true;
+				(_deathTime, _isDead) = (_statistics.TimeToDie, true);
+				return true;
 			}
 			return base.Hurt(damage);
 		}
