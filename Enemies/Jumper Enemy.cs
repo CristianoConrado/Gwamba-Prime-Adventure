@@ -53,8 +53,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public IEnumerator Load()
 		{
-			_timedJumpTime = new float[_statistics.TimedJumps.Length];
-			_jumpCount = new short[_statistics.JumpPointStructures.Length];
+			(_timedJumpTime, _jumpCount) = (new float[_statistics.TimedJumps.Length], new short[_statistics.JumpPointStructures.Length]);
 			for (ushort i = 0; _statistics.TimedJumps.Length > i; i++)
 				_timedJumpTime[i] = _statistics.TimedJumps[i].TimeToExecute;
 			for (ushort i = 0; _statistics.JumpPointStructures.Length > i; i++)
@@ -68,8 +67,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if (isActiveAndEnabled && !IsStunned && 0F >= _jumpTime)
 			{
-				_jumpTime = _statistics.TimeToJump;
-				_targetPosition = GwambaStateMarker.Localization;
+				(_jumpTime, _targetPosition) = (_statistics.TimeToJump, GwambaStateMarker.Localization);
 				BasicJump();
 			}
 		}
@@ -97,11 +95,8 @@ namespace GwambaPrimeAdventure.Enemy
 					Rigidbody.AddForceY(_statistics.TimedJumps[jumpIndex].Strength * Rigidbody.mass, ForceMode2D.Impulse);
 					while (OnGround)
 						await Task.Yield();
-					_isJumping = true;
-					_contunuosFollow = _follow = _statistics.TimedJumps[jumpIndex].Follow;
-					_turnFollow = _statistics.TimedJumps[jumpIndex].TurnFollow;
-					_useTarget = _statistics.TimedJumps[jumpIndex].UseTarget;
-					_otherTarget = _statistics.TimedJumps[jumpIndex].OtherTarget;
+					(_isJumping, _contunuosFollow, _turnFollow) = (true, _follow = _statistics.TimedJumps[jumpIndex].Follow, _statistics.TimedJumps[jumpIndex].TurnFollow);
+					(_useTarget, _otherTarget) = (_statistics.TimedJumps[jumpIndex].UseTarget, _statistics.TimedJumps[jumpIndex].OtherTarget);
 					if (_statistics.SequentialTimmedJumps)
 						_sequentialJumpIndex++;
 					else
@@ -214,12 +209,9 @@ namespace GwambaPrimeAdventure.Enemy
 				Rigidbody.AddForceY(_statistics.JumpPointStructures[jumpIndex].JumpStats.Strength * Rigidbody.mass, ForceMode2D.Impulse);
 				while (OnGround)
 					await Task.Yield();
-				_isJumping = true;
-				_contunuosFollow = _follow = _statistics.JumpPointStructures[jumpIndex].JumpStats.Follow;
-				_turnFollow = _statistics.JumpPointStructures[jumpIndex].JumpStats.TurnFollow;
-				_useTarget = _statistics.JumpPointStructures[jumpIndex].JumpStats.UseTarget;
-				_otherTarget = _statistics.JumpPointStructures[jumpIndex].JumpStats.OtherTarget;
-				_jumpCount[jumpIndex] = (short)_statistics.JumpPointStructures[jumpIndex].JumpCount;
+				(_isJumping, _contunuosFollow) = (true, _follow = _statistics.JumpPointStructures[jumpIndex].JumpStats.Follow);
+				(_turnFollow, _useTarget) = (_statistics.JumpPointStructures[jumpIndex].JumpStats.TurnFollow, _statistics.JumpPointStructures[jumpIndex].JumpStats.UseTarget);
+				(_otherTarget, _jumpCount[jumpIndex]) = (_statistics.JumpPointStructures[jumpIndex].JumpStats.OtherTarget, (short)_statistics.JumpPointStructures[jumpIndex].JumpCount);
 				_jumpTime = _statistics.TimeToJump;
 				if (_statistics.JumpPointStructures[jumpIndex].JumpStats.StopMove)
 				{
@@ -232,9 +224,9 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public new async void Receive(MessageData message)
 		{
-			if (message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] && 0 < (message.AdditionalData as EnemyProvider[]).Length)
-				for (ushort i = 0; (message.AdditionalData as EnemyProvider[]).Length > i; i++)
-					if ((message.AdditionalData as EnemyProvider[])[i] && this == (message.AdditionalData as EnemyProvider[])[i])
+			if (message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] enemies && 0 < enemies.Length)
+				foreach (EnemyProvider enemy in enemies)
+					if (enemy && this == enemy)
 					{
 						base.Receive(message);
 						if (MessageFormat.State == message.Format && message.ToggleValue.HasValue)
