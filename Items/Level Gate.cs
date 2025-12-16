@@ -18,7 +18,7 @@ namespace GwambaPrimeAdventure.Item
 		private Vector2
 			_transitionSize = Vector2.zero,
 			_worldSpaceSize = Vector2.zero,
-			_activeSize = Vector2.one;
+			_activeSize = Vector2.zero;
 		private short _defaultPriority = 0;
 		private bool
 			_isOnInteraction = false,
@@ -103,7 +103,6 @@ namespace GwambaPrimeAdventure.Item
 			_gateCamera.Priority.Value = _defaultPriority;
 			_levelGateScreen.RootElement.style.display = DisplayStyle.None;
 			_levelGateWorld.RootElement.style.display = DisplayStyle.Flex;
-			_levelGateWorld.Document.worldSpaceSize = _activeSize;
 			_isOnTransicion = true;
 			float time;
 			float elapsedTime = 0F;
