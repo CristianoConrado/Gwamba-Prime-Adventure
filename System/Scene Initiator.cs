@@ -26,6 +26,8 @@ namespace GwambaPrimeAdventure
 			(transicionHud.RootElement.style.opacity, transicionHud.LoadingBar.highValue, ProgressIndex) = (1F, _objectLoaders.Length, 0);
 			foreach (ObjectLoader loader in _objectLoaders)
 				yield return StartCoroutine(Instantiate(loader).Load(transicionHud.LoadingBar));
+			for (float i = 1F; 0F < transicionHud.RootElement.style.opacity.value; i -= 1E-1F)
+				yield return transicionHud.RootElement.style.opacity = i;
 			Destroy(gameObject);
 			StateController.SetState(true);
 		}
