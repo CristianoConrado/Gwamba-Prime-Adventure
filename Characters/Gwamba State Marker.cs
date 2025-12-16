@@ -31,7 +31,7 @@ namespace GwambaPrimeAdventure.Character
 			_localAtEnd = Vector2.zero,
 			_localAtSurface = Vector2.zero,
 			_localAtLinearVelocity = Vector2.zero;
-		private Vector3 _localOfAny = Vector3.zero;
+		private Vector3 _localAtAny = Vector3.zero;
 		private RaycastHit2D _castHit;
 		private readonly ContactFilter2D _interactionFilter = new()
 		{
@@ -306,9 +306,9 @@ namespace GwambaPrimeAdventure.Character
 				{
 					_animator.SetBool(AirJump, !(_canAirJump = false));
 					_animator.SetBool(AttackAirJump, _comboAttackBuffer);
-					transform.TurnScaleX(_localOfAny.z = _movementAction);
+					transform.TurnScaleX(_localAtAny.z = _movementAction);
 					(_isJumping, _rigidbody.linearVelocity) = (false, Vector2.zero);
-					_rigidbody.AddForceX((_airJumpStrenght + BunnyHop(_jumpBoost)) * _localOfAny.z * _rigidbody.mass, ForceMode2D.Impulse);
+					_rigidbody.AddForceX((_airJumpStrenght + BunnyHop(_jumpBoost)) * _localAtAny.z * _rigidbody.mass, ForceMode2D.Impulse);
 					_rigidbody.AddForceY((_airJumpStrenght + BunnyHop(_jumpBoost)) * _rigidbody.mass, ForceMode2D.Impulse);
 					EffectsController.SoundEffect(_airJumpSound, transform.position);
 					if (_comboAttackBuffer)
@@ -318,8 +318,8 @@ namespace GwambaPrimeAdventure.Character
 				{
 					_animator.SetBool(DashSlide, true);
 					_animator.SetBool(AttackSlide, _comboAttackBuffer);
-					transform.TurnScaleX(_localOfAny.z = _movementAction);
-					_localOfAny.x = transform.position.x;
+					transform.TurnScaleX(_localAtAny.z = _movementAction);
+					_localAtAny.x = transform.position.x;
 					EffectsController.SoundEffect(_dashSlideSound, transform.position);
 					if (_comboAttackBuffer)
 						StartAttackSound();
@@ -515,13 +515,13 @@ namespace GwambaPrimeAdventure.Character
 			if (!_instance || _instance != this || _animator.GetBool(Stun) || _animator.GetBool(Death))
 				return;
 			if (_animator.GetBool(DashSlide))
-				if (Mathf.Abs(transform.position.x - _localOfAny.x) > _dashDistance || !_isOnGround || _isJumping || _animator.GetBool(Stun) || _animator.GetBool(Death))
+				if (Mathf.Abs(transform.position.x - _localAtAny.x) > _dashDistance || !_isOnGround || _isJumping || _animator.GetBool(Stun) || _animator.GetBool(Death))
 				{
 					_animator.SetBool(DashSlide, false);
 					_animator.SetBool(AttackSlide, false);
 				}
 				else
-					_rigidbody.linearVelocityX = _dashSpeed * _localOfAny.z;
+					_rigidbody.linearVelocityX = _dashSpeed * _localAtAny.z;
 			else
 			{
 				if (!_isOnGround && !_downStairs && Mathf.Abs(_rigidbody.linearVelocityY) > _minimumVelocity && !_animator.GetBool(AirJump))
@@ -577,10 +577,10 @@ namespace GwambaPrimeAdventure.Character
 						_lastGroundedTime = _jumpCoyoteTime;
 				else
 				{
-					_localOfAny.x = _longJumping ? _dashSpeed : _movementSpeed + BunnyHop(_velocityBoost);
-					_localOfAny.y = _localOfAny.x * _movementAction - _rigidbody.linearVelocityX;
-					_localOfAny.z = (Mathf.Abs(_localOfAny.x * _movementAction) > 0F ? _acceleration : _decceleration) + BunnyHop(_potencyBoost);
-					_rigidbody.AddForceX(Mathf.Pow(Mathf.Abs(_localOfAny.y) * _localOfAny.z, _velocityPower) * Mathf.Sign(_localOfAny.y) * _rigidbody.mass);
+					_localAtAny.x = _longJumping ? _dashSpeed : _movementSpeed + BunnyHop(_velocityBoost);
+					_localAtAny.y = _localAtAny.x * _movementAction - _rigidbody.linearVelocityX;
+					_localAtAny.z = (Mathf.Abs(_localAtAny.x * _movementAction) > 0F ? _acceleration : _decceleration) + BunnyHop(_potencyBoost);
+					_rigidbody.AddForceX(Mathf.Pow(Mathf.Abs(_localAtAny.y) * _localAtAny.z, _velocityPower) * Mathf.Sign(_localAtAny.y) * _rigidbody.mass);
 					if (0F != _movementAction && !_attackUsage)
 					{
 						if (Mathf.Abs(_rigidbody.linearVelocityX) > _minimumVelocity)
@@ -588,15 +588,15 @@ namespace GwambaPrimeAdventure.Character
 						else if (Mathf.Abs(_rigidbody.linearVelocityX) <= _minimumVelocity)
 							transform.TurnScaleX(_movementAction);
 						if (_isOnGround)
-							_animator.SetFloat(WalkSpeed, Mathf.Abs(_rigidbody.linearVelocityX) <= _minimumVelocity ? 1F : Mathf.Abs(_rigidbody.linearVelocityX) / _localOfAny.x);
+							_animator.SetFloat(WalkSpeed, Mathf.Abs(_rigidbody.linearVelocityX) <= _minimumVelocity ? 1F : Mathf.Abs(_rigidbody.linearVelocityX) / _localAtAny.x);
 					}
 				}
 				if (_attackUsage && !_animator.GetBool(AttackAirJump))
 					_rigidbody.linearVelocityX *= _attackVelocityCut;
 				if (_isOnGround && 0F == _movementAction && Mathf.Abs(_rigidbody.linearVelocityX) > _minimumVelocity)
 				{
-					_localOfAny.x = Mathf.Min(Mathf.Abs(_rigidbody.linearVelocityX), Mathf.Abs(_frictionAmount)) * Mathf.Sign(_rigidbody.linearVelocityX);
-					_rigidbody.AddForceX(-_localOfAny.x * _rigidbody.mass, ForceMode2D.Impulse);
+					_localAtAny.x = Mathf.Min(Mathf.Abs(_rigidbody.linearVelocityX), Mathf.Abs(_frictionAmount)) * Mathf.Sign(_rigidbody.linearVelocityX);
+					_rigidbody.AddForceX(-_localAtAny.x * _rigidbody.mass, ForceMode2D.Impulse);
 					_animator.SetFloat(WalkSpeed, Mathf.Abs(_rigidbody.linearVelocityX) / (_longJumping ? _dashSpeed : _movementSpeed + BunnyHop(_velocityBoost)));
 				}
 			}
@@ -626,7 +626,7 @@ namespace GwambaPrimeAdventure.Character
 			{
 				_groundContacts.Clear();
 				collision.GetContacts(_groundContacts);
-				_localAtStart.Set(Local.x + _collider.bounds.extents.x * _localOfAny.z, Local.y);
+				_localAtStart.Set(Local.x + _collider.bounds.extents.x * _localAtAny.z, Local.y);
 				_localAtEnd.Set(WorldBuild.SNAP_LENGTH, _collider.size.y);
 				_groundContacts.RemoveAll(contact => contact.point.OutsideRectangle(_localAtStart, _localAtEnd));
 				if (0 < _groundContacts.Count)
@@ -697,15 +697,15 @@ namespace GwambaPrimeAdventure.Character
 						_groundContacts.RemoveAll(contact => contact.point.OutsideRectangle(_localAtStart, _localAtEnd));
 						if (0 < _groundContacts.Count)
 						{
-							_localOfAny.x = (_collider.bounds.extents.x + WorldBuild.SNAP_LENGTH / 2F) * (0F < transform.localScale.x ? 1F : -1F);
-							_localOfAny.y = _localAtStart.y + _localAtEnd.y / 2F;
-							_localOfAny.z = _localAtStart.y - _localAtEnd.y / 2F;
-							_localAtStart.Set(Local.x + _localOfAny.x, Local.y + _collider.bounds.extents.y);
-							_localAtEnd.Set(Local.x + _localOfAny.x, Local.y - _collider.bounds.extents.y);
-							if ((_castHit = Physics2D.Linecast(_localAtStart, _localAtEnd, WorldBuild.SCENE_LAYER_MASK)) && _localOfAny.y >= _castHit.point.y && _localOfAny.z <= _castHit.point.y)
+							_localAtAny.x = (_collider.bounds.extents.x + WorldBuild.SNAP_LENGTH / 2F) * (0F < transform.localScale.x ? 1F : -1F);
+							_localAtAny.y = _localAtStart.y + _localAtEnd.y / 2F;
+							_localAtAny.z = _localAtStart.y - _localAtEnd.y / 2F;
+							_localAtStart.Set(Local.x + _localAtAny.x, Local.y + _collider.bounds.extents.y);
+							_localAtEnd.Set(Local.x + _localAtAny.x, Local.y - _collider.bounds.extents.y);
+							if ((_castHit = Physics2D.Linecast(_localAtStart, _localAtEnd, WorldBuild.SCENE_LAYER_MASK)) && _localAtAny.y >= _castHit.point.y && _localAtAny.z <= _castHit.point.y)
 							{
-								_localOfAny.y = Mathf.Abs(_castHit.point.y - (transform.position.y - _collider.bounds.extents.y));
-								_localAtSurface.Set(transform.position.x + WorldBuild.SNAP_LENGTH * (0F < transform.localScale.x ? 1F : -1F), transform.position.y + _localOfAny.y);
+								_localAtAny.y = Mathf.Abs(_castHit.point.y - (transform.position.y - _collider.bounds.extents.y));
+								_localAtSurface.Set(transform.position.x + WorldBuild.SNAP_LENGTH * (0F < transform.localScale.x ? 1F : -1F), transform.position.y + _localAtAny.y);
 								transform.position = _localAtSurface;
 								_rigidbody.linearVelocityX = _movementSpeed * _movementAction;
 							}
@@ -713,15 +713,15 @@ namespace GwambaPrimeAdventure.Character
 					}
 					else if (0F >= _lastJumpTime)
 					{
-						_localOfAny.x = Local.x - (_collider.bounds.extents.x - WorldBuild.SNAP_LENGTH / 2F * _downStairsDistance) * (0F < transform.localScale.x ? 1F : -1F);
-						_localOfAny.y = WorldBuild.SNAP_LENGTH * _downStairsDistance;
-						if (_groundContacts.TrueForAll(contact => _localOfAny.x + _localOfAny.y / 2F >= contact.point.x && _localOfAny.x - _localOfAny.y / 2F <= contact.point.x))
+						_localAtAny.x = Local.x - (_collider.bounds.extents.x - WorldBuild.SNAP_LENGTH / 2F * _downStairsDistance) * (0F < transform.localScale.x ? 1F : -1F);
+						_localAtAny.y = WorldBuild.SNAP_LENGTH * _downStairsDistance;
+						if (_groundContacts.TrueForAll(contact => _localAtAny.x + _localAtAny.y / 2F >= contact.point.x && _localAtAny.x - _localAtAny.y / 2F <= contact.point.x))
 						{
-							_localOfAny.x = (0F < transform.localScale.x ? 1F : -1F);
-							_localAtStart.Set(Local.x - (_collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * _downStairsDistance) * _localOfAny.x, Local.y - _collider.bounds.extents.y);
+							_localAtAny.x = (0F < transform.localScale.x ? 1F : -1F);
+							_localAtStart.Set(Local.x - (_collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * _downStairsDistance) * _localAtAny.x, Local.y - _collider.bounds.extents.y);
 							if (_downStairs = _castHit = Physics2D.Raycast(_localAtStart, -transform.up, WorldBuild.SNAP_LENGTH + 1F, WorldBuild.SCENE_LAYER_MASK))
 							{
-								_localAtSurface.Set(transform.position.x + WorldBuild.SNAP_LENGTH * _downStairsDistance * _localOfAny.x, transform.position.y - _castHit.distance);
+								_localAtSurface.Set(transform.position.x + WorldBuild.SNAP_LENGTH * _downStairsDistance * _localAtAny.x, transform.position.y - _castHit.distance);
 								transform.position = _localAtSurface;
 							}
 						}
