@@ -5,16 +5,19 @@ namespace GwambaPrimeAdventure.Connection
 {
 	public struct SaveFile
 	{
-		public ushort Lifes;
 		public List<string> LifesAcquired;
-		public ushort Coins;
+		public ushort
+			Lifes,
+			Coins;
 		public Dictionary<string, bool> Books;
-		public List<string> BooksName;
+		public List<string>
+			GeneralObjects,
+			BooksName;
 		public List<bool> BooksValue;
-		public List<string> GeneralObjects;
 		public string LastLevelEntered;
-		public bool[] LevelsCompleted;
-		public bool[] DeafetedBosses;
+		public bool[]
+			LevelsCompleted,
+			DeafetedBosses;
 	};
 	public static class SaveController
 	{
@@ -26,13 +29,13 @@ namespace GwambaPrimeAdventure.Connection
 		{
 			SaveFile saveFile = new()
 			{
-				Lifes = 10,
 				LifesAcquired = new List<string>(),
+				Lifes = 10,
 				Coins = 0,
 				Books = new Dictionary<string, bool>(),
+				GeneralObjects = new List<string>(),
 				BooksName = new List<string>(),
 				BooksValue = new List<bool>(),
-				GeneralObjects = new List<string>(),
 				LastLevelEntered = "",
 				LevelsCompleted = new bool[WorldBuild.LEVELS_COUNT],
 				DeafetedBosses = new bool[WorldBuild.LEVELS_COUNT]
