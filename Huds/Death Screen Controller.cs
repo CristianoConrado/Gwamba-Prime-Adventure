@@ -24,8 +24,7 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
 				return;
 			}
-			_instance = this;
-			_deathScreenHud = Instantiate(_deathScreenHudObject, transform);
+			(_instance, _deathScreenHud) = (this, Instantiate(_deathScreenHudObject, transform));
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include(this);
 		}
@@ -56,12 +55,8 @@ namespace GwambaPrimeAdventure.Hud
 			else
 			{
 				_deathScreenHud.Text.text = "You have died";
-				_deathScreenHud.Text.style.display = DisplayStyle.Flex;
-				_deathScreenHud.Continue.style.display = DisplayStyle.Flex;
-				_deathScreenHud.OutLevel.style.display = DisplayStyle.Flex;
-				_deathScreenHud.GameOver.style.display = DisplayStyle.None;
-				_deathScreenHud.Curtain.style.display = DisplayStyle.None;
-				_deathScreenHud.RootElement.style.display = DisplayStyle.None;
+				_deathScreenHud.OutLevel.style.display = _deathScreenHud.Continue.style.display = _deathScreenHud.Text.style.display = DisplayStyle.Flex;
+				_deathScreenHud.RootElement.style.display = _deathScreenHud.Curtain.style.display = _deathScreenHud.GameOver.style.display = DisplayStyle.None;
 			}
 		}
 		private void Continue()
@@ -72,10 +67,7 @@ namespace GwambaPrimeAdventure.Hud
 				StartCoroutine(Curtain());
 			IEnumerator Curtain()
 			{
-				_deathScreenHud.Text.style.display = DisplayStyle.None;
-				_deathScreenHud.Continue.style.display = DisplayStyle.None;
-				_deathScreenHud.OutLevel.style.display = DisplayStyle.None;
-				_deathScreenHud.GameOver.style.display = DisplayStyle.None;
+				_deathScreenHud.GameOver.style.display = _deathScreenHud.OutLevel.style.display = _deathScreenHud.Continue.style.display = _deathScreenHud.Text.style.display = DisplayStyle.None;
 				_deathScreenHud.Curtain.style.display = DisplayStyle.Flex;
 				for (float i = 0F; 1F > _deathScreenHud.Curtain.style.opacity.value; i += 5E-2F)
 					yield return _deathScreenHud.Curtain.style.opacity = i;
@@ -94,11 +86,8 @@ namespace GwambaPrimeAdventure.Hud
 				ConfigurationController.Instance.SetActive(true);
 				_deathScreenHud.RootElement.style.display = DisplayStyle.None;
 				_deathScreenHud.Text.text = "You have died";
-				_deathScreenHud.Text.style.display = DisplayStyle.Flex;
-				_deathScreenHud.Continue.style.display = DisplayStyle.Flex;
-				_deathScreenHud.OutLevel.style.display = DisplayStyle.Flex;
-				_deathScreenHud.GameOver.style.display = DisplayStyle.None;
-				_deathScreenHud.Curtain.style.display = DisplayStyle.None;
+				_deathScreenHud.OutLevel.style.display = _deathScreenHud.Continue.style.display = _deathScreenHud.Text.style.display = DisplayStyle.Flex;
+				_deathScreenHud.Curtain.style.display = _deathScreenHud.GameOver.style.display = DisplayStyle.None;
 			}
 		}
 		private void OutLevel() => GetComponent<Transitioner>().Transicion(_levelSelectorScene);
@@ -115,8 +104,7 @@ namespace GwambaPrimeAdventure.Hud
 				if (0 >= saveFile.Lifes)
 				{
 					_deathScreenHud.Text.text = "Game Over";
-					_deathScreenHud.Continue.style.display = DisplayStyle.None;
-					_deathScreenHud.OutLevel.style.display = DisplayStyle.None;
+					_deathScreenHud.OutLevel.style.display = _deathScreenHud.Continue.style.display = DisplayStyle.None;
 					_deathScreenHud.GameOver.style.display = DisplayStyle.Flex;
 				}
 				_deathScreenHud.RootElement.style.display = DisplayStyle.Flex;
