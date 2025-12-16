@@ -28,8 +28,7 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
 				return;
 			}
-			Instance = this;
-			_configurationHud = Instantiate(_configurationHudObject, transform);
+			(Instance, _configurationHud) = (this, Instantiate(_configurationHudObject, transform));
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include(this);
 		}
@@ -115,22 +114,16 @@ namespace GwambaPrimeAdventure.Hud
 		private void HideHudAction(InputAction.CallbackContext hideHud) => OpenCloseConfigurations();
 		private void CloseConfigurations()
 		{
-			_configurationHud.Confirmation.style.display = DisplayStyle.None;
-			_configurationHud.Settings.style.display = DisplayStyle.Flex;
-			_configurationHud.RootElement.style.display = DisplayStyle.None;
+			(_configurationHud.Confirmation.style.display, _configurationHud.Settings.style.display) = (_configurationHud.RootElement.style.display = DisplayStyle.None, DisplayStyle.Flex);
 			StateController.SetState(true);
 		}
-		private void OutLevel()
-		{
-			_configurationHud.Settings.style.display = DisplayStyle.None;
-			_configurationHud.Confirmation.style.display = DisplayStyle.Flex;
-		}
+		private void OutLevel() => (_configurationHud.Settings.style.display, _configurationHud.Confirmation.style.display) = (DisplayStyle.None, DisplayStyle.Flex);
 		private void SaveGame() => SaveController.SaveData();
 		private void ScreenResolution(ChangeEvent<string> resolution)
 		{
 			SettingsController.Load(out Settings settings);
-			Span<string> dimensions = resolution.newValue.Split(new char[] { 'x', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			settings.ScreenResolution = new Vector2Int(ushort.Parse(dimensions[0]), ushort.Parse(dimensions[1]));
+			ReadOnlySpan<string> dimensions = resolution.newValue.Split(new char[] { 'x', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			settings.ScreenResolution.Set(ushort.Parse(dimensions[0]), ushort.Parse(dimensions[1]));
 			Screen.SetResolution(settings.ScreenResolution.x, settings.ScreenResolution.y, settings.FullScreenMode);
 			SettingsController.WriteSave(settings);
 		}
@@ -225,11 +218,7 @@ namespace GwambaPrimeAdventure.Hud
 			else
 				GetComponent<Transitioner>().Transicion(_menuScene);
 		}
-		private void NoBackLevel()
-		{
-			_configurationHud.Settings.style.display = DisplayStyle.Flex;
-			_configurationHud.Confirmation.style.display = DisplayStyle.None;
-		}
+		private void NoBackLevel() => (_configurationHud.Settings.style.display, _configurationHud.Confirmation.style.display) = (DisplayStyle.Flex, DisplayStyle.None);
 		internal void OpenCloseConfigurations()
 		{
 			if (!_isActive)
@@ -238,23 +227,14 @@ namespace GwambaPrimeAdventure.Hud
 				CloseConfigurations();
 			else
 			{
-				_configurationHud.RootElement.style.display = DisplayStyle.Flex;
 				StateController.SetState(false);
 				if (SceneManager.GetActiveScene().name == _menuScene)
-				{
-					_configurationHud.OutLevel.style.display = DisplayStyle.None;
-					_configurationHud.SaveGame.style.display = DisplayStyle.None;
-				}
+					_configurationHud.SaveGame.style.display = _configurationHud.OutLevel.style.display = DisplayStyle.None;
 				else if (SceneManager.GetActiveScene().name == _levelSelectorScene)
-				{
-					_configurationHud.OutLevel.style.display = DisplayStyle.Flex;
-					_configurationHud.SaveGame.style.display = DisplayStyle.Flex;
-				}
+					_configurationHud.SaveGame.style.display = _configurationHud.OutLevel.style.display = DisplayStyle.Flex;
 				else
-				{
-					_configurationHud.OutLevel.style.display = DisplayStyle.Flex;
-					_configurationHud.SaveGame.style.display = DisplayStyle.None;
-				}
+					(_configurationHud.OutLevel.style.display, _configurationHud.SaveGame.style.display) = (DisplayStyle.Flex, DisplayStyle.None);
+				_configurationHud.RootElement.style.display = DisplayStyle.Flex;
 			}
 		}
 		internal void SetActive(bool isActive) => _isActive = isActive;
