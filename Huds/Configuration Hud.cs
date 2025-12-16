@@ -39,8 +39,7 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
 				return;
 			}
-			_instance = this;
-			RootElement = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>(nameof(RootElement));
+			(_instance, RootElement) = (this, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>(nameof(RootElement)));
 			Settings = RootElement.Q<GroupBox>(nameof(Settings));
 			Confirmation = RootElement.Q<GroupBox>(nameof(Confirmation));
 			ScreenResolution = RootElement.Q<DropdownField>(nameof(ScreenResolution));
@@ -70,24 +69,20 @@ namespace GwambaPrimeAdventure.Hud
 			if (!SettingsController.FileExists())
 				SettingsController.WriteSave(settings);
 			DialogSpeed.highValue = 1E-1F;
-			ScreenBrightness.highValue = 1F;
-			GeneralVolume.highValue = 1F;
-			EffectsVolume.highValue = 1F;
-			MusicVolume.highValue = 1F;
-			FrameRate.highValue = 240;
+			MusicVolume.highValue = EffectsVolume.highValue = GeneralVolume.highValue = ScreenBrightness.highValue = 1F;
+			FrameRate.highValue = 120;
 			VSync.highValue = 2;
-			DialogSpeed.lowValue = 0F;
-			ScreenBrightness.lowValue = 0F;
-			GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
-			EffectsVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
-			MusicVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
+			ScreenBrightness.lowValue = DialogSpeed.lowValue = 0F;
+			MusicVolume.lowValue = EffectsVolume.lowValue = GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			FrameRate.lowValue = 10;
 			VSync.lowValue = 0;
-			for (ushort i = 0; WorldBuild.PixelPerfectResolutions().Length > i; i++)
-				ScreenResolution.choices.Add($@"{WorldBuild.PixelPerfectResolutions()[i].width} x {WorldBuild.PixelPerfectResolutions()[i].height}");
+			foreach (Resolution resolution in WorldBuild.PixelPerfectResolutions())
+				ScreenResolution.choices.Add($@"{resolution.width} x {resolution.height}");
 			foreach (FullScreenMode mode in Enum.GetValues(typeof(FullScreenMode)))
 				FullScreenModes.choices.Add(mode.ToString());
 			ScreenResolution.value = $@"{settings.ScreenResolution.x} x {settings.ScreenResolution.y}";
+			foreach (Resolution resolution in Screen.resolutions)
+				InfoLogger.Informer.LogInfo(resolution);
 			FullScreenModes.value = settings.FullScreenMode.ToString();
 			DialogToggle.value = settings.DialogToggle;
 			GeneralVolumeToggle.value = settings.GeneralVolumeToggle;
