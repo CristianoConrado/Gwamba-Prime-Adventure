@@ -9,8 +9,10 @@ namespace GwambaPrimeAdventure.Character
 		private static PointSetter _instance;
 		[SerializeField, Tooltip("The name of the hubby world scene."), Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)] private SceneField _hubbyWorldScene;
 		[SerializeField, Tooltip("If this point setter is the begining point to begin in the scene.")] private bool _beginingPoint;
+		[SerializeField, Tooltip("If this point is faced to left.")] private bool _turnToLeft;
 		[SerializeField, Tooltip("Which point setter is setted when scene is the hubby world.")] private ushort _selfIndex;
 		internal static Vector2 CheckedPoint => _instance ? _instance.transform.position : Vector2.zero;
+		internal static bool TurnToLeft => _instance ? _instance._turnToLeft : false;
 		public IEnumerator Load()
 		{
 			SaveController.Load(out SaveFile saveFile);
