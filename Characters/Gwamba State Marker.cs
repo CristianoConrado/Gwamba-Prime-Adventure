@@ -31,7 +31,7 @@ namespace GwambaPrimeAdventure.Character
 			_localAtEnd = Vector2.zero,
 			_localAtSurface = Vector2.zero,
 			_localAtLinearVelocity = Vector2.zero,
-			_localAtPosition = Vector2.zero;
+			_beginPosition = Vector2.zero;
 		private Vector3 _localAtAny = Vector3.zero;
 		private RaycastHit2D _castHit;
 		private readonly ContactFilter2D _interactionFilter = new()
@@ -154,7 +154,7 @@ namespace GwambaPrimeAdventure.Character
 				if (!_instance._isHubbyWorld)
 				{
 					_instance._turnLeft = _turnToLeft;
-					_instance._localAtPosition = _startPosition;
+					_instance._beginPosition = _startPosition;
 					_instance._reloadTransform = true;
 				}
 				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
@@ -238,7 +238,7 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if (!_instance || this != _instance)
 				yield break;
-			_localAtPosition = _startPosition;
+			_beginPosition = _startPosition;
 			_turnLeft = _turnToLeft;
 			_reloadTransform = true;
 			yield return StartCoroutine(StartLoad());
@@ -251,7 +251,7 @@ namespace GwambaPrimeAdventure.Character
 			yield return new WaitUntil(() => _reloadTransform);
 			_reloadTransform = false;
 			transform.TurnScaleX(_turnLeft);
-			transform.position = _localAtPosition;
+			transform.position = _beginPosition;
 			if (_animator.GetBool(Death))
 			{
 				Reanimate();
@@ -289,7 +289,7 @@ namespace GwambaPrimeAdventure.Character
 			}
 			if (_isHubbyWorld = scene.name == _hubbyWorldScene && _didStart)
 			{
-				_localAtPosition = PointSetter.CheckedPoint;
+				_beginPosition = PointSetter.CheckedPoint;
 				_turnLeft = PointSetter.TurnToLeft;
 				_reloadTransform = true;
 			}
