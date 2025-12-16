@@ -11,30 +11,29 @@ namespace GwambaPrimeAdventure.Hud
 	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(Transitioner))]
 	internal sealed class ConfigurationController : MonoBehaviour, IConnector
 	{
+		private static ConfigurationController _instance;
 		private ConfigurationHud _configurationHud;
 		private InputController _inputController;
-		private bool _isActive = true;
 		[Header("Interaction Objects")]
 		[SerializeField, Tooltip("The object that handles the hud of the configurations.")] private ConfigurationHud _configurationHudObject;
 		[SerializeField, Tooltip("The scene of the menu.")] private SceneField _menuScene;
 		[SerializeField, Tooltip("The scene of the level selector.")] private SceneField _levelSelectorScene;
 		[SerializeField, Tooltip("The mixer of the sounds.")] private AudioMixer _mixer;
-		internal static ConfigurationController Instance { get; private set; }
 		public MessagePath Path => MessagePath.Hud;
 		private void Awake()
 		{
-			if (Instance)
+			if (_instance)
 			{
 				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
 				return;
 			}
-			(Instance, _configurationHud) = (this, Instantiate(_configurationHudObject, transform));
+			(_instance, _configurationHud) = (this, Instantiate(_configurationHudObject, transform));
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include(this);
 		}
 		private void OnDestroy()
 		{
-			if (!Instance || this != Instance)
+			if (!_instance || this != _instance)
 				return;
 			_configurationHud.Close.clicked -= CloseConfigurations;
 			_configurationHud.OutLevel.clicked -= OutLevel;
@@ -60,7 +59,7 @@ namespace GwambaPrimeAdventure.Hud
 		}
 		private void OnEnable()
 		{
-			if (!Instance || this != Instance)
+			if (!_instance || this != _instance)
 				return;
 			_inputController = new InputController();
 			_inputController.Commands.HideHud.canceled += HideHudAction;
@@ -68,7 +67,7 @@ namespace GwambaPrimeAdventure.Hud
 		}
 		private void OnDisable()
 		{
-			if (!Instance || this != Instance)
+			if (!_instance || this != _instance)
 				return;
 			_inputController.Commands.HideHud.canceled -= HideHudAction;
 			_inputController.Commands.HideHud.Disable();
@@ -76,7 +75,7 @@ namespace GwambaPrimeAdventure.Hud
 		}
 		private IEnumerator Start()
 		{
-			if (!Instance || this != Instance)
+			if (!_instance || this != _instance)
 				yield break;
 			yield return StartCoroutine(StartLoad());
 			yield return _configurationHud.LoadHud();
@@ -107,8 +106,10 @@ namespace GwambaPrimeAdventure.Hud
 		}
 		private IEnumerator StartLoad()
 		{
+			_inputController.Commands.HideHud.Disable();
 			_configurationHud.RootElement.style.display = DisplayStyle.None;
-			yield return new WaitUntil(() => _isActive = !SceneInitiator.IsInTrancision());
+			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
+			_inputController.Commands.HideHud.Enable();
 		}
 		private void SceneLoaded(Scene scene, LoadSceneMode loadMode) => StartCoroutine(StartLoad());
 		private void HideHudAction(InputAction.CallbackContext hideHud) => OpenCloseConfigurations();
@@ -212,17 +213,15 @@ namespace GwambaPrimeAdventure.Hud
 		private void YesBackLevel()
 		{
 			CloseConfigurations();
-			_isActive = false;
+			_inputController.Commands.HideHud.Disable();
 			if (SceneManager.GetActiveScene().name != _levelSelectorScene)
 				GetComponent<Transitioner>().Transicion(_levelSelectorScene);
 			else
 				GetComponent<Transitioner>().Transicion(_menuScene);
 		}
 		private void NoBackLevel() => (_configurationHud.Settings.style.display, _configurationHud.Confirmation.style.display) = (DisplayStyle.Flex, DisplayStyle.None);
-		internal void OpenCloseConfigurations()
+		private void OpenCloseConfigurations()
 		{
-			if (!_isActive)
-				return;
 			if (DisplayStyle.Flex == _configurationHud.RootElement.style.display)
 				CloseConfigurations();
 			else
@@ -237,11 +236,22 @@ namespace GwambaPrimeAdventure.Hud
 				_configurationHud.RootElement.style.display = DisplayStyle.Flex;
 			}
 		}
-		internal void SetActive(bool isActive) => _isActive = isActive;
+		internal static void OpenConfigurations() => _instance.OpenCloseConfigurations();
+		internal static void SetActive(bool isActive)
+		{
+			if (_instance._inputController is not null)
+				if (isActive)
+					_instance._inputController.Commands.HideHud.Enable();
+				else
+					_instance._inputController.Commands.HideHud.Disable();
+		}
 		public void Receive(MessageData message)
 		{
-			if (MessageFormat.State == message.Format && message.ToggleValue.HasValue)
-				_isActive = message.ToggleValue.Value;
+			if (MessageFormat.State == message.Format && message.ToggleValue.HasValue && _inputController is not null)
+				if (message.ToggleValue.Value)
+					_inputController.Commands.HideHud.Enable();
+				else
+					_inputController.Commands.HideHud.Disable();
 		}
 	};
 };
