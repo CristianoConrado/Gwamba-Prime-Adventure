@@ -1,10 +1,11 @@
 using UnityEngine;
+using System.Collections;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Utility;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class ShooterEnemy : EnemyProvider, IConnector, IDestructible
+	internal sealed class ShooterEnemy : EnemyProvider, ILoader, IConnector, IDestructible
 	{
 		private Vector2 _originCast = Vector2.zero;
 		private Vector2 _directionCast = Vector2.zero;
@@ -22,13 +23,17 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void Awake()
 		{
 			base.Awake();
-			_projectileParameters = new() { parent = transform, worldSpace = false };
 			Sender.Include(this);
 		}
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
 			Sender.Exclude(this);
+		}
+		public IEnumerator Load()
+		{
+			_projectileParameters = new InstantiateParameters() { parent = transform, worldSpace = false };
+			yield return null;
 		}
 		private void Shoot()
 		{
@@ -130,9 +135,9 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public void Receive(MessageData message)
 		{
-			if (message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] && 0 < (message.AdditionalData as EnemyProvider[]).Length)
-				for (ushort i = 0; (message.AdditionalData as EnemyProvider[]).Length > i; i++)
-					if ((message.AdditionalData as EnemyProvider[])[i] && this == (message.AdditionalData as EnemyProvider[])[i] && MessageFormat.Event == message.Format && _statistics.ReactToDamage)
+			if (message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] enemies && 0 < enemies.Length)
+				foreach (EnemyProvider enemy in enemies)
+					if (enemy && this == enemy && MessageFormat.Event == message.Format && _statistics.ReactToDamage)
 					{
 						_targetDirection = (GwambaStateMarker.Localization - (Vector2)transform.position).normalized;
 						transform.TurnScaleX(GwambaStateMarker.Localization.x < transform.position.x);
