@@ -142,13 +142,8 @@ namespace GwambaPrimeAdventure.Character
 				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
 				return;
 			}
-			_instance = this;
-			_animator = GetComponent<Animator>();
-			_rigidbody = GetComponent<Rigidbody2D>();
-			_collider = GetComponent<BoxCollider2D>();
-			_screenShaker = GetComponent<CinemachineImpulseSource>();
-			_gwambaCanvas = GetComponentInChildren<GwambaCanvas>();
-			_gwambaDamagers = GetComponentsInChildren<GwambaDamager>();
+			(_instance, _animator, _rigidbody, _collider) = (this, GetComponent<Animator>(), GetComponent<Rigidbody2D>(), GetComponent<BoxCollider2D>());
+			(_screenShaker, _gwambaCanvas, _gwambaDamagers) = (GetComponent<CinemachineImpulseSource>(), GetComponentInChildren<GwambaCanvas>(), GetComponentsInChildren<GwambaDamager>());
 			_inputController = new InputController();
 			_inputController.Commands.Movement.started += MovementInput;
 			_inputController.Commands.Movement.performed += MovementInput;
@@ -610,7 +605,8 @@ namespace GwambaPrimeAdventure.Character
 				if (_comboAttackBuffer)
 					StartAttackSound();
 			}
-			(_isOnGround, _offGround) = (_downStairs = false, !_isOnGround);
+			_offGround = !_isOnGround;
+			_isOnGround = _downStairs = false;
 		}
 		private void OnCollisionStay2D(Collision2D collision)
 		{
