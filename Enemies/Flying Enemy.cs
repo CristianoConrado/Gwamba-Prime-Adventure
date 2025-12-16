@@ -41,9 +41,7 @@ namespace GwambaPrimeAdventure.Enemy
 					_trail[i] = trail.offset + trail.points[i] + (Vector2)transform.position;
 				else
 					_trail[i] = trail.points[i];
-			_movementDirection = Vector2.right * _movementSide;
-			_pointOrigin = Rigidbody.position;
-			_sizeDetection *= _statistics.LookDistance;
+			(_movementDirection, _pointOrigin, _sizeDetection) = (Vector2.right * _movementSide, Rigidbody.position, _sizeDetection * _statistics.LookDistance);
 			yield return null;
 		}
 		private void Chase()
@@ -175,9 +173,9 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public new void Receive(MessageData message)
 		{
-			if (message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] && 0 < (message.AdditionalData as EnemyProvider[]).Length)
-				for (ushort i = 0; (message.AdditionalData as EnemyProvider[]).Length > i; i++)
-					if ((message.AdditionalData as EnemyProvider[])[i] && this == (message.AdditionalData as EnemyProvider[])[i])
+			if (message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] enemies && 0 < enemies.Length)
+				foreach (EnemyProvider enemy in enemies)
+					if (enemy && this == enemy)
 					{
 						base.Receive(message);
 						return;
