@@ -20,8 +20,7 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
 				return;
 			}
-			_instance = this;
-			_menuHud = Instantiate(_menuHudObject, transform);
+			(_instance, _menuHud) = (this, Instantiate(_menuHudObject, transform));
 			_menuHud.SaveName[0].value = FilesController.Select(1);
 			_menuHud.SaveName[1].value = FilesController.Select(2);
 			_menuHud.SaveName[2].value = FilesController.Select(3);
@@ -81,9 +80,7 @@ namespace GwambaPrimeAdventure.Hud
 		private void HideHud(InputAction.CallbackContext hideHud) => Back();
 		private void Play()
 		{
-			_menuHud.Buttons.style.display = DisplayStyle.None;
-			_menuHud.Saves.style.display = DisplayStyle.Flex;
-			_isPlay = true;
+			(_menuHud.Buttons.style.display, _menuHud.Saves.style.display, _isPlay) = (DisplayStyle.None, DisplayStyle.Flex, true);
 			ConfigurationController.Instance.SetActive(false);
 		}
 		private void OpenConfigurations() => ConfigurationController.Instance.OpenCloseConfigurations();
@@ -92,9 +89,7 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			if (!_isPlay)
 				return;
-			_menuHud.Saves.style.display = DisplayStyle.None;
-			_menuHud.Buttons.style.display = DisplayStyle.Flex;
-			_isPlay = false;
+			(_menuHud.Saves.style.display, _menuHud.Buttons.style.display, _isPlay) = (DisplayStyle.None, DisplayStyle.Flex, false);
 			ConfigurationController.Instance.SetActive(true);
 		}
 		private void ChangeName1(ChangeEvent<string> write) => _menuHud.RenameFile[0].enabledSelf = write.newValue != FilesController.Select(1);
