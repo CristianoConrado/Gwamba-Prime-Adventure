@@ -23,6 +23,8 @@ namespace GwambaPrimeAdventure
 			}
 			_instance = this;
 			_cinemachineFollow = GetComponent<CinemachineFollow>();
+			_posiontDamping = _cinemachineFollow.TrackerSettings.PositionDamping;
+			GetComponent<BoxCollider2D>().size = WorldBuild.OrthographicToRealSize(GetComponent<CinemachineCamera>().Lens.OrthographicSize);
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include(this);
 		}
@@ -40,6 +42,7 @@ namespace GwambaPrimeAdventure
 			if (!_instance || this != _instance)
 				return;
 			_cinemachineFollow.enabled = true;
+			_cinemachineFollow.TrackerSettings.PositionDamping = _posiontDamping;
 		}
 		private void OnDisable()
 		{
@@ -52,8 +55,6 @@ namespace GwambaPrimeAdventure
 			if (!_instance || this != _instance)
 				yield break;
 			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
-			_posiontDamping = _cinemachineFollow.TrackerSettings.PositionDamping;
-			GetComponent<BoxCollider2D>().size = WorldBuild.OrthographicToRealSize(GetComponent<CinemachineCamera>().Lens.OrthographicSize);
 			DontDestroyOnLoad(gameObject);
 		}
 		private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
@@ -64,6 +65,7 @@ namespace GwambaPrimeAdventure
 				return;
 			}
 			_cinemachineFollow.enabled = true;
+			_cinemachineFollow.TrackerSettings.PositionDamping = Vector2.zero;
 		}
 		private void SetOtherChildren(GameObject gameObject, bool activate)
 		{
