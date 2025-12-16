@@ -26,10 +26,11 @@ namespace GwambaPrimeAdventure.Character
 		private readonly Collider2D[] _interactions = new Collider2D[(uint)WorldBuild.PIXELS_PER_UNIT];
 		private readonly List<ContactPoint2D> _groundContacts = new((int)WorldBuild.PIXELS_PER_UNIT);
 		private IInteractable[] _interactionsPerObject;
-		private Vector2 _localOfStart = Vector2.zero;
-		private Vector2 _localOfEnd = Vector2.zero;
-		private Vector2 _localOfSurface = Vector2.zero;
-		private Vector2 _guardedLinearVelocity = Vector2.zero;
+		private Vector2
+			_localOfStart = Vector2.zero,
+			_localOfEnd = Vector2.zero,
+			_localOfSurface = Vector2.zero,
+			_guardedLinearVelocity = Vector2.zero;
 		private Vector3 _localOfAny = Vector3.zero;
 		private RaycastHit2D _castHit;
 		private readonly ContactFilter2D _interactionFilter = new()
@@ -38,48 +39,53 @@ namespace GwambaPrimeAdventure.Character
 			useLayerMask = true,
 			useTriggers = true
 		};
-		private readonly int IsOn = Animator.StringToHash(nameof(IsOn));
-		private readonly int Idle = Animator.StringToHash(nameof(Idle));
-		private readonly int Walk = Animator.StringToHash(nameof(Walk));
-		private readonly int WalkSpeed = Animator.StringToHash(nameof(WalkSpeed));
-		private readonly int Jump = Animator.StringToHash(nameof(Jump));
-		private readonly int Fall = Animator.StringToHash(nameof(Fall));
-		private readonly int AirJump = Animator.StringToHash(nameof(AirJump));
-		private readonly int DashSlide = Animator.StringToHash(nameof(DashSlide));
-		private readonly int Attack = Animator.StringToHash(nameof(Attack));
-		private readonly int AttackCombo = Animator.StringToHash(nameof(AttackCombo));
-		private readonly int AttackJump = Animator.StringToHash(nameof(AttackJump));
-		private readonly int AttackAirJump = Animator.StringToHash(nameof(AttackAirJump));
-		private readonly int AttackSlide = Animator.StringToHash(nameof(AttackSlide));
-		private readonly int Stun = Animator.StringToHash(nameof(Stun));
-		private readonly int Death = Animator.StringToHash(nameof(Death));
-		private short _vitality = 0;
-		private short _stunResistance = 0;
-		private ushort _recoverVitality = 0;
-		private ushort _bunnyHopBoost = 0;
-		private float _timerOfInvencibility = 0F;
-		private float _showInvencibilityTimer = 0F;
-		private float _stunTimer = 0F;
-		private float _fadeTimer = 0F;
-		private float _movementAction = 0F;
-		private float _lastGroundedTime = 0F;
-		private float _lastJumpTime = 0F;
-		private float _startOfFall = 0F;
-		private float _fallDamage = 0F;
-		private float _attackDelay = 0F;
+		private readonly int
+			IsOn = Animator.StringToHash(nameof(IsOn)),
+			Idle = Animator.StringToHash(nameof(Idle)),
+			Walk = Animator.StringToHash(nameof(Walk)),
+			WalkSpeed = Animator.StringToHash(nameof(WalkSpeed)),
+			Jump = Animator.StringToHash(nameof(Jump)),
+			Fall = Animator.StringToHash(nameof(Fall)),
+			AirJump = Animator.StringToHash(nameof(AirJump)),
+			DashSlide = Animator.StringToHash(nameof(DashSlide)),
+			Attack = Animator.StringToHash(nameof(Attack)),
+			AttackCombo = Animator.StringToHash(nameof(AttackCombo)),
+			AttackJump = Animator.StringToHash(nameof(AttackJump)),
+			AttackAirJump = Animator.StringToHash(nameof(AttackAirJump)),
+			AttackSlide = Animator.StringToHash(nameof(AttackSlide)),
+			Stun = Animator.StringToHash(nameof(Stun)),
+			Death = Animator.StringToHash(nameof(Death));
+		private short
+			_vitality = 0,
+			_stunResistance = 0;
+		private ushort
+			_recoverVitality = 0,
+			_bunnyHopBoost = 0;
+		private float
+			_timerOfInvencibility = 0F,
+			_showInvencibilityTimer = 0F,
+			_stunTimer = 0F,
+			_fadeTimer = 0F,
+			_movementAction = 0F,
+			_lastGroundedTime = 0F,
+			_lastJumpTime = 0F,
+			_startOfFall = 0F,
+			_fallDamage = 0F,
+			_attackDelay = 0F;
 		private readonly float _minimumVelocity = WorldBuild.MINIMUM_TIME_SPACE_LIMIT * 10F;
-		private bool _isHubbyWorld = false;
-		private bool _didStart = false;
-		private bool _isOnGround = false;
-		private bool _offGround = false;
-		private bool _downStairs = false;
-		private bool _isJumping = false;
-		private bool _canAirJump = true;
-		private bool _longJumping = false;
-		private bool _bunnyHopUsed = false;
-		private bool _offBunnyHop = false;
-		private bool _fallStarted = false;
-		private bool _invencibility = false;
+		private bool
+			_isHubbyWorld = false,
+			_didStart = false,
+			_isOnGround = false,
+			_offGround = false,
+			_downStairs = false,
+			_isJumping = false,
+			_canAirJump = true,
+			_longJumping = false,
+			_bunnyHopUsed = false,
+			_offBunnyHop = false,
+			_fallStarted = false,
+			_invencibility = false;
 		[Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)]
 		[SerializeField, BoxGroup("Control"), Tooltip("The scene of the hubby world.")] private SceneField _hubbyWorldScene;
 		[SerializeField, BoxGroup("Control"), Tooltip("The scene of the menu.")] private SceneField _menuScene;
