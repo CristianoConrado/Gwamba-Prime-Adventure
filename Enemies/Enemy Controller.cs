@@ -23,9 +23,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void Awake()
 		{
 			base.Awake();
-			_selfEnemies = GetComponents<EnemyProvider>();
-			_rigidbody = GetComponent<Rigidbody2D>();
-			_screenShaker = GetComponent<CinemachineImpulseSource>();
+			(_selfEnemies, _rigidbody, _screenShaker) = (GetComponents<EnemyProvider>(), GetComponent<Rigidbody2D>(), GetComponent<CinemachineImpulseSource>());
 			_destructibleEnemy = _selfEnemies[0];
 			for (ushort i = 0; _selfEnemies.Length - 1 > i; i++)
 				if (_selfEnemies[i + 1].DestructilbePriority > _selfEnemies[i].DestructilbePriority)
@@ -56,9 +54,7 @@ namespace GwambaPrimeAdventure.Enemy
 			foreach (EnemyProvider enemy in _selfEnemies)
 				enemy.enabled = false;
 			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
-			_vitality = (short)_statistics.Vitality;
-			_armorResistance = (short)_statistics.HitResistance;
-			_fadeTime = _statistics.TimeToFadeAway;
+			(_vitality, _armorResistance, _fadeTime) = ((short)_statistics.Vitality, (short)_statistics.HitResistance, _statistics.TimeToFadeAway);
 			foreach (EnemyProvider enemy in _selfEnemies)
 				enemy.enabled = true;
 		}
