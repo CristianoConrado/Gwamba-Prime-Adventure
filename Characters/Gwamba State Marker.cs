@@ -233,9 +233,10 @@ namespace GwambaPrimeAdventure.Character
 		public IEnumerator StartLoad()
 		{
 			DisableInputs();
-			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
-			transform.TurnScaleX(EffectsController.TurnToLeft);
+			yield return new WaitUntil(() => PointSetter.IsSetted || !SceneInitiator.IsInTrancision());
+			transform.TurnScaleX(PointSetter.TurnToLeft);
 			transform.position = PointSetter.CheckedPoint;
+			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
 			if (_animator.GetBool(Death))
 			{
 				Reanimate();
@@ -747,7 +748,7 @@ namespace GwambaPrimeAdventure.Character
 				if (!message.ToggleValue.Value)
 				{
 					Reanimate();
-					transform.TurnScaleX(EffectsController.TurnToLeft);
+					transform.TurnScaleX(PointSetter.TurnToLeft);
 					transform.position = PointSetter.CheckedPoint;
 				}
 				else if (message.ToggleValue.Value)
