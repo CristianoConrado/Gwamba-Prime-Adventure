@@ -34,8 +34,7 @@ namespace GwambaPrimeAdventure.Enemy
 				if (0F >= (_timeOperation -= Time.deltaTime))
 					if (_invencible)
 					{
-						_invencible = false;
-						_timeOperation = _statistics.UseAlternatedTime ? _statistics.TimeToInvencible : _statistics.TimeToDestructible;
+						(_invencible, _timeOperation) = (false, _statistics.UseAlternatedTime ? _statistics.TimeToInvencible : _statistics.TimeToDestructible);
 						if (_statistics.InvencibleStop)
 						{
 							_sender.SetToggle(true);
@@ -44,8 +43,7 @@ namespace GwambaPrimeAdventure.Enemy
 					}
 					else
 					{
-						_invencible = true;
-						_timeOperation = _statistics.TimeToDestructible;
+						(_invencible, _timeOperation) = (true, _statistics.TimeToDestructible);
 						if (_statistics.InvencibleStop)
 						{
 							_sender.SetToggle(false);
@@ -59,8 +57,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if (!_invencible && _statistics.BiggerDamage <= damage)
 				if ((isHurted = base.Hurt(damage)) && _statistics.InvencibleHurted)
 				{
-					_timeOperation = _statistics.TimeToDestructible;
-					_invencible = true;
+					(_timeOperation, _invencible) = (_statistics.TimeToDestructible, true);
 					if (_statistics.InvencibleStop)
 					{
 						_sender.SetToggle(true);
@@ -71,9 +68,9 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public void Receive(MessageData message)
 		{
-			if (message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] && 0 < (message.AdditionalData as EnemyProvider[]).Length)
-				for (ushort i = 0; (message.AdditionalData as EnemyProvider[]).Length > i; i++)
-					if ((message.AdditionalData as EnemyProvider[])[i] && this == (message.AdditionalData as EnemyProvider[])[i])
+			if (message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] enemies && 0 < enemies.Length)
+				foreach (EnemyProvider enemy in enemies)
+					if (enemy && this == enemy)
 					{
 						if (MessageFormat.Event == message.Format && _statistics.ReactToDamage && message.ToggleValue.HasValue)
 							if (_statistics.UseAlternatedTime && message.ToggleValue.Value)
