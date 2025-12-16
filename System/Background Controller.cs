@@ -12,8 +12,9 @@ namespace GwambaPrimeAdventure
 		private Transform[] _childrenTransforms;
 		private SpriteRenderer[] _childrenRederers;
 		private Vector2[] _startPosition;
-		private Vector2 _speed = Vector2.zero;
-		private Vector2 _movement = Vector2.zero;
+		private Vector2
+			_speed = Vector2.zero,
+			_movement = Vector2.zero;
 		[Header("Background Interaction")]
 		[SerializeField, Tooltip("The object that handles the backgrounds.")] private Transform _backgroundObject;
 		[SerializeField, Tooltip("The handler of the background.")] private SpriteAtlas _backgroundHandler;
