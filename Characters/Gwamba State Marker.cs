@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using Unity.Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
@@ -203,8 +202,6 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if (!_instance || this != _instance)
 				return;
-			if (_gwambaCanvas.RootElement is not null)
-				_gwambaCanvas.RootElement.style.display = DisplayStyle.Flex;
 			_animator.SetFloat(IsOn, 1F);
 			_animator.SetFloat(WalkSpeed, 1F);
 			EnableInputs();
@@ -213,7 +210,6 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if (!_instance || this != _instance)
 				return;
-			_gwambaCanvas.RootElement.style.display = DisplayStyle.None;
 			_animator.SetFloat(IsOn, 0F);
 			_animator.SetFloat(WalkSpeed, 0F);
 			DisableInputs();
