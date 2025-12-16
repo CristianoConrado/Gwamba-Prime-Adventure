@@ -54,7 +54,7 @@ namespace GwambaPrimeAdventure.Hud
 			if (!_instance || this != _instance)
 				return;
 			_menuHud.Play.clicked -= Play;
-			_menuHud.Configurations.clicked += OpenConfigurations;
+			_menuHud.Configurations.clicked -= OpenConfigurations;
 			_menuHud.Quit.clicked -= Quit;
 			_menuHud.Back.clicked -= Back;
 			_menuHud.SaveName[0].UnregisterValueChangedCallback(ChangeName1);
@@ -81,16 +81,16 @@ namespace GwambaPrimeAdventure.Hud
 		private void Play()
 		{
 			(_menuHud.Buttons.style.display, _menuHud.Saves.style.display, _isPlay) = (DisplayStyle.None, DisplayStyle.Flex, true);
-			ConfigurationController.Instance.SetActive(false);
+			ConfigurationController.SetActive(false);
 		}
-		private void OpenConfigurations() => ConfigurationController.Instance.OpenCloseConfigurations();
+		private void OpenConfigurations() => ConfigurationController.OpenConfigurations();
 		private void Quit() => Application.Quit();
 		private void Back()
 		{
 			if (!_isPlay)
 				return;
 			(_menuHud.Saves.style.display, _menuHud.Buttons.style.display, _isPlay) = (DisplayStyle.None, DisplayStyle.Flex, false);
-			ConfigurationController.Instance.SetActive(true);
+			ConfigurationController.SetActive(true);
 		}
 		private void ChangeName1(ChangeEvent<string> write) => _menuHud.RenameFile[0].enabledSelf = write.newValue != FilesController.Select(1);
 		private void ChangeName2(ChangeEvent<string> write) => _menuHud.RenameFile[1].enabledSelf = write.newValue != FilesController.Select(2);
