@@ -22,28 +22,46 @@
                 </ui:GroupBox>
                 <ui:GroupBox name="Output">
                     <ui:GroupBox name="OutputSliders">
-                        <ui:Slider label="General Volume" name="GeneralVolume" />
-                        <ui:Slider label="Effects Volume" name="EffectsVolume" />
-                        <ui:Slider label="Music Volume" name="MusicVolume" />
-                        <ui:Slider label="Dialog Speed" name="DialogSpeed" />
-                        <ui:GroupBox name="FrameRateGroup">
+                        <ui:GroupBox name="SubSliderGroup">
+                            <ui:Slider label="General Volume" name="GeneralVolume" />
+                            <ui:Label text="1.0" name="GeneralVolumeText" />
+                        </ui:GroupBox>
+                        <ui:GroupBox name="SubSliderGroup">
+                            <ui:Slider label="Effects Volume" name="EffectsVolume" />
+                            <ui:Label text="1.0" name="EffectsVolumeText" />
+                        </ui:GroupBox>
+                        <ui:GroupBox name="SubSliderGroup">
+                            <ui:Slider label="Music Volume" name="MusicVolume" />
+                            <ui:Label text="1.0" name="MusicVolumeText" />
+                        </ui:GroupBox>
+                        <ui:GroupBox name="SubSliderGroup">
                             <ui:SliderInt label="Frame Rate" name="FrameRate" />
-                            <ui:Label text="120" name="FrameRateText" />
+                            <ui:Label text="60" name="FrameRateText" />
+                        </ui:GroupBox>
+                        <ui:GroupBox name="SubSliderGroup">
+                            <ui:Slider label="Dialog Speed" name="DialogSpeed" />
+                            <ui:Label text="0.5" name="DialogSpeedText" />
                         </ui:GroupBox>
                     </ui:GroupBox>
                     <ui:GroupBox name="Toggles">
                         <ui:Toggle name="GeneralVolumeToggle" />
                         <ui:Toggle name="EffectsVolumeToggle" />
                         <ui:Toggle name="MusicVolumeToggle" />
-                        <ui:Toggle name="DialogToggle" />
                         <ui:Toggle name="InfinityFPS" />
+                        <ui:Toggle name="DialogToggle" />
                     </ui:GroupBox>
                 </ui:GroupBox>
             </ui:GroupBox>
             <ui:GroupBox name="RightPage" >
                 <ui:GroupBox name="Sliders">
-                    <ui:Slider label="Screen Brightness" name="ScreenBrightness" />
-                    <ui:SliderInt label="VSync" name="VSync" />
+                    <ui:GroupBox name="SubSliderGroup">
+                        <ui:Slider label="Screen Brightness" name="ScreenBrightness" />
+                        <ui:Label text="1.0" name="ScreenBrightnessText" />
+                    </ui:GroupBox>
+                    <ui:GroupBox name="SubSliderGroup">
+                        <ui:SliderInt label="VSync" name="VSync" />
+                        <ui:Label text="1" name="VSyncText" />
+                    </ui:GroupBox>
                 </ui:GroupBox>
             </ui:GroupBox> 
         </ui:GroupBox>
