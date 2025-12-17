@@ -14,6 +14,7 @@ namespace GwambaPrimeAdventure.Connection
 			MusicVolume;
 		public ushort
 			FrameRate,
+			SimulationHertz,
 			VSync;
 		public bool
 			DialogToggle,
@@ -41,6 +42,7 @@ namespace GwambaPrimeAdventure.Connection
 					EffectsVolume = 1F,
 					MusicVolume = 1F,
 					FrameRate = 60,
+					SimulationHertz = WorldBuild.DEFAULT_HERTZ,
 					VSync = 1,
 					DialogToggle = true,
 					GeneralVolumeToggle = true,
