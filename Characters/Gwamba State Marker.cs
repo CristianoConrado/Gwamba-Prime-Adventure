@@ -249,10 +249,7 @@ namespace GwambaPrimeAdventure.Character
 			transform.TurnScaleX(_turnLeft);
 			transform.position = _beginingPosition;
 			if (_animator.GetBool(Death))
-			{
-				Reanimate();
-				_deathLoad = true;
-			}
+				_animator.SetBool(Death, _bunnyHopUsed = _offBunnyHop = !(_deathLoad = true));
 			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
 			if (_deathLoad)
 				OnEnable();
@@ -290,9 +287,12 @@ namespace GwambaPrimeAdventure.Character
 				_reloadTransform = true;
 			}
 			if (_didStart)
+			{
+				RestartStatistics();
 				StartCoroutine(StartLoad());
+			}
 		}
-		private void Reanimate()
+		private void RestartStatistics()
 		{
 			for (ushort i = 0; (_vitality = (short)_gwambaCanvas.Vitality.Length) > i; i++)
 			{
@@ -308,7 +308,6 @@ namespace GwambaPrimeAdventure.Character
 				_gwambaCanvas.StunResistance[i].style.backgroundColor = _gwambaCanvas.StunResistanceColor;
 			for (ushort i = _bunnyHopBoost = 0; _gwambaCanvas.BunnyHop.Length > i; i++)
 				_gwambaCanvas.BunnyHop[i].style.backgroundColor = _gwambaCanvas.MissingColor;
-			_animator.SetBool(Death, _bunnyHopUsed = _offBunnyHop = false);
 		}
 		private void MovementInput(InputAction.CallbackContext movement)
 		{
@@ -436,7 +435,7 @@ namespace GwambaPrimeAdventure.Character
 		public void DamagerStun(ushort stunStrength, float stunTime)
 		{
 			_stunResistance -= (short)stunStrength;
-			for (ushort i = (ushort)_gwambaCanvas.StunResistance.Length; (0 <= _stunResistance ? _stunResistance : 0) > i; i--)
+			for (ushort i = (ushort)_gwambaCanvas.StunResistance.Length; (0 <= _stunResistance ? _stunResistance : 0) < i; i--)
 				_gwambaCanvas.StunResistance[i - 1].style.backgroundColor = _gwambaCanvas.MissingColor;
 			if (0 >= _stunResistance && !_animator.GetBool(Death))
 			{
@@ -766,7 +765,8 @@ namespace GwambaPrimeAdventure.Character
 			if (MessageFormat.Event == message.Format && message.ToggleValue.HasValue)
 				if (!message.ToggleValue.Value)
 				{
-					Reanimate();
+					RestartStatistics();
+					_animator.SetBool(Death, _bunnyHopUsed = _offBunnyHop = false);
 					transform.TurnScaleX(PointSetter.TurnToLeft);
 					transform.position = PointSetter.CheckedPoint;
 				}
