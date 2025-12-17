@@ -14,6 +14,7 @@ namespace GwambaPrimeAdventure.Hud
 		internal GroupBox Confirmation { get; private set; }
 		internal DropdownField ScreenResolution { get; private set; }
 		internal DropdownField FullScreenModes { get; private set; }
+		internal DropdownField SimulationHertz { get; private set; }
 		internal Toggle DialogToggle { get; private set; }
 		internal Toggle GeneralVolumeToggle { get; private set; }
 		internal Toggle EffectsVolumeToggle { get; private set; }
@@ -44,6 +45,7 @@ namespace GwambaPrimeAdventure.Hud
 			Confirmation = RootElement.Q<GroupBox>(nameof(Confirmation));
 			ScreenResolution = RootElement.Q<DropdownField>(nameof(ScreenResolution));
 			FullScreenModes = RootElement.Q<DropdownField>(nameof(FullScreenModes));
+			SimulationHertz = RootElement.Q<DropdownField>(nameof(SimulationHertz));
 			DialogToggle = RootElement.Q<Toggle>(nameof(DialogToggle));
 			GeneralVolumeToggle = RootElement.Q<Toggle>(nameof(GeneralVolumeToggle));
 			EffectsVolumeToggle = RootElement.Q<Toggle>(nameof(EffectsVolumeToggle));
@@ -80,8 +82,12 @@ namespace GwambaPrimeAdventure.Hud
 				ScreenResolution.choices.Add($@"{resolution.width} x {resolution.height}");
 			foreach (FullScreenMode mode in Enum.GetValues(typeof(FullScreenMode)))
 				FullScreenModes.choices.Add(mode.ToString());
+			SimulationHertz.choices.Add($"{WorldBuild.DEFAULT_HERTZ} hertz");
+			SimulationHertz.choices.Add($"{WorldBuild.MEDIUM_HERTZ} hertz");
+			SimulationHertz.choices.Add($"{WorldBuild.MAXIMUM_HERTZ} hertz");
 			ScreenResolution.value = $@"{settings.ScreenResolution.x} x {settings.ScreenResolution.y}";
 			FullScreenModes.value = settings.FullScreenMode.ToString();
+			SimulationHertz.value = $"{settings.SimulationHertz} hertz";
 			DialogToggle.value = settings.DialogToggle;
 			GeneralVolumeToggle.value = settings.GeneralVolumeToggle;
 			EffectsVolumeToggle.value = settings.EffectsVolumeToggle;
