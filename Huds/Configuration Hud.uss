@@ -26,7 +26,7 @@
 }
 #Output {
     width: 90%;
-    height: 50%;
+    height: 60%;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -36,7 +36,15 @@
     width: 90%;
     height: 100%;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
+    align-self: center;
+    flex-direction: column;
+}
+#Output #Toggles {
+    width: 10%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-around;
     align-self: center;
     flex-direction: column;
 }
@@ -56,14 +64,6 @@
     align-items: flex-start;
     justify-content: center;
     align-self: center;
-}
-#Output #Toggles {
-    width: 10%;
-    height: 100%;
-    align-items: center;
-    justify-content: space-evenly;
-    align-self: center;
-    flex-direction: column;
 }
 Slider, SliderInt {
     width: 90%;
@@ -107,14 +107,14 @@ Slider #unity-dragger, SliderInt #unity-dragger{
     flex-direction: row;
     border-radius: 10px;
 }
-#FrameRateGroup{
-    width: 90%;
+#SubSliderGroup{
+    width: 100%;
     flex-direction: row;
     justify-content: space-between;
     align-content: center;
     align-items: center;
 }
-#FrameRateGroup #FrameRate{
+#SubSliderGroup Slider, #SubSliderGroup SliderInt{
     width: 90%;
     height: 95px;
     padding-bottom: 55px;
@@ -123,7 +123,7 @@ Slider #unity-dragger, SliderInt #unity-dragger{
     justify-content: center;
     align-self: center;
 }
-#FrameRateText{
+#SubSliderGroup Label{
     font-size: 25px;
 }
 #Output Toggle {
@@ -150,19 +150,11 @@ Slider #unity-dragger, SliderInt #unity-dragger{
 #Output Toggle VisualElement:checked {
     background-color: rgb(255, 160, 0);
 }
-#ScreenBrightness {
-    width: 90%;
-    height: 10%;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    align-self: center;
-}
 #DropsDown {
     flex-direction: row;
     height: 10%;
     width: 90%;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-evenly;
     align-self: center;
 }
