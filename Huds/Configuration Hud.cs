@@ -20,11 +20,11 @@ namespace GwambaPrimeAdventure.Hud
 		internal Toggle EffectsVolumeToggle { get; private set; }
 		internal Toggle MusicVolumeToggle { get; private set; }
 		internal Toggle InfinityFPS { get; private set; }
-		internal Slider DialogSpeed { get; private set; }
 		internal Slider ScreenBrightness { get; private set; }
 		internal Slider GeneralVolume { get; private set; }
 		internal Slider EffectsVolume { get; private set; }
 		internal Slider MusicVolume { get; private set; }
+		internal Slider DialogSpeed { get; private set; }
 		internal SliderInt FrameRate { get; private set; }
 		internal SliderInt VSync { get; private set; }
 		internal Button Close { get; private set; }
@@ -32,7 +32,13 @@ namespace GwambaPrimeAdventure.Hud
 		internal Button SaveGame { get; private set; }
 		internal Button Yes { get; private set; }
 		internal Button No { get; private set; }
+		internal Label ScreenBrightnessText { get; private set; }
+		internal Label GeneralVolumeText { get; private set; }
+		internal Label EffectsVolumeText { get; private set; }
+		internal Label MusicVolumeText { get; private set; }
+		internal Label DialogSpeedText { get; private set; }
 		internal Label FrameRateText { get; private set; }
+		internal Label VSyncText { get; private set; }
 		private void Awake()
 		{
 			if (_instance)
@@ -63,7 +69,13 @@ namespace GwambaPrimeAdventure.Hud
 			SaveGame = RootElement.Q<Button>(nameof(SaveGame));
 			Yes = RootElement.Q<Button>(nameof(Yes));
 			No = RootElement.Q<Button>(nameof(No));
+			ScreenBrightnessText = RootElement.Q<Label>(nameof(ScreenBrightnessText));
+			GeneralVolumeText = RootElement.Q<Label>(nameof(GeneralVolumeText));
+			EffectsVolumeText = RootElement.Q<Label>(nameof(EffectsVolumeText));
+			MusicVolumeText = RootElement.Q<Label>(nameof(MusicVolumeText));
+			DialogSpeedText = RootElement.Q<Label>(nameof(DialogSpeedText));
 			FrameRateText =  RootElement.Q<Label>(nameof(FrameRateText));
+			VSyncText = RootElement.Q<Label>(nameof(VSyncText));
 		}
 		internal IEnumerator LoadHud()
 		{
@@ -100,7 +112,13 @@ namespace GwambaPrimeAdventure.Hud
 			MusicVolume.value = settings.MusicVolume;
 			FrameRate.value = settings.FrameRate;
 			VSync.value = settings.VSync;
+			ScreenBrightnessText.text = settings.ScreenBrightness.ToString();
+			GeneralVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.GeneralVolume ? (settings.GeneralVolume / 1F).ToString() : "0";
+			EffectsVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.EffectsVolume ? (settings.EffectsVolume / 1F).ToString() : "0";
+			MusicVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.MusicVolume ? (settings.MusicVolume / 1F).ToString() : "0";
+			DialogSpeedText.text = (settings.DialogSpeed * 10F).ToString();
 			FrameRateText.text = settings.FrameRate.ToString();
+			VSyncText.text = settings.VSync.ToString();
 			yield return null;
 		}
 	};
