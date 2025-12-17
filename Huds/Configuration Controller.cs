@@ -78,8 +78,17 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			if (!_instance || this != _instance)
 				yield break;
-			yield return StartCoroutine(StartLoad());
 			yield return _configurationHud.LoadHud();
+			SettingsController.Load(out Settings settings);
+			Screen.SetResolution(settings.ScreenResolution.x, settings.ScreenResolution.y, settings.FullScreenMode);
+			Screen.brightness = settings.ScreenBrightness;
+			Application.targetFrameRate = settings.InfinityFPS ? -1 : settings.FrameRate;
+			Time.fixedDeltaTime = 1F / settings.SimulationHertz;
+			QualitySettings.vSyncCount = settings.VSync;
+			_mixer.SetFloat(nameof(GeneralVolume), settings.GeneralVolumeToggle ? Mathf.Log10(settings.GeneralVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
+			_mixer.SetFloat(nameof(EffectsVolume), settings.EffectsVolumeToggle ? Mathf.Log10(settings.EffectsVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
+			_mixer.SetFloat(nameof(MusicVolume), settings.MusicVolumeToggle ? Mathf.Log10(settings.MusicVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
+			yield return StartCoroutine(StartLoad());
 			_configurationHud.Close.clicked += CloseConfigurations;
 			_configurationHud.OutLevel.clicked += OutLevel;
 			_configurationHud.SaveGame.clicked += SaveGame;
@@ -100,10 +109,6 @@ namespace GwambaPrimeAdventure.Hud
 			_configurationHud.VSync.RegisterValueChangedCallback(VSync);
 			_configurationHud.Yes.clicked += YesBackLevel;
 			_configurationHud.No.clicked += NoBackLevel;
-			SettingsController.Load(out Settings settings);
-			_mixer.SetFloat(nameof(GeneralVolume), Mathf.Log10(settings.GeneralVolume) * 20F);
-			_mixer.SetFloat(nameof(EffectsVolume), Mathf.Log10(settings.EffectsVolume) * 20F);
-			_mixer.SetFloat(nameof(MusicVolume), Mathf.Log10(settings.MusicVolume) * 20F);
 			DontDestroyOnLoad(gameObject);
 		}
 		private IEnumerator StartLoad()
@@ -152,18 +157,21 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			SettingsController.Load(out Settings settings);
 			settings.GeneralVolumeToggle = toggle.newValue;
+			_mixer.SetFloat(nameof(GeneralVolume), settings.GeneralVolumeToggle ? Mathf.Log10(settings.GeneralVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
 			SettingsController.WriteSave(settings);
 		}
 		private void EffectsVolumeToggle(ChangeEvent<bool> toggle)
 		{
 			SettingsController.Load(out Settings settings);
 			settings.EffectsVolumeToggle = toggle.newValue;
+			_mixer.SetFloat(nameof(EffectsVolume), settings.EffectsVolumeToggle ? Mathf.Log10(settings.EffectsVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
 			SettingsController.WriteSave(settings);
 		}
 		private void MusicVolumeToggle(ChangeEvent<bool> toggle)
 		{
 			SettingsController.Load(out Settings settings);
 			settings.MusicVolumeToggle = toggle.newValue;
+			_mixer.SetFloat(nameof(MusicVolume), settings.MusicVolumeToggle ? Mathf.Log10(settings.MusicVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
 			SettingsController.WriteSave(settings);
 		}
 		private void InfinityFPS(ChangeEvent<bool> toggle)
@@ -173,49 +181,50 @@ namespace GwambaPrimeAdventure.Hud
 			Application.targetFrameRate = settings.InfinityFPS ? -1 : settings.FrameRate;
 			SettingsController.WriteSave(settings);
 		}
-		private void DialogSpeed(ChangeEvent<float> value)
-		{
-			SettingsController.Load(out Settings settings);
-			settings.DialogSpeed = value.newValue;
-			SettingsController.WriteSave(settings);
-		}
 		private void ScreenBrightness(ChangeEvent<float> brightness)
 		{
 			SettingsController.Load(out Settings settings);
-			Screen.brightness = settings.ScreenBrightness = brightness.newValue;
+			_configurationHud.ScreenBrightnessText.text = $"{Screen.brightness = settings.ScreenBrightness = brightness.newValue}";
 			SettingsController.WriteSave(settings);
 		}
 		private void GeneralVolume(ChangeEvent<float> volume)
 		{
 			SettingsController.Load(out Settings settings);
-			_mixer.SetFloat(nameof(GeneralVolume), Mathf.Log10(settings.GeneralVolume = volume.newValue) * 20F);
+			_configurationHud.GeneralVolumeText.text = $"{Mathf.Round(settings.GeneralVolume = volume.newValue / 1F * 10F) / 10F}";
+			_mixer.SetFloat(nameof(GeneralVolume), settings.GeneralVolumeToggle ? Mathf.Log10(settings.GeneralVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
 			SettingsController.WriteSave(settings);
 		}
 		private void EffectsVolume(ChangeEvent<float> volume)
 		{
 			SettingsController.Load(out Settings settings);
-			_mixer.SetFloat(nameof(EffectsVolume), Mathf.Log10(settings.EffectsVolume = volume.newValue) * 20F);
+			_configurationHud.EffectsVolumeText.text = $"{Mathf.Round(settings.EffectsVolume = volume.newValue / 1F * 10F) / 10F}";
+			_mixer.SetFloat(nameof(EffectsVolume), settings.EffectsVolumeToggle ? Mathf.Log10(settings.EffectsVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
 			SettingsController.WriteSave(settings);
 		}
 		private void MusicVolume(ChangeEvent<float> volume)
 		{
 			SettingsController.Load(out Settings settings);
-			_mixer.SetFloat(nameof(MusicVolume), Mathf.Log10(settings.MusicVolume = volume.newValue) * 20F);
+			_configurationHud.MusicVolumeText.text = $"{Mathf.Round(settings.MusicVolume = volume.newValue / 1F * 10F) / 10F}";
+			_mixer.SetFloat(nameof(MusicVolume), settings.MusicVolumeToggle ? Mathf.Log10(settings.MusicVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
+			SettingsController.WriteSave(settings);
+		}
+		private void DialogSpeed(ChangeEvent<float> value)
+		{
+			SettingsController.Load(out Settings settings);
+			_configurationHud.DialogSpeedText.text = $"{Mathf.Round((settings.DialogSpeed = Mathf.Round(value.newValue * 100F) / 100F) * 100F) / 10F}";
 			SettingsController.WriteSave(settings);
 		}
 		private void FrameRate(ChangeEvent<int> frameRate)
 		{
 			SettingsController.Load(out Settings settings);
-			settings.FrameRate = (ushort)frameRate.newValue;
-			if (!settings.InfinityFPS)
-				Application.targetFrameRate = settings.FrameRate;
-			_configurationHud.FrameRateText.text = frameRate.newValue.ToString();
+			_configurationHud.FrameRateText.text = $"{settings.FrameRate = (ushort)frameRate.newValue}";
+			Application.targetFrameRate = settings.InfinityFPS ? -1 : settings.FrameRate;
 			SettingsController.WriteSave(settings);
 		}
 		private void VSync(ChangeEvent<int> vsync)
 		{
 			SettingsController.Load(out Settings settings);
-			QualitySettings.vSyncCount = settings.VSync = (ushort)vsync.newValue;
+			_configurationHud.VSyncText.text = $"{QualitySettings.vSyncCount = settings.VSync = (ushort)vsync.newValue}";
 			SettingsController.WriteSave(settings);
 		}
 		private void YesBackLevel()
