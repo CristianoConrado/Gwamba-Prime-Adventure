@@ -66,7 +66,6 @@ namespace GwambaPrimeAdventure.Connection
 			AudioSource source = Instantiate(_sourceObject, originSound, Quaternion.identity);
 			source.clip = clip;
 			source.volume = 1F;
-			source.mute = !settings.EffectsVolumeToggle || !settings.GeneralVolumeToggle;
 			source.Play();
 			StartCoroutine(SoundPlay(source, clip.length));
 			IEnumerator SoundPlay(AudioSource source, float playTime)
