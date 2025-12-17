@@ -18,6 +18,7 @@
                 <ui:GroupBox name="DropsDown">
                     <ui:DropdownField label="Screen Resolution" name="ScreenResolution" />
                     <ui:DropdownField label="Full Screen Modes" name="FullScreenModes" />
+                    <ui:DropdownField label="Simulation Hertz" name="SimulationHertz" />
                 </ui:GroupBox>
                 <ui:GroupBox name="Output">
                     <ui:GroupBox name="OutputSliders">
