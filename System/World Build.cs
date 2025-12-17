@@ -27,6 +27,9 @@ namespace GwambaPrimeAdventure
 		public const int ITEM_LAYER_MASK = 1 << ITEM_LAYER;
 		public const int ENEMY_LAYER_MASK = 1 << ENEMY_LAYER;
 		public const int BOSS_LAYER_MASK = 1 << BOSS_LAYER;
+		public const ushort DEFAULT_HERTZ = 50;
+		public const ushort MEDIUM_HERTZ = 60;
+		public const ushort MAXIMUM_HERTZ = 100;
 		public const ushort PIXEL_PERFECT_WIDTH = 320;
 		public const ushort PIXEL_PERFECT_HEIGHT = (ushort)(PIXEL_PERFECT_WIDTH * WIDTH_HEIGHT_PROPORTION);
 		public const ushort UI_SCALE_WIDTH = 1920;
@@ -61,4 +64,3 @@ namespace GwambaPrimeAdventure
 		public static bool OutsideCircle(this Vector2 pointOutside, Vector2 originPoint, float radius) => Vector2.Distance(originPoint, pointOutside) > radius;
 	};
 };
-
