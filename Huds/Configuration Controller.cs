@@ -40,6 +40,7 @@ namespace GwambaPrimeAdventure.Hud
 			_configurationHud.SaveGame.clicked -= SaveGame;
 			_configurationHud.ScreenResolution.UnregisterValueChangedCallback(ScreenResolution);
 			_configurationHud.FullScreenModes.UnregisterValueChangedCallback(FullScreenModes);
+			_configurationHud.SimulationHertz.UnregisterValueChangedCallback(SimulationHertz);
 			_configurationHud.DialogToggle.UnregisterValueChangedCallback(DialogToggle);
 			_configurationHud.GeneralVolumeToggle.UnregisterValueChangedCallback(GeneralVolumeToggle);
 			_configurationHud.EffectsVolumeToggle.UnregisterValueChangedCallback(EffectsVolumeToggle);
@@ -84,6 +85,7 @@ namespace GwambaPrimeAdventure.Hud
 			_configurationHud.SaveGame.clicked += SaveGame;
 			_configurationHud.ScreenResolution.RegisterValueChangedCallback(ScreenResolution);
 			_configurationHud.FullScreenModes.RegisterValueChangedCallback(FullScreenModes);
+			_configurationHud.SimulationHertz.RegisterValueChangedCallback(SimulationHertz);
 			_configurationHud.DialogToggle.RegisterValueChangedCallback(DialogToggle);
 			_configurationHud.GeneralVolumeToggle.RegisterValueChangedCallback(GeneralVolumeToggle);
 			_configurationHud.EffectsVolumeToggle.RegisterValueChangedCallback(EffectsVolumeToggle);
@@ -132,6 +134,12 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			SettingsController.Load(out Settings settings);
 			Screen.fullScreenMode = settings.FullScreenMode = Enum.Parse<FullScreenMode>(screenMode.newValue);
+			SettingsController.WriteSave(settings);
+		}
+		private void SimulationHertz(ChangeEvent<string> simulationHertz)
+		{
+			SettingsController.Load(out Settings settings);
+			Time.fixedDeltaTime = 1F / (settings.SimulationHertz = ushort.Parse(simulationHertz.newValue.Split(' ')[0]));
 			SettingsController.WriteSave(settings);
 		}
 		private void DialogToggle(ChangeEvent<bool> toggle)
