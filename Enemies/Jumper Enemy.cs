@@ -140,7 +140,7 @@ namespace GwambaPrimeAdventure.Enemy
 					for (ushort i = 0; _timedJumpTime.Length > i; i++)
 						TimedJump(i);
 		}
-		private new void FixedUpdate()
+		private void FixedUpdate()
 		{
 			if (IsStunned)
 				return;
@@ -196,7 +196,6 @@ namespace GwambaPrimeAdventure.Enemy
 				}
 				Rigidbody.linearVelocityX = Mathf.Abs(_targetPosition.x - transform.position.x) > _statistics.DistanceToTarget ? _movementSide * _statistics.MovementSpeed : 0F;
 			}
-			base.FixedUpdate();
 		}
 		public async void OnJump(ushort jumpIndex)
 		{
