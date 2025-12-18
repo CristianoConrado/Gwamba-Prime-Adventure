@@ -80,7 +80,7 @@ namespace GwambaPrimeAdventure.Connection
 		}
 		private void PrivateSurfaceSound(Vector2 originPosition)
 		{
-			if ((_surfaceCollider = Physics2D.OverlapCircle(originPosition, WorldBuild.SNAP_LENGTH, WorldBuild.SCENE_LAYER)) && _surfaceCollider.TryGetComponent<Surface>(out var surface))
+			if ((_surfaceCollider = Physics2D.OverlapPoint(originPosition, WorldBuild.SCENE_LAYER_MASK)) && _surfaceCollider.TryGetComponent<Surface>(out var surface))
 				for (ushort i = 0; _surfaceSounds.Length > i; i++)
 					if (_surfaceSounds[i].Tiles.Contains(surface.CheckForTile(originPosition)))
 					{
