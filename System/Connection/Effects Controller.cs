@@ -80,13 +80,12 @@ namespace GwambaPrimeAdventure.Connection
 		}
 		private void PrivateSurfaceSound(Vector2 originPosition)
 		{
-			if ((_surfaceCollider = Physics2D.OverlapPoint(originPosition, WorldBuild.SCENE_LAYER_MASK)) && _surfaceCollider.TryGetComponent<Surface>(out var surface))
-				for (ushort i = 0; _surfaceSounds.Length > i; i++)
-					if (_surfaceSounds[i].Tiles.Contains(surface.CheckForTile(originPosition)))
-					{
-						PrivateSoundEffect(_surfaceSounds[i].Clip, originPosition);
-						return;
-					}
+			for (ushort i = 0; _surfaceSounds.Length > i; i++)
+				if (_surfaceSounds[i].Tiles.Contains(Surface.CheckForTile(originPosition)))
+				{
+					PrivateSoundEffect(_surfaceSounds[i].Clip, originPosition);
+					return;
+				}
 		}
 		public static void HitStop(float stopTime, float slowTime) => _instance.PrvateHitStop(stopTime, slowTime);
 		public static void OnGlobalLight(Light2DBase globalLight) => _instance.PrivateGlobalLight(globalLight, true);
