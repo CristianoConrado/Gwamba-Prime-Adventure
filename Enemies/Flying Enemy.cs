@@ -110,7 +110,7 @@ namespace GwambaPrimeAdventure.Enemy
 				if (0F >= (_stoppedTime -= Time.deltaTime))
 					(_isDashing, _afterDash, _stopWorking) = (!_afterDash, false, false);
 		}
-		private new void FixedUpdate()
+		private void FixedUpdate()
 		{
 			if (_stopWorking || IsStunned)
 				return;
