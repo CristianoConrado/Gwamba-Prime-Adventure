@@ -186,7 +186,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void OnCollisionStay2D(Collision2D collision)
 		{
 			base.OnCollisionStay2D(collision);
-			if (WorldBuild.SCENE_LAYER != collision.gameObject.layer || Mathf.Abs(Rigidbody.linearVelocityX) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT * 10F)
+			if (WorldBuild.SCENE_LAYER != collision.gameObject.layer)
 				return;
 			_originCast = (Vector2)transform.position + _collider.offset;
 			_originCast.x += _collider.bounds.extents.x * (0F < transform.localScale.x ? 1F : -1F) * transform.right.x;
