@@ -16,7 +16,6 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_usedOne = false,
 			_usable = true;
 		[Header("Activator")]
-		[SerializeField, Tooltip("The receptors that will receive the signal.")] private Receptor[] _receptors;
 		[SerializeField, Tooltip("The activator only can be activeted one time.")] private bool _oneActivation;
 		[SerializeField, Tooltip("If this object have been activeted before it will always be activeted.")] private bool _saveOnSpecifics;
 		protected bool Usable => _usable;
@@ -54,10 +53,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 					_animator.SetTrigger(Use);
 				else
 					_animator.SetTrigger(UseAgain);
-			for (ushort i = 0; _receptors.Length > i; i++)
-				if (_receptors[i])
-					_receptors[i].ReceiveSignal(this);
 			_usedOne = true;
+			Receptor.ReceiveSignal(this);
 			SaveController.Load(out SaveFile saveFile);
 			if (_saveOnSpecifics && !saveFile.GeneralObjects.Contains(name))
 			{
