@@ -46,7 +46,7 @@ namespace GwambaPrimeAdventure.Hud
 			_configurationHud.EffectsVolumeToggle.UnregisterValueChangedCallback(EffectsVolumeToggle);
 			_configurationHud.MusicVolumeToggle.UnregisterValueChangedCallback(MusicVolumeToggle);
 			_configurationHud.InfinityFPS.UnregisterValueChangedCallback(InfinityFPS);
-			_configurationHud.DialogSpeed.UnregisterValueChangedCallback(DialogSpeed);
+			_configurationHud.SpeachDelay.UnregisterValueChangedCallback(DialogSpeed);
 			_configurationHud.ScreenBrightness.UnregisterValueChangedCallback(ScreenBrightness);
 			_configurationHud.GeneralVolume.UnregisterValueChangedCallback(GeneralVolume);
 			_configurationHud.EffectsVolume.UnregisterValueChangedCallback(EffectsVolume);
@@ -101,7 +101,7 @@ namespace GwambaPrimeAdventure.Hud
 			_configurationHud.MusicVolumeToggle.RegisterValueChangedCallback(MusicVolumeToggle);
 			_configurationHud.InfinityFPS.RegisterValueChangedCallback(InfinityFPS);
 			_configurationHud.ScreenBrightness.RegisterValueChangedCallback(ScreenBrightness);
-			_configurationHud.DialogSpeed.RegisterValueChangedCallback(DialogSpeed);
+			_configurationHud.SpeachDelay.RegisterValueChangedCallback(DialogSpeed);
 			_configurationHud.GeneralVolume.RegisterValueChangedCallback(GeneralVolume);
 			_configurationHud.EffectsVolume.RegisterValueChangedCallback(EffectsVolume);
 			_configurationHud.MusicVolume.RegisterValueChangedCallback(MusicVolume);
@@ -208,12 +208,6 @@ namespace GwambaPrimeAdventure.Hud
 			_mixer.SetFloat(nameof(MusicVolume), settings.MusicVolumeToggle ? Mathf.Log10(settings.MusicVolume) * 20F : Mathf.Log10(WorldBuild.MINIMUM_TIME_SPACE_LIMIT) * 20F);
 			SettingsController.WriteSave(settings);
 		}
-		private void DialogSpeed(ChangeEvent<float> value)
-		{
-			SettingsController.Load(out Settings settings);
-			_configurationHud.DialogSpeedText.text = $"{Mathf.Round((settings.DialogSpeed = Mathf.Round(value.newValue * 100F) / 100F) * 100F) / 10F}";
-			SettingsController.WriteSave(settings);
-		}
 		private void FrameRate(ChangeEvent<int> frameRate)
 		{
 			SettingsController.Load(out Settings settings);
@@ -225,6 +219,13 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			SettingsController.Load(out Settings settings);
 			_configurationHud.VSyncText.text = $"{QualitySettings.vSyncCount = settings.VSync = (ushort)vsync.newValue}";
+			SettingsController.WriteSave(settings);
+		}
+		private void DialogSpeed(ChangeEvent<int> speed)
+		{
+			SettingsController.Load(out Settings settings);
+			settings.SpeachDelay = speed.newValue / 1000F;
+			_configurationHud.SpeachDelayText.text = $"{speed.newValue / 100F}";
 			SettingsController.WriteSave(settings);
 		}
 		private void YesBackLevel()
