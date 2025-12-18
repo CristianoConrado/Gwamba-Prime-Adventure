@@ -98,7 +98,7 @@ namespace GwambaPrimeAdventure.Enemy
 					InvencibleDash();
 				}
 		}
-		private new void FixedUpdate()
+		private void FixedUpdate()
 		{
 			if (IsStunned)
 				return;
@@ -162,7 +162,6 @@ namespace GwambaPrimeAdventure.Enemy
 				Rigidbody.linearVelocityX = (transform.right * _movementSide).x * -_statistics.RetreatSpeed;
 				if (Mathf.Abs(transform.position.x - _retreatLocation) >= _statistics.RetreatDistance)
 					RetreatUse();
-				base.FixedUpdate();
 				return;
 			}
 			if (_statistics.DetectionStop && _detected && !_isDashing)
@@ -171,7 +170,6 @@ namespace GwambaPrimeAdventure.Enemy
 				_sender.SetFormat(MessageFormat.State);
 				_sender.SetToggle(false);
 				_sender.Send(MessagePath.Enemy);
-				base.FixedUpdate();
 				return;
 			}
 			else if (_detected && !_isDashing)
@@ -184,18 +182,16 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			transform.TurnScaleX(_movementSide);
 			Rigidbody.linearVelocityX = (transform.right * _movementSide).x * (_isDashing ? _statistics.DashSpeed : _statistics.MovementSpeed);
-			base.FixedUpdate();
 		}
 		private new void OnCollisionStay2D(Collision2D collision)
 		{
-			if (WorldBuild.SCENE_LAYER != collision.gameObject.layer)
-				return;
 			base.OnCollisionStay2D(collision);
+			if (WorldBuild.SCENE_LAYER != collision.gameObject.layer || Mathf.Abs(Rigidbody.linearVelocityX) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT * 10F)
+				return;
 			_originCast = (Vector2)transform.position + _collider.offset;
 			_originCast.x += _collider.bounds.extents.x * (0F < transform.localScale.x ? 1F : -1F) * transform.right.x;
 			_sizeCast.Set(WorldBuild.SNAP_LENGTH, _collider.bounds.size.y);
-			_groundContacts.Clear();
-			collision.GetContacts(_groundContacts);
+			_collider.GetContacts(_groundContacts);
 			_groundContacts.RemoveAll(contact => contact.point.OutsideRectangle(_originCast, _sizeCast));
 			_wayBlocked = 0 < _groundContacts.Count;
 		}
