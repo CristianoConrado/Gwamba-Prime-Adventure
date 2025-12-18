@@ -622,7 +622,7 @@ namespace GwambaPrimeAdventure.Character
 						_animator.SetBool(Idle, false);
 					if (!_animator.GetBool(Walk) && 0F != _movementAction)
 						_animator.SetBool(Walk, true);
-					else if (_animator.GetBool(Walk) && 0F == _movementAction)
+					else if (_animator.GetBool(Walk) && 0F == _movementAction && Mathf.Abs(_rigidbody.linearVelocityX) <= _minimumVelocity)
 						_animator.SetBool(Walk, false);
 				}
 			}
@@ -663,7 +663,7 @@ namespace GwambaPrimeAdventure.Character
 					EffectsController.SurfaceSound(_groundContacts[0].point);
 				}
 			}
-			if (_isOnGround && !_offGround && 0F == _movementAction && !_isJumping)
+			if (_isOnGround && !_offGround && 0F == _movementAction && Mathf.Abs(_rigidbody.linearVelocityX) <= _minimumVelocity && Mathf.Abs(_rigidbody.linearVelocityY) <= _minimumVelocity)
 				return;
 			_collider.GetContacts(_groundContacts);
 			_localAtStart.Set(Local.x, Local.y - _collider.bounds.extents.y);
