@@ -15,18 +15,18 @@ namespace GwambaPrimeAdventure.Hud
 		internal DropdownField ScreenResolution { get; private set; }
 		internal DropdownField FullScreenModes { get; private set; }
 		internal DropdownField SimulationHertz { get; private set; }
-		internal Toggle DialogToggle { get; private set; }
 		internal Toggle GeneralVolumeToggle { get; private set; }
 		internal Toggle EffectsVolumeToggle { get; private set; }
 		internal Toggle MusicVolumeToggle { get; private set; }
 		internal Toggle InfinityFPS { get; private set; }
+		internal Toggle DialogToggle { get; private set; }
 		internal Slider ScreenBrightness { get; private set; }
 		internal Slider GeneralVolume { get; private set; }
 		internal Slider EffectsVolume { get; private set; }
 		internal Slider MusicVolume { get; private set; }
-		internal Slider DialogSpeed { get; private set; }
 		internal SliderInt FrameRate { get; private set; }
 		internal SliderInt VSync { get; private set; }
+		internal SliderInt SpeachDelay { get; private set; }
 		internal Button Close { get; private set; }
 		internal Button OutLevel { get; private set; }
 		internal Button SaveGame { get; private set; }
@@ -36,7 +36,7 @@ namespace GwambaPrimeAdventure.Hud
 		internal Label GeneralVolumeText { get; private set; }
 		internal Label EffectsVolumeText { get; private set; }
 		internal Label MusicVolumeText { get; private set; }
-		internal Label DialogSpeedText { get; private set; }
+		internal Label SpeachDelayText { get; private set; }
 		internal Label FrameRateText { get; private set; }
 		internal Label VSyncText { get; private set; }
 		private void Awake()
@@ -57,13 +57,13 @@ namespace GwambaPrimeAdventure.Hud
 			EffectsVolumeToggle = RootElement.Q<Toggle>(nameof(EffectsVolumeToggle));
 			MusicVolumeToggle = RootElement.Q<Toggle>(nameof(MusicVolumeToggle));
 			InfinityFPS = RootElement.Q<Toggle>(nameof(InfinityFPS));
-			DialogSpeed = RootElement.Q<Slider>(nameof(DialogSpeed));
 			ScreenBrightness = RootElement.Q<Slider>(nameof(ScreenBrightness));
 			GeneralVolume = RootElement.Q<Slider>(nameof(GeneralVolume));
 			EffectsVolume = RootElement.Q<Slider>(nameof(EffectsVolume));
 			MusicVolume = RootElement.Q<Slider>(nameof(MusicVolume));
 			FrameRate = RootElement.Q<SliderInt>(nameof(FrameRate));
 			VSync = RootElement.Q<SliderInt>(nameof(VSync));
+			SpeachDelay = RootElement.Q<SliderInt>(nameof(SpeachDelay));
 			Close = RootElement.Q<Button>(nameof(Close));
 			OutLevel = RootElement.Q<Button>(nameof(OutLevel));
 			SaveGame = RootElement.Q<Button>(nameof(SaveGame));
@@ -73,7 +73,7 @@ namespace GwambaPrimeAdventure.Hud
 			GeneralVolumeText = RootElement.Q<Label>(nameof(GeneralVolumeText));
 			EffectsVolumeText = RootElement.Q<Label>(nameof(EffectsVolumeText));
 			MusicVolumeText = RootElement.Q<Label>(nameof(MusicVolumeText));
-			DialogSpeedText = RootElement.Q<Label>(nameof(DialogSpeedText));
+			SpeachDelayText = RootElement.Q<Label>(nameof(SpeachDelayText));
 			FrameRateText =  RootElement.Q<Label>(nameof(FrameRateText));
 			VSyncText = RootElement.Q<Label>(nameof(VSyncText));
 		}
@@ -82,11 +82,11 @@ namespace GwambaPrimeAdventure.Hud
 			SettingsController.Load(out Settings settings);
 			if (!SettingsController.FileExists())
 				SettingsController.WriteSave(settings);
-			DialogSpeed.highValue = 1E-1F;
+			SpeachDelay.highValue = 100;
 			MusicVolume.highValue = EffectsVolume.highValue = GeneralVolume.highValue = ScreenBrightness.highValue = 1F;
 			FrameRate.highValue = 120;
 			VSync.highValue = 2;
-			ScreenBrightness.lowValue = DialogSpeed.lowValue = 0F;
+			ScreenBrightness.lowValue = SpeachDelay.lowValue = 0;
 			MusicVolume.lowValue = EffectsVolume.lowValue = GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			FrameRate.lowValue = 10;
 			VSync.lowValue = 0;
@@ -105,7 +105,7 @@ namespace GwambaPrimeAdventure.Hud
 			EffectsVolumeToggle.value = settings.EffectsVolumeToggle;
 			MusicVolumeToggle.value = settings.MusicVolumeToggle;
 			InfinityFPS.value = settings.InfinityFPS;
-			DialogSpeed.value = settings.DialogSpeed;
+			SpeachDelay.value = (ushort)(settings.SpeachDelay * 1000F);
 			ScreenBrightness.value = settings.ScreenBrightness;
 			GeneralVolume.value = settings.GeneralVolume;
 			EffectsVolume.value = settings.EffectsVolume;
@@ -116,7 +116,7 @@ namespace GwambaPrimeAdventure.Hud
 			GeneralVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.GeneralVolume ? (settings.GeneralVolume / 1F).ToString() : "0";
 			EffectsVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.EffectsVolume ? (settings.EffectsVolume / 1F).ToString() : "0";
 			MusicVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.MusicVolume ? (settings.MusicVolume / 1F).ToString() : "0";
-			DialogSpeedText.text = (settings.DialogSpeed * 10F).ToString();
+			SpeachDelayText.text = (settings.SpeachDelay * 10F).ToString();
 			FrameRateText.text = settings.FrameRate.ToString();
 			VSyncText.text = settings.VSync.ToString();
 			yield return null;
