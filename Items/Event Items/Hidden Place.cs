@@ -7,18 +7,20 @@ using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(Tilemap), typeof(TilemapRenderer)), RequireComponent(typeof(TilemapCollider2D), typeof(CompositeCollider2D), typeof(Light2DBase))]
-	[RequireComponent(typeof(Receptor))]
+	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(Tilemap), typeof(TilemapRenderer))]
+	[RequireComponent(typeof(TilemapCollider2D), typeof(CompositeCollider2D), typeof(Light2DBase)), RequireComponent(typeof(Receptor))]
 	internal sealed class HiddenPlace : StateController, IReceptorSignal
 	{
 		private Tilemap _tilemap;
 		private TilemapRenderer _tilemapRenderer;
 		private TilemapCollider2D _tilemapCollider;
-		private Light2DBase _selfLight;
-		private Light2DBase _followLight;
+		private Light2DBase
+			_selfLight,
+			_followLight;
 		private readonly Sender _sender = Sender.Create();
-		private bool _activation = false;
-		private bool _follow = false;
+		private bool
+			_activation = false,
+			_follow = false;
 		[Header("Hidden Place")]
 		[SerializeField, Tooltip("Other hidden place to activate.")] private HiddenPlace _otherPlace;
 		[SerializeField, Tooltip("The occlusion object to reveal/hide.")] private OcclusionObject _occlusionObject;
@@ -34,11 +36,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private new void Awake()
 		{
 			base.Awake();
-			_tilemap = GetComponent<Tilemap>();
-			_tilemapRenderer = GetComponent<TilemapRenderer>();
-			_tilemapCollider = GetComponent<TilemapCollider2D>();
-			_selfLight = GetComponent<Light2DBase>();
-			_followLight = GetComponentInChildren<Light2DBase>();
+			(_tilemap, _tilemapRenderer, _tilemapCollider) = (GetComponent<Tilemap>(), GetComponent<TilemapRenderer>(), GetComponent<TilemapCollider2D>());
+			(_selfLight, _followLight) = (GetComponent<Light2DBase>(), GetComponentInChildren<Light2DBase>());
 			_sender.SetFormat(MessageFormat.State);
 			_sender.SetAdditionalData(_occlusionObject);
 		}
@@ -51,10 +50,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		{
 			_activation = !_fadeActivation;
 			if (_isReceptor)
-			{
-				_tilemapRenderer.enabled = _fadeActivation;
-				_tilemapCollider.enabled = _fadeActivation && !_useOtherCollider;
-			}
+				(_tilemapRenderer.enabled, _tilemapCollider.enabled) = (_fadeActivation, _fadeActivation && !_useOtherCollider);
 		}
 		private void FixedUpdate()
 		{
