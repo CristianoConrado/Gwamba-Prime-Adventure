@@ -10,10 +10,12 @@ namespace GwambaPrimeAdventure.Enemy.Utility
 		protected CinemachineImpulseSource _screenShaker;
 		protected IDestructible _destructibleEnemy;
 		protected Vector2 _guardedLinearVelocity = Vector2.zero;
-		protected short _vitality = 0;
-		protected short _armorResistance = 0;
-		protected float _fadeTime = 0F;
-		protected float _stunTimer = 0F;
+		protected short
+			_vitality = 0,
+			_armorResistance = 0;
+		protected float
+			_fadeTime = 0F,
+			_stunTimer = 0F;
 		protected bool _stunned = false;
 	};
 	public abstract class Projectile : StateController
@@ -22,17 +24,20 @@ namespace GwambaPrimeAdventure.Enemy.Utility
 		protected CinemachineImpulseSource _screenShaker;
 		protected readonly List<Projectile> _projectiles = new();
 		protected IEnumerator _parabolicEvent;
-		protected Vector2Int _oldCellPosition = Vector2Int.zero;
-		protected Vector2Int _cellPosition = Vector2Int.zero;
+		protected Vector2Int
+			_oldCellPosition = Vector2Int.zero,
+			_cellPosition = Vector2Int.zero;
 		protected short _vitality = 0;
-		protected ushort _angleMulti = 0;
-		protected ushort _pointToJump = 0;
-		protected ushort _pointToBreak = 0;
-		protected ushort _internalBreakPoint = 0;
-		protected ushort _pointToReturn = 0;
-		protected ushort _internalReturnPoint = 0;
-		protected float _deathTimer = 0F;
-		protected float _stunTimer = 0F;
+		protected ushort
+			_angleMulti = 0,
+			_pointToJump = 0,
+			_pointToBreak = 0,
+			_internalBreakPoint = 0,
+			_pointToReturn = 0,
+			_internalReturnPoint = 0;
+		protected float
+			_deathTimer = 0F,
+			_stunTimer = 0F;
 		protected bool _breakInUse = false;
 	};
 	public interface IJumper
