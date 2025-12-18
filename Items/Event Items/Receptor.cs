@@ -8,6 +8,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(IReceptorSignal))]
 	internal sealed class Receptor : StateController, ILoader
 	{
+		private static readonly List<Receptor> _selfes = new();
 		private readonly List<Activator> _usedActivators = new();
 		private Activator _signalActivator;
 		private IReceptorSignal _receptor;
@@ -27,6 +28,12 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		{
 			base.Awake();
 			_receptor = GetComponent<IReceptorSignal>();
+			_selfes.Add(this);
+		}
+		private new void OnDestroy()
+		{
+			base.OnDestroy();
+			_selfes.Remove(this);
 		}
 		public IEnumerator Load()
 		{
@@ -93,9 +100,14 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				}
 			}
 		}
-		internal void ReceiveSignal(Activator signalActivator)
+		internal static void ReceiveSignal(Activator signal)
 		{
-			_signalActivator = signalActivator;
+			foreach (Receptor receptor in _selfes)
+				receptor.Signal(signal);
+		}
+		private void Signal(Activator signal)
+		{
+			_signalActivator = signal;
 			if (0F < _timeToActivate)
 				_signalTimer = _timeToActivate;
 			else
