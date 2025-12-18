@@ -39,8 +39,8 @@
                             <ui:Label text="60" name="FrameRateText" />
                         </ui:GroupBox>
                         <ui:GroupBox name="SubSliderGroup">
-                            <ui:Slider label="Dialog Speed" name="DialogSpeed" />
-                            <ui:Label text="0.5" name="DialogSpeedText" />
+                            <ui:SliderInt label="Speach Delay" name="SpeachDelay" />
+                            <ui:Label text="0.50" name="SpeachDelayText" />
                         </ui:GroupBox>
                     </ui:GroupBox>
                     <ui:GroupBox name="Toggles">
