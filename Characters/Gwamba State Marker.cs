@@ -639,8 +639,7 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			if (_animator.GetBool(AirJump) || _animator.GetBool(DashSlide))
 			{
-				_groundContacts.Clear();
-				collision.GetContacts(_groundContacts);
+				_collider.GetContacts(_groundContacts);
 				_localAtStart.Set(Local.x + _collider.bounds.extents.x * _localAtAny.z, Local.y);
 				_localAtEnd.Set(WorldBuild.SNAP_LENGTH, _collider.size.y);
 				_groundContacts.RemoveAll(contact => contact.point.OutsideRectangle(_localAtStart, _localAtEnd));
@@ -653,8 +652,7 @@ namespace GwambaPrimeAdventure.Character
 					EffectsController.SurfaceSound(_groundContacts[0].point);
 				}
 			}
-			_groundContacts.Clear();
-			collision.GetContacts(_groundContacts);
+			_collider.GetContacts(_groundContacts);
 			_localAtStart.Set(Local.x, Local.y - _collider.bounds.extents.y);
 			_localAtEnd.Set(_collider.size.x, WorldBuild.SNAP_LENGTH);
 			_groundContacts.RemoveAll(contact => contact.point.OutsideRectangle(_localAtStart, _localAtEnd));
@@ -705,19 +703,18 @@ namespace GwambaPrimeAdventure.Character
 				if (!_animator.GetBool(AirJump) && !_animator.GetBool(DashSlide) && 0F != _movementAction)
 					if (Mathf.Abs(_rigidbody.linearVelocityX) <= _minimumVelocity)
 					{
-						_groundContacts.Clear();
-						collision.GetContacts(_groundContacts);
+						_collider.GetContacts(_groundContacts);
+						_localAtStart.Set(Local.x + _collider.bounds.extents.x * (0F < transform.localScale.x ? 1F : -1F), Local.y + WorldBuild.SNAP_LENGTH / 2F);
+						_localAtEnd.Set(WorldBuild.SNAP_LENGTH, _collider.size.y + WorldBuild.SNAP_LENGTH);
+						_groundContacts.RemoveAll(contact => contact.point.OutsideRectangle(_localAtStart, _localAtEnd));
 						_localAtStart.Set(Local.x + _collider.bounds.extents.x * (0F < transform.localScale.x ? 1F : -1F), Local.y - (_collider.size.y - _upStairsLength) / 2F);
 						_localAtEnd.Set(WorldBuild.SNAP_LENGTH, _upStairsLength);
-						_groundContacts.RemoveAll(contact => contact.point.OutsideRectangle(_localAtStart, _localAtEnd));
-						if (0 < _groundContacts.Count)
+						if (_groundContacts.TrueForAll(contact => contact.point.InsideRectangle(_localAtStart, _localAtEnd)))
 						{
 							_localAtAny.x = (_collider.bounds.extents.x + WorldBuild.SNAP_LENGTH / 2F) * (0F < transform.localScale.x ? 1F : -1F);
-							_localAtAny.y = _localAtStart.y + _localAtEnd.y / 2F;
-							_localAtAny.z = _localAtStart.y - _localAtEnd.y / 2F;
 							_localAtStart.Set(Local.x + _localAtAny.x, Local.y + _collider.bounds.extents.y);
 							_localAtEnd.Set(Local.x + _localAtAny.x, Local.y - _collider.bounds.extents.y);
-							if ((_castHit = Physics2D.Linecast(_localAtStart, _localAtEnd, WorldBuild.SCENE_LAYER_MASK)) && _localAtAny.y >= _castHit.point.y && _localAtAny.z <= _castHit.point.y)
+							if (_castHit = Physics2D.Linecast(_localAtStart, _localAtEnd, WorldBuild.SCENE_LAYER_MASK))
 							{
 								_localAtAny.y = Mathf.Abs(_castHit.point.y - (transform.position.y - _collider.bounds.extents.y));
 								_localAtSurface.Set(transform.position.x + WorldBuild.SNAP_LENGTH * (0F < transform.localScale.x ? 1F : -1F), transform.position.y + _localAtAny.y);
