@@ -9,9 +9,10 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private readonly Sender _sender = Sender.Create();
 		private ushort _index = 0;
 		private float _timer = 0F;
-		private bool _active = false;
-		private bool _use = false;
-		private bool _returnActive;
+		private bool
+			_active = false,
+			_use = false,
+			_returnActive = false;
 		[Header("Teleporter")]
 		[SerializeField, Tooltip("The locations that Guwba can teleport to.")] private Vector2[] _locations;
 		[SerializeField, Tooltip("If it have to interact to teleport.")] private bool _isInteractive;
