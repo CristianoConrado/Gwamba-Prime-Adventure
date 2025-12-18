@@ -10,7 +10,6 @@ namespace GwambaPrimeAdventure.Connection
 	{
 		private static EffectsController _instance;
 		private readonly List<Light2DBase> _lightsStack = new();
-		private Collider2D _surfaceCollider;
 		private bool _canHitStop = true;
 		[SerializeField, Tooltip("The sounds of the surfaces that will be played.")] private SurfaceSound[] _surfaceSounds;
 		[SerializeField, Tooltip("The source where the sounds came from.")] private AudioSource _sourceObject;
