@@ -62,7 +62,7 @@ namespace GwambaPrimeAdventure.Story
 			if (_dialogHud.CharacterSpeach.text.Length == _text.Length && _dialogHud.CharacterSpeach.text == _text)
 			{
 				SettingsController.Load(out Settings settings);
-				_dialogTime = settings.DialogSpeed;
+				_dialogTime = settings.SpeachDelay;
 				if (_dialogObject.Speachs.Length - 1 > _speachIndex)
 				{
 					if (_storyTeller && _dialogObject.Speachs[_speachIndex].NextSlide)
@@ -118,7 +118,7 @@ namespace GwambaPrimeAdventure.Story
 				_sender.Send(MessagePath.Hud);
 				StateController.SetState(false);
 				_dialogHud = Instantiate(_dialogHudObject, transform);
-				_dialogTime = settings.DialogSpeed;
+				_dialogTime = settings.SpeachDelay;
 				_dialogHud.AdvanceSpeach.clicked += AdvanceSpeach;
 				StartCoroutine(TextDigitation());
 				if (_storyTeller)
@@ -132,4 +132,3 @@ namespace GwambaPrimeAdventure.Story
 		}
 	};
 };
-
