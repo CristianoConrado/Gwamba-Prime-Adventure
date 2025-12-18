@@ -29,7 +29,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		public void Execute()
 		{
 			if (_occlusionObject)
-				_sender.Send(MessagePath.System); SaveController.Load(out SaveFile saveFile);
+				_sender.Send(MessagePath.System);
+			SaveController.Load(out SaveFile saveFile);
 			if (_saveOnSpecifics && !saveFile.GeneralObjects.Contains(name))
 			{
 				saveFile.GeneralObjects.Add(name);
