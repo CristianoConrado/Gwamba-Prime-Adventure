@@ -7,7 +7,7 @@ namespace GwambaPrimeAdventure.Connection
 		public Vector2Int ScreenResolution;
 		public FullScreenMode FullScreenMode;
 		public float
-			DialogSpeed,
+			SpeachDelay,
 			ScreenBrightness,
 			GeneralVolume,
 			EffectsVolume,
@@ -17,11 +17,11 @@ namespace GwambaPrimeAdventure.Connection
 			SimulationHertz,
 			VSync;
 		public bool
-			DialogToggle,
 			GeneralVolumeToggle,
 			EffectsVolumeToggle,
 			MusicVolumeToggle,
-			InfinityFPS;
+			InfinityFPS,
+			DialogToggle;
 	};
 	public static class SettingsController
 	{
@@ -36,7 +36,6 @@ namespace GwambaPrimeAdventure.Connection
 				{
 					ScreenResolution = new Vector2Int(WorldBuild.PixelPerfectResolutions()[^1].width, WorldBuild.PixelPerfectResolutions()[^1].height),
 					FullScreenMode = FullScreenMode.FullScreenWindow,
-					DialogSpeed = 5E-2F,
 					ScreenBrightness = 1F,
 					GeneralVolume = 1F,
 					EffectsVolume = 1F,
@@ -44,11 +43,12 @@ namespace GwambaPrimeAdventure.Connection
 					FrameRate = 60,
 					SimulationHertz = WorldBuild.DEFAULT_HERTZ,
 					VSync = 1,
-					DialogToggle = true,
+					SpeachDelay = 5E-2F,
 					GeneralVolumeToggle = true,
 					EffectsVolumeToggle = true,
 					MusicVolumeToggle = true,
-					InfinityFPS = false
+					InfinityFPS = false,
+					DialogToggle = true
 				};
 		}
 		public static void WriteSave(Settings settings) => FileEncoder.WriteData(settings, SettingsPath);
