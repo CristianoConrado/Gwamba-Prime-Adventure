@@ -7,12 +7,14 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	internal abstract class Activator : StateController, ILoader
 	{
 		private Animator _animator;
-		private readonly int IsOn = Animator.StringToHash(nameof(IsOn));
-		private readonly int Use = Animator.StringToHash(nameof(Use));
-		private readonly int UseAgain = Animator.StringToHash(nameof(UseAgain));
-		private bool _used = false;
-		private bool _usedOne = false;
-		private bool _usable = true;
+		private readonly int
+			IsOn = Animator.StringToHash(nameof(IsOn)),
+			Use = Animator.StringToHash(nameof(Use)),
+			UseAgain = Animator.StringToHash(nameof(UseAgain));
+		private bool
+			_used = false,
+			_usedOne = false,
+			_usable = true;
 		[Header("Activator")]
 		[SerializeField, Tooltip("The receptors that will receive the signal.")] private Receptor[] _receptors;
 		[SerializeField, Tooltip("The activator only can be activeted one time.")] private bool _oneActivation;
