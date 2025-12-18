@@ -34,17 +34,21 @@ namespace GwambaPrimeAdventure.Enemy
 			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
 			transform.TurnScaleX(_movementSide = (short)((GwambaStateMarker.Localization.x < transform.position.x ? -1 : 1) * (_moving.InvertMovementSide ? -1 : 1)));
 		}
-		protected void FixedUpdate() => _onGround = false;
 		protected void OnCollisionStay2D(Collision2D collision)
 		{
-			if (WorldBuild.SCENE_LAYER != collision.gameObject.layer)
+			if (WorldBuild.SCENE_LAYER != collision.gameObject.layer || (_onGround && Mathf.Abs(Rigidbody.linearVelocityY) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT * 10F))
 				return;
-			_groundContacts.Clear();
-			collision.GetContacts(_groundContacts);
+			_collider.GetContacts(_groundContacts);
 			_originCast.Set(transform.position.x + _collider.offset.x, transform.position.y + _collider.offset.y - _collider.bounds.extents.y * transform.up.y);
 			_sizeCast.Set(_collider.bounds.size.x, WorldBuild.SNAP_LENGTH);
 			_groundContacts.RemoveAll(contact => contact.point.OutsideRectangle(_originCast, _sizeCast));
 			_onGround = 0 < _groundContacts.Count;
+		}
+		protected void OnCollisionExit2D(Collision2D collision)
+		{
+			if (WorldBuild.SCENE_LAYER != collision.gameObject.layer)
+				return;
+			_onGround = false;
 		}
 		public void Receive(MessageData message)
 		{
