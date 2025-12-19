@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.U2D;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 namespace GwambaPrimeAdventure.Connection
 {
 	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(Light2DBase))]
@@ -11,7 +10,6 @@ namespace GwambaPrimeAdventure.Connection
 		private static EffectsController _instance;
 		private readonly List<Light2DBase> _lightsStack = new();
 		private bool _canHitStop = true;
-		[SerializeField, Tooltip("The sounds of the surfaces that will be played.")] private SurfaceSound[] _surfaceSounds;
 		[SerializeField, Tooltip("The source where the sounds came from.")] private AudioSource _sourceObject;
 		private new void Awake()
 		{
@@ -61,7 +59,8 @@ namespace GwambaPrimeAdventure.Connection
 		}
 		private void PrivateSoundEffect(AudioClip clip, Vector2 originSound)
 		{
-			SettingsController.Load(out Settings settings);
+			if (!clip)
+				return;
 			AudioSource source = Instantiate(_sourceObject, originSound, Quaternion.identity);
 			source.clip = clip;
 			source.volume = 1F;
@@ -77,15 +76,7 @@ namespace GwambaPrimeAdventure.Connection
 				Destroy(source.gameObject);
 			}
 		}
-		private void PrivateSurfaceSound(Vector2 originPosition)
-		{
-			for (ushort i = 0; _surfaceSounds.Length > i; i++)
-				if (_surfaceSounds[i].Tiles.Contains(Surface.CheckForTile(originPosition)))
-				{
-					PrivateSoundEffect(_surfaceSounds[i].Clip, originPosition);
-					return;
-				}
-		}
+		private void PrivateSurfaceSound(Vector2 originPosition) => PrivateSoundEffect(Surface.CheckSurface(originPosition), originPosition);
 		public static void HitStop(float stopTime, float slowTime) => _instance.PrvateHitStop(stopTime, slowTime);
 		public static void OnGlobalLight(Light2DBase globalLight) => _instance.PrivateGlobalLight(globalLight, true);
 		public static void OffGlobalLight(Light2DBase globalLight) => _instance.PrivateGlobalLight(globalLight, false);
