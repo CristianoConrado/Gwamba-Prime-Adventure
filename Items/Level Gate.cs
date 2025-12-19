@@ -25,8 +25,8 @@ namespace GwambaPrimeAdventure.Item
 			_isOnTransicion = false;
 		[Header("Scene Status")]
 		[SerializeField, Tooltip("The brain responsable for controlling the camera.")] private CinemachineBrain _brain;
-		[SerializeField, Tooltip("The object that handles the hud of the level gate.")] private LevelGateHud _levelGateWorldObject;
-		[SerializeField, Tooltip("The object that handles the hud of the level gate.")] private LevelGateHud _levelGateScreenObject;
+		[SerializeField, Tooltip("The handler of the world hud of the level gate.")] private LevelGateHud _levelGateWorldObject;
+		[SerializeField, Tooltip("The handler of the screen hud of the level gate.")] private LevelGateHud _levelGateScreenObject;
 		[SerializeField, Tooltip("The scene of the level.")] private SceneField _levelScene;
 		[SerializeField, Tooltip("The scene of the boss.")] private SceneField _bossScene;
 		[SerializeField, Tooltip("The offset that the hud will be.")] private Vector2 _offsetPosition;
