@@ -29,7 +29,7 @@ namespace GwambaPrimeAdventure
 			if (_connectors.TryGetValue(connector.Path, out HashSet<IConnector> gettedConnectors))
 			{
 				gettedConnectors.Remove(connector);
-				if (0 == gettedConnectors.Count)
+				if (0 >= gettedConnectors.Count)
 					_connectors.TryRemove(connector.Path, out _);
 			}
 			return new ValueTask(Task.CompletedTask);
@@ -41,7 +41,7 @@ namespace GwambaPrimeAdventure
 		public void SetNumber(ushort number) => _messageData.NumberValue = number;
 		public void Send(MessagePath path)
 		{
-			if (_connectors.TryGetValue(path, out var connectors))
+			if (_connectors.TryGetValue(path, out HashSet<IConnector> connectors))
 			{
 				IConnector[] snapshot = new IConnector[connectors.Count];
 				connectors.CopyTo(snapshot);
