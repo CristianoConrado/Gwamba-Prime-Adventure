@@ -1,21 +1,21 @@
 using UnityEngine;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Collider2D))]
+	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ) )]
 	internal sealed class InteractiveActivator : Activator, IInteractable
 	{
 		private readonly Sender _sender = Sender.Create();
 		public void Interaction()
 		{
-			if (Usable)
+			if ( Usable )
 			{
 				Activation();
-				if (!Usable)
+				if ( !Usable )
 				{
-					_sender.SetFormat(MessageFormat.State);
-					_sender.SetToggle(false);
-					_sender.SetAdditionalData(gameObject);
-					_sender.Send(MessagePath.Hud);
+					_sender.SetFormat( MessageFormat.State );
+					_sender.SetToggle( false );
+					_sender.SetAdditionalData( gameObject );
+					_sender.Send( MessagePath.Hud );
 				}
 			}
 		}
