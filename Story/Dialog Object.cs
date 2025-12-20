@@ -19,7 +19,8 @@ namespace GwambaPrimeAdventure.Story
 		[Serializable]
 		internal struct Speach
 		{
-			[field: SerializeField, Tooltip( "The image icon of the character that is speaking." ), Header( "Speach Components" ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )] internal Sprite Model { get; private set; }
+			[field: SerializeField, Tooltip( "The image icon of the character that is speaking." ), Header( "Speach Components" ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
+			internal Sprite Model { get; private set; }
 			[field: SerializeField, Tooltip( "The name of the character that is speaking." )] internal string CharacterName { get; private set; }
 			[field: SerializeField, TextArea( 0, 12 ), Tooltip( "The speach of the character that is speaking." )] internal string SpeachText { get; private set; }
 			[field: SerializeField, Tooltip( "If after the speach the next slide of story scene have to come." )] internal bool NextSlide { get; private set; }
