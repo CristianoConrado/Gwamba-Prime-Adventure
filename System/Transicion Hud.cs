@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(UIDocument))]
+	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( UIDocument ) )]
 	public sealed class TransicionHud : MonoBehaviour
 	{
 		private static TransicionHud _instance;
@@ -10,14 +10,14 @@ namespace GwambaPrimeAdventure
 		public ProgressBar LoadingBar { get; private set; }
 		private void Awake()
 		{
-			if (_instance)
+			if ( _instance )
 			{
-				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
+				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
 			_instance = this;
-			RootElement = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>(nameof(RootElement));
-			LoadingBar = RootElement.Q<ProgressBar>(nameof(LoadingBar));
+			RootElement = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) );
+			LoadingBar = RootElement.Q<ProgressBar>( nameof( LoadingBar ) );
 		}
 		public static bool Exists() => _instance;
 	};
