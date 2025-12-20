@@ -12,9 +12,9 @@ namespace GwambaPrimeAdventure.Character
 		private new void Awake()
 		{
 			base.Awake();
-			if ( _instance )
+			if ( Instance )
 				return;
-			(_instance, _gwambaCanvas, _gwambaDamagers, _animator) = (this, GetComponentInChildren<GwambaCanvas>(), GetComponentsInChildren<GwambaDamager>(), GetComponent<Animator>());
+			(Instance, _gwambaCanvas, _gwambaDamagers, _animator) = (this, GetComponentInChildren<GwambaCanvas>(), GetComponentsInChildren<GwambaDamager>(), GetComponent<Animator>());
 			(_screenShaker, _rigidbody, _collider) = (GetComponent<CinemachineImpulseSource>(), GetComponent<Rigidbody2D>(), GetComponent<BoxCollider2D>());
 			_inputController = new InputController();
 			_inputController.Commands.Movement.started += MovementInput;
@@ -31,7 +31,7 @@ namespace GwambaPrimeAdventure.Character
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
-			if ( !_instance || this != _instance )
+			if ( !Instance || this != Instance )
 				return;
 			StopAllCoroutines();
 			for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
@@ -55,7 +55,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnEnable()
 		{
-			if ( !_instance || this != _instance )
+			if ( !Instance || this != Instance )
 				return;
 			_animator.SetFloat( IsOn, 1F );
 			_animator.SetFloat( WalkSpeed, 1F );
@@ -63,7 +63,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnDisable()
 		{
-			if ( !_instance || this != _instance )
+			if ( !Instance || this != Instance )
 				return;
 			_animator.SetFloat( IsOn, 0F );
 			_animator.SetFloat( WalkSpeed, 0F );
@@ -87,7 +87,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private IEnumerator Start()
 		{
-			if ( !_instance || this != _instance )
+			if ( !Instance || this != Instance )
 				yield break;
 			_beginingPosition = StartPosition;
 			_turnLeft = TurnToLeft;
@@ -113,7 +113,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		public IEnumerator Load()
 		{
-			if ( !_instance || _instance != this )
+			if ( !Instance || Instance != this )
 				yield break;
 			yield return _gwambaCanvas.LoadHud();
 			SaveController.Load( out SaveFile saveFile );
@@ -348,7 +348,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void Update()
 		{
-			if ( !_instance || _instance != this || _animator.GetBool( Death ) )
+			if ( !Instance || Instance != this || _animator.GetBool( Death ) )
 				return;
 			if ( _invencibility )
 			{
@@ -382,7 +382,7 @@ namespace GwambaPrimeAdventure.Character
 		private float BunnyHop( float callBackValue ) => 0 < _bunnyHopBoost ? _bunnyHopBoost * callBackValue : 0F;
 		private void FixedUpdate()
 		{
-			if ( !_instance || _instance != this || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
+			if ( !Instance || Instance != this || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
 				return;
 			if ( _animator.GetBool( DashSlide ) )
 				if ( Mathf.Abs( transform.position.x - _localAtAny.x ) > DashDistance || !_isOnGround || _isJumping || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
@@ -502,7 +502,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionStay2D( Collision2D collision )
 		{
-			if ( !_instance || this != _instance || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
+			if ( !Instance || this != Instance || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
 			if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) )
 			{
@@ -602,7 +602,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( !_instance || this != _instance || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
+			if ( !Instance || this != Instance || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
 			_isOnGround = false;
 		}
