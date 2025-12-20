@@ -5,7 +5,7 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
 {
-	[DisallowMultipleComponent, Icon(WorldBuild.PROJECT_ICON), RequireComponent(typeof(Transform), typeof(UIDocument))]
+	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( UIDocument ) )]
 	internal sealed class ConfigurationHud : MonoBehaviour
 	{
 		private static ConfigurationHud _instance;
@@ -41,47 +41,47 @@ namespace GwambaPrimeAdventure.Hud
 		internal Label VSyncText { get; private set; }
 		private void Awake()
 		{
-			if (_instance)
+			if ( _instance )
 			{
-				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
+				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, RootElement) = (this, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>(nameof(RootElement)));
-			Settings = RootElement.Q<GroupBox>(nameof(Settings));
-			Confirmation = RootElement.Q<GroupBox>(nameof(Confirmation));
-			ScreenResolution = RootElement.Q<DropdownField>(nameof(ScreenResolution));
-			FullScreenModes = RootElement.Q<DropdownField>(nameof(FullScreenModes));
-			SimulationHertz = RootElement.Q<DropdownField>(nameof(SimulationHertz));
-			DialogToggle = RootElement.Q<Toggle>(nameof(DialogToggle));
-			GeneralVolumeToggle = RootElement.Q<Toggle>(nameof(GeneralVolumeToggle));
-			EffectsVolumeToggle = RootElement.Q<Toggle>(nameof(EffectsVolumeToggle));
-			MusicVolumeToggle = RootElement.Q<Toggle>(nameof(MusicVolumeToggle));
-			InfinityFPS = RootElement.Q<Toggle>(nameof(InfinityFPS));
-			ScreenBrightness = RootElement.Q<Slider>(nameof(ScreenBrightness));
-			GeneralVolume = RootElement.Q<Slider>(nameof(GeneralVolume));
-			EffectsVolume = RootElement.Q<Slider>(nameof(EffectsVolume));
-			MusicVolume = RootElement.Q<Slider>(nameof(MusicVolume));
-			FrameRate = RootElement.Q<SliderInt>(nameof(FrameRate));
-			VSync = RootElement.Q<SliderInt>(nameof(VSync));
-			SpeachDelay = RootElement.Q<SliderInt>(nameof(SpeachDelay));
-			Close = RootElement.Q<Button>(nameof(Close));
-			OutLevel = RootElement.Q<Button>(nameof(OutLevel));
-			SaveGame = RootElement.Q<Button>(nameof(SaveGame));
-			Yes = RootElement.Q<Button>(nameof(Yes));
-			No = RootElement.Q<Button>(nameof(No));
-			ScreenBrightnessText = RootElement.Q<Label>(nameof(ScreenBrightnessText));
-			GeneralVolumeText = RootElement.Q<Label>(nameof(GeneralVolumeText));
-			EffectsVolumeText = RootElement.Q<Label>(nameof(EffectsVolumeText));
-			MusicVolumeText = RootElement.Q<Label>(nameof(MusicVolumeText));
-			SpeachDelayText = RootElement.Q<Label>(nameof(SpeachDelayText));
-			FrameRateText =  RootElement.Q<Label>(nameof(FrameRateText));
-			VSyncText = RootElement.Q<Label>(nameof(VSyncText));
+			(_instance, RootElement) = (this, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) ));
+			Settings = RootElement.Q<GroupBox>( nameof( Settings ) );
+			Confirmation = RootElement.Q<GroupBox>( nameof( Confirmation ) );
+			ScreenResolution = RootElement.Q<DropdownField>( nameof( ScreenResolution ) );
+			FullScreenModes = RootElement.Q<DropdownField>( nameof( FullScreenModes ) );
+			SimulationHertz = RootElement.Q<DropdownField>( nameof( SimulationHertz ) );
+			DialogToggle = RootElement.Q<Toggle>( nameof( DialogToggle ) );
+			GeneralVolumeToggle = RootElement.Q<Toggle>( nameof( GeneralVolumeToggle ) );
+			EffectsVolumeToggle = RootElement.Q<Toggle>( nameof( EffectsVolumeToggle ) );
+			MusicVolumeToggle = RootElement.Q<Toggle>( nameof( MusicVolumeToggle ) );
+			InfinityFPS = RootElement.Q<Toggle>( nameof( InfinityFPS ) );
+			ScreenBrightness = RootElement.Q<Slider>( nameof( ScreenBrightness ) );
+			GeneralVolume = RootElement.Q<Slider>( nameof( GeneralVolume ) );
+			EffectsVolume = RootElement.Q<Slider>( nameof( EffectsVolume ) );
+			MusicVolume = RootElement.Q<Slider>( nameof( MusicVolume ) );
+			FrameRate = RootElement.Q<SliderInt>( nameof( FrameRate ) );
+			VSync = RootElement.Q<SliderInt>( nameof( VSync ) );
+			SpeachDelay = RootElement.Q<SliderInt>( nameof( SpeachDelay ) );
+			Close = RootElement.Q<Button>( nameof( Close ) );
+			OutLevel = RootElement.Q<Button>( nameof( OutLevel ) );
+			SaveGame = RootElement.Q<Button>( nameof( SaveGame ) );
+			Yes = RootElement.Q<Button>( nameof( Yes ) );
+			No = RootElement.Q<Button>( nameof( No ) );
+			ScreenBrightnessText = RootElement.Q<Label>( nameof( ScreenBrightnessText ) );
+			GeneralVolumeText = RootElement.Q<Label>( nameof( GeneralVolumeText ) );
+			EffectsVolumeText = RootElement.Q<Label>( nameof( EffectsVolumeText ) );
+			MusicVolumeText = RootElement.Q<Label>( nameof( MusicVolumeText ) );
+			SpeachDelayText = RootElement.Q<Label>( nameof( SpeachDelayText ) );
+			FrameRateText = RootElement.Q<Label>( nameof( FrameRateText ) );
+			VSyncText = RootElement.Q<Label>( nameof( VSyncText ) );
 		}
 		internal IEnumerator LoadHud()
 		{
-			SettingsController.Load(out Settings settings);
-			if (!SettingsController.FileExists())
-				SettingsController.WriteSave(settings);
+			SettingsController.Load( out Settings settings );
+			if ( !SettingsController.FileExists() )
+				SettingsController.WriteSave( settings );
 			SpeachDelay.highValue = 100;
 			MusicVolume.highValue = EffectsVolume.highValue = GeneralVolume.highValue = ScreenBrightness.highValue = 1F;
 			FrameRate.highValue = 120;
@@ -90,13 +90,13 @@ namespace GwambaPrimeAdventure.Hud
 			MusicVolume.lowValue = EffectsVolume.lowValue = GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			FrameRate.lowValue = 10;
 			VSync.lowValue = 0;
-			foreach (Resolution resolution in WorldBuild.PixelPerfectResolutions())
-				ScreenResolution.choices.Add($@"{resolution.width} x {resolution.height}");
-			foreach (FullScreenMode mode in Enum.GetValues(typeof(FullScreenMode)))
-				FullScreenModes.choices.Add(mode.ToString());
-			SimulationHertz.choices.Add($"{WorldBuild.DEFAULT_HERTZ} hertz");
-			SimulationHertz.choices.Add($"{WorldBuild.MEDIUM_HERTZ} hertz");
-			SimulationHertz.choices.Add($"{WorldBuild.MAXIMUM_HERTZ} hertz");
+			foreach ( Resolution resolution in WorldBuild.PixelPerfectResolutions() )
+				ScreenResolution.choices.Add( $@"{resolution.width} x {resolution.height}" );
+			foreach ( FullScreenMode mode in Enum.GetValues( typeof( FullScreenMode ) ) )
+				FullScreenModes.choices.Add( mode.ToString() );
+			SimulationHertz.choices.Add( $"{WorldBuild.DEFAULT_HERTZ} hertz" );
+			SimulationHertz.choices.Add( $"{WorldBuild.MEDIUM_HERTZ} hertz" );
+			SimulationHertz.choices.Add( $"{WorldBuild.MAXIMUM_HERTZ} hertz" );
 			ScreenResolution.value = $@"{settings.ScreenResolution.x} x {settings.ScreenResolution.y}";
 			FullScreenModes.value = settings.FullScreenMode.ToString();
 			SimulationHertz.value = $"{settings.SimulationHertz} hertz";
@@ -105,7 +105,7 @@ namespace GwambaPrimeAdventure.Hud
 			EffectsVolumeToggle.value = settings.EffectsVolumeToggle;
 			MusicVolumeToggle.value = settings.MusicVolumeToggle;
 			InfinityFPS.value = settings.InfinityFPS;
-			SpeachDelay.value = (ushort)(settings.SpeachDelay * 1000F);
+			SpeachDelay.value = (ushort) ( settings.SpeachDelay * 1000F );
 			ScreenBrightness.value = settings.ScreenBrightness;
 			GeneralVolume.value = settings.GeneralVolume;
 			EffectsVolume.value = settings.EffectsVolume;
@@ -113,10 +113,10 @@ namespace GwambaPrimeAdventure.Hud
 			FrameRate.value = settings.FrameRate;
 			VSync.value = settings.VSync;
 			ScreenBrightnessText.text = settings.ScreenBrightness.ToString();
-			GeneralVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.GeneralVolume ? (settings.GeneralVolume / 1F).ToString() : "0";
-			EffectsVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.EffectsVolume ? (settings.EffectsVolume / 1F).ToString() : "0";
-			MusicVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.MusicVolume ? (settings.MusicVolume / 1F).ToString() : "0";
-			SpeachDelayText.text = (settings.SpeachDelay * 10F).ToString();
+			GeneralVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.GeneralVolume ? ( settings.GeneralVolume / 1F ).ToString() : "0";
+			EffectsVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.EffectsVolume ? ( settings.EffectsVolume / 1F ).ToString() : "0";
+			MusicVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.MusicVolume ? ( settings.MusicVolume / 1F ).ToString() : "0";
+			SpeachDelayText.text = ( settings.SpeachDelay * 10F ).ToString();
 			FrameRateText.text = settings.FrameRate.ToString();
 			VSyncText.text = settings.VSync.ToString();
 			yield return null;
