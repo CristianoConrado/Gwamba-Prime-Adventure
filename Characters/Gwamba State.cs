@@ -139,27 +139,6 @@ namespace GwambaPrimeAdventure.Character
 		public static StateT Instance { get; protected set; }
 		protected Vector2 Local => (Vector2) transform.position + _collider.offset;
 		public MessagePath Path => MessagePath.Character;
-		private new void Awake()
-		{
-			if ( Instance )
-			{
-				if ( !Instance._isHubbyWorld )
-				{
-					Instance._turnLeft = TurnToLeft;
-					Instance._beginingPosition = StartPosition;
-					Instance._reloadTransform = true;
-				}
-				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
-			}
-		}
-		internal bool EqualObject( params GameObject[] others )
-		{
-			if ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) )
-				for ( ushort i = 0; others.Length > i; i++ )
-					if ( gameObject == others[ i ] )
-						return true;
-			return false;
-		}
 		public abstract void Receive( MessageData message );
 	};
 };
