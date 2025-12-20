@@ -8,7 +8,7 @@ namespace GwambaPrimeAdventure
 	public interface IConnector
 	{
 		public MessagePath Path { get; }
-		public void Receive(MessageData message);
+		public void Receive( MessageData message );
 	};
 	public interface IOccludee
 	{
@@ -17,8 +17,8 @@ namespace GwambaPrimeAdventure
 	public interface IDestructible
 	{
 		public short Health { get; }
-		public bool Hurt(ushort damage);
-		public void Stun(ushort stunStength, float stunTime);
+		public bool Hurt( ushort damage );
+		public void Stun( ushort stunStength, float stunTime );
 	};
 	public interface IInteractable
 	{
