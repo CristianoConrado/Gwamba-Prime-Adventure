@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Character
 {
     public static class CharacterExporter
