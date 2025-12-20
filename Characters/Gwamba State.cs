@@ -1,15 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Rendering;
 using Unity.Cinemachine;
 using System.Collections.Generic;
 using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Character
 {
-	public static class GwambaState
-	{
-		public static Vector2 Localization => GwambaMarker.Instance ? GwambaMarker.Instance.transform.position : Vector2.zero;
-		public static bool EqualObject( params GameObject[] others ) => GwambaMarker.Instance ? GwambaMarker.Instance.EqualThisObject( others ) : false;
-	};
 	[DisallowMultipleComponent, SelectionBase, RequireComponent( typeof( Transform ), typeof( SortingGroup ), typeof( CircleCollider2D ) )]
 	internal abstract class GwambaState<StateT> : StateController, IConnector where StateT : GwambaState<StateT>
 	{
@@ -158,7 +153,7 @@ namespace GwambaPrimeAdventure.Character
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 			}
 		}
-		internal bool EqualThisObject( params GameObject[] others )
+		internal bool EqualObject( params GameObject[] others )
 		{
 			if ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) )
 				for ( ushort i = 0; others.Length > i; i++ )
