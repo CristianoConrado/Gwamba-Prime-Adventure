@@ -24,6 +24,8 @@ namespace GwambaPrimeAdventure.Enemy.Utility
 		protected CinemachineImpulseSource _screenShaker;
 		protected readonly List<Projectile> _projectiles = new();
 		protected IEnumerator _parabolicEvent;
+		protected Vector2 _projectilePosition = Vector2.zero;
+		protected Quaternion _projectileRotation = Quaternion.identity;
 		protected Vector2Int
 			_oldCellPosition = Vector2Int.zero,
 			_cellPosition = Vector2Int.zero;
@@ -42,14 +44,14 @@ namespace GwambaPrimeAdventure.Enemy.Utility
 	};
 	public interface IJumper
 	{
-		public void OnJump(ushort jumpIndex);
+		public void OnJump( ushort jumpIndex );
 	};
 	public interface ISummoner
 	{
-		public void OnSummon(ushort summonIndex);
+		public void OnSummon( ushort summonIndex );
 	};
 	public interface ITeleporter
 	{
-		public void OnTeleport(ushort teleportIndex);
+		public void OnTeleport( ushort teleportIndex );
 	};
 };
