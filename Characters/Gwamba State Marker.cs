@@ -342,7 +342,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void FootStepSound(float stepPositionX)
 		{
-			_localAtSurface.Set(transform.position.x + stepPositionX, transform.position.y - _collider.bounds.extents.y);
+			_localAtSurface.Set(Local.x + stepPositionX, Local.y - _collider.bounds.extents.y);
 			EffectsController.SurfaceSound(_localAtSurface);
 		}
 		private void JumpInput(InputAction.CallbackContext jump)
@@ -696,8 +696,7 @@ namespace GwambaPrimeAdventure.Character
 						_screenShaker.ImpulseDefinition.ImpulseDuration = _fallShakeTime;
 						_screenShaker.GenerateImpulse(_fallDamage / _fallDamageDistance * _fallShake);
 						DamagerHurt((ushort)Mathf.FloorToInt(_fallDamage / _fallDamageDistance));
-						_localAtSurface.Set(transform.position.x, transform.position.y - _collider.bounds.extents.y);
-						EffectsController.SurfaceSound(_localAtSurface);
+						FootStepSound(0F);
 						(_fallStarted, _fallDamage) = (false, 0F);
 						if (_invencibility && 0F >= _fadeTimer)
 							_fadeTimer = _timeToFadeShow;
