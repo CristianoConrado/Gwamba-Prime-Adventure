@@ -15,17 +15,17 @@ namespace GwambaPrimeAdventure.Connection
 		private static readonly string FilesArchivePath = Application.persistentDataPath + "/Save Files.txt";
 		private static FilesArchive LoadFiles()
 		{
-			if (File.Exists(FilesArchivePath))
-				return FileEncoder.ReadData<FilesArchive>(FilesArchivePath);
-			return new FilesArchive()
-			{
-				SaveFile1 = "Save File 1",
-				SaveFile2 = "Save File 2",
-				SaveFile3 = "Save File 3",
-				SaveFile4 = "Save File 4"
-			};
+			return File.Exists( FilesArchivePath ) 
+				? FileEncoder.ReadData<FilesArchive>( FilesArchivePath ) 
+				: new FilesArchive()
+				{
+					SaveFile1 = "Save File 1",
+					SaveFile2 = "Save File 2",
+					SaveFile3 = "Save File 3",
+					SaveFile4 = "Save File 4"
+				};
 		}
-		public static string Select(ushort actualSaveFile)
+		public static string Select( ushort actualSaveFile )
 			=> actualSaveFile switch
 			{
 				1 => LoadFiles().SaveFile1,
@@ -34,10 +34,10 @@ namespace GwambaPrimeAdventure.Connection
 				4 => LoadFiles().SaveFile4,
 				_ => null
 			};
-		internal static string SaveData((ushort actualSaveFile, string newSaveName) set = default)
+		internal static string SaveData( (ushort actualSaveFile, string newSaveName) set = default )
 		{
-			if (File.Exists(Select(set.actualSaveFile)))
-				File.Delete(Select(set.actualSaveFile));
+			if ( File.Exists( Select( set.actualSaveFile ) ) )
+				File.Delete( Select( set.actualSaveFile ) );
 			FilesArchive newFilesArchive = LoadFiles();
 			string newSaveName = set.actualSaveFile switch
 			{
@@ -47,7 +47,7 @@ namespace GwambaPrimeAdventure.Connection
 				4 => newFilesArchive.SaveFile4 = set.newSaveName,
 				_ => null
 			};
-			FileEncoder.WriteData(newFilesArchive, FilesArchivePath);
+			FileEncoder.WriteData( newFilesArchive, FilesArchivePath );
 			return newSaveName;
 		}
 	};
