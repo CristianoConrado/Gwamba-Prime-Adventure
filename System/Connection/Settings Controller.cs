@@ -26,15 +26,14 @@ namespace GwambaPrimeAdventure.Connection
 	public static class SettingsController
 	{
 		private static readonly string SettingsPath = $@"{Application.persistentDataPath}\Settings.txt";
-		public static bool FileExists() => File.Exists(SettingsPath);
-		public static void Load(out Settings settings)
+		public static bool FileExists() => File.Exists( SettingsPath );
+		public static void Load( out Settings settings )
 		{
-			if (File.Exists(SettingsPath))
-				settings = FileEncoder.ReadData<Settings>(SettingsPath);
-			else
-				settings = new Settings()
+			settings = File.Exists( SettingsPath )
+				? FileEncoder.ReadData<Settings>( SettingsPath ) 
+				: new Settings()
 				{
-					ScreenResolution = new Vector2Int(WorldBuild.PixelPerfectResolutions()[^1].width, WorldBuild.PixelPerfectResolutions()[^1].height),
+					ScreenResolution = new Vector2Int( WorldBuild.PixelPerfectResolutions()[ ^1 ].width, WorldBuild.PixelPerfectResolutions()[ ^1 ].height ),
 					FullScreenMode = FullScreenMode.FullScreenWindow,
 					ScreenBrightness = 1F,
 					GeneralVolume = 1F,
@@ -51,6 +50,6 @@ namespace GwambaPrimeAdventure.Connection
 					DialogToggle = true
 				};
 		}
-		public static void WriteSave(Settings settings) => FileEncoder.WriteData(settings, SettingsPath);
+		public static void WriteSave( Settings settings ) => FileEncoder.WriteData( settings, SettingsPath );
 	};
 };
