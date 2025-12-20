@@ -13,7 +13,12 @@ namespace GwambaPrimeAdventure.Character
 		{
 			base.Awake();
 			if ( Instance )
+			{
+				if ( !Instance._isHubbyWorld )
+					(Instance._beginingPosition, Instance._turnLeft, Instance._reloadTransform) = (StartPosition, TurnToLeft, true);
+				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
+			}
 			(Instance, _gwambaCanvas, _gwambaDamagers, _animator) = (this, GetComponentInChildren<GwambaCanvas>(), GetComponentsInChildren<GwambaDamager>(), GetComponent<Animator>());
 			(_screenShaker, _rigidbody, _collider) = (GetComponent<CinemachineImpulseSource>(), GetComponent<Rigidbody2D>(), GetComponent<BoxCollider2D>());
 			_inputController = new InputController();
@@ -614,6 +619,14 @@ namespace GwambaPrimeAdventure.Character
 				SaveController.Load( out SaveFile saveFile );
 				(_gwambaCanvas.LifeText.text, _gwambaCanvas.CoinText.text) = ($"X {saveFile.Lifes}", $"X {saveFile.Coins}");
 			}
+		}
+		internal bool EqualObject( params GameObject[] others )
+		{
+			if ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) )
+				for ( ushort i = 0; others.Length > i; i++ )
+					if ( gameObject == others[ i ] )
+						return true;
+			return false;
 		}
 		public override void Receive( MessageData message )
 		{
