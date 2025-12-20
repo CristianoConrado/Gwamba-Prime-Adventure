@@ -8,7 +8,6 @@ namespace GwambaPrimeAdventure.Character
 	[DisallowMultipleComponent, SelectionBase, RequireComponent( typeof( Transform ), typeof( SortingGroup ), typeof( CircleCollider2D ) )]
 	internal abstract class GwambaState<StateT> : StateController, IConnector where StateT : GwambaState<StateT>
 	{
-		protected static StateT _instance;
 		protected GwambaCanvas _gwambaCanvas;
 		protected GwambaDamager[] _gwambaDamagers;
 		protected Animator _animator;
@@ -137,18 +136,18 @@ namespace GwambaPrimeAdventure.Character
 		[field: SerializeField, BoxGroup( "Attack" ), Min( 0F ), Tooltip( "The amount of time the attack will be inactive after attack's hit." )] protected float DelayAfterAttack { get; private set; }
 		[field: SerializeField, BoxGroup( "Attack" ), Tooltip( "If Gwamba is attacking in the moment." )] protected bool AttackUsage { get; private set; }
 		[field: SerializeField, BoxGroup( "Attack" ), Tooltip( "The buffer moment that Gwamba have to execute a combo attack." )] protected bool ComboAttackBuffer { get; private set; }
-		internal static StateT Instance => _instance;
+		public static StateT Instance { get; protected set; }
 		protected Vector2 Local => (Vector2) transform.position + _collider.offset;
 		public MessagePath Path => MessagePath.Character;
 		private new void Awake()
 		{
-			if ( _instance )
+			if ( Instance )
 			{
-				if ( !_instance._isHubbyWorld )
+				if ( !Instance._isHubbyWorld )
 				{
-					_instance._turnLeft = TurnToLeft;
-					_instance._beginingPosition = StartPosition;
-					_instance._reloadTransform = true;
+					Instance._turnLeft = TurnToLeft;
+					Instance._beginingPosition = StartPosition;
+					Instance._reloadTransform = true;
 				}
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 			}
