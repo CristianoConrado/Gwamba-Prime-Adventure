@@ -5,21 +5,20 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(SpriteRenderer), typeof(Collider2D))]
+	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( SpriteRenderer ), typeof( Collider2D ) )]
 	internal sealed class GwambaDamager : StateController, IDestructible
 	{
 		private SpriteRenderer _spriteRenderer;
-		internal readonly List<IDestructible> damagedes = new();
+		internal readonly List<IDestructible> damagedes = new List<IDestructible>();
 		internal event Predicate<ushort> DamagerHurt;
 		internal event UnityAction<ushort, float> DamagerStun;
 		internal event UnityAction<GwambaDamager, IDestructible> DamagerAttack;
-		private Color _alphaChanger = new();
-		[SerializeField, Tooltip("If this Gwamba's part will take damage."), Space(WorldBuild.FIELD_SPACE_LENGTH * 2F)] private bool _takeDamage;
-		[field: SerializeField, HideIf(nameof(_takeDamage)), Tooltip("The velocity of the screen shake on the attack.")] internal Vector2 AttackShake { get; private set; }
-		[field: SerializeField, HideIf(nameof(_takeDamage)), Tooltip("The amount of damage that the attack of Gwamba hits.")] internal ushort AttackDamage { get; private set; }
-		[field: SerializeField, HideIf(nameof(_takeDamage)), Min(0F), Tooltip("The amount of time the attack screen shake will be applied.")]
-		internal float AttackShakeTime { get; private set; }
-		[field: SerializeField, HideIf(nameof(_takeDamage)), Min(0F), Tooltip("The amount of time that this Gwamba's attack stun does.")] internal float StunTime { get; private set; }
+		private Color _alphaChanger = new Color();
+		[SerializeField, Tooltip( "If this Gwamba's part will take damage." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )] private bool _takeDamage;
+		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Tooltip( "The velocity of the screen shake on the attack." )] internal Vector2 AttackShake { get; private set; }
+		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Tooltip( "The amount of damage that the attack of Gwamba hits." )] internal ushort AttackDamage { get; private set; }
+		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Min( 0F ), Tooltip( "The amount of time the attack screen shake will be applied." )] internal float AttackShakeTime { get; private set; }
+		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Min( 0F ), Tooltip( "The amount of time that this Gwamba's attack stun does." )] internal float StunTime { get; private set; }
 		internal float Alpha
 		{
 			get => _spriteRenderer.color.a;
@@ -36,21 +35,16 @@ namespace GwambaPrimeAdventure.Character
 			_spriteRenderer = GetComponent<SpriteRenderer>();
 			_alphaChanger = _spriteRenderer.color;
 		}
-		public bool Hurt(ushort damage)
+		public bool Hurt( ushort damage ) => _takeDamage && DamagerHurt.Invoke( damage );
+		public void Stun( ushort stunStength, float stunTime )
 		{
-			if (_takeDamage)
-				return DamagerHurt.Invoke(damage);
-			return false;
+			if ( _takeDamage )
+				DamagerStun.Invoke( stunStength, stunTime );
 		}
-		public void Stun(ushort stunStength, float stunTime)
+		private void OnTriggerEnter2D( Collider2D other )
 		{
-			if (_takeDamage)
-				DamagerStun.Invoke(stunStength, stunTime);
-		}
-		private void OnTriggerEnter2D(Collider2D other)
-		{
-			if (!_takeDamage && other.TryGetComponent<IDestructible>(out var destructible) && !damagedes.Contains(destructible))
-				DamagerAttack.Invoke(this, destructible);
+			if ( !_takeDamage && other.TryGetComponent<IDestructible>( out var destructible ) && !damagedes.Contains( destructible ) )
+				DamagerAttack.Invoke( this, destructible );
 		}
 	};
 };
