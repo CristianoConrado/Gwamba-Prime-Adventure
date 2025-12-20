@@ -4,84 +4,84 @@ using Unity.Cinemachine;
 using System.Collections;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, RequireComponent(typeof(Transform), typeof(CinemachineCamera), typeof(CinemachineFollow)), RequireComponent(typeof(Rigidbody2D),typeof(BoxCollider2D))]
+	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( CinemachineCamera ), typeof( CinemachineFollow ) ), RequireComponent( typeof( Rigidbody2D ), typeof( BoxCollider2D ) )]
 	internal sealed class CameraOccluder : StateController, IConnector
 	{
 		private static CameraOccluder _instance;
 		private CinemachineFollow _cinemachineFollow;
 		private Vector2 _posiontDamping = Vector2.zero;
-		[Header("Interactions")]
-		[SerializeField, Tooltip("The scene of the menu.")] private SceneField _menuScene;
+		[Header( "Interactions" )]
+		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField _menuScene;
 		public MessagePath Path => MessagePath.System;
 		private new void Awake()
 		{
 			base.Awake();
-			if (_instance)
+			if ( _instance )
 			{
-				Destroy(gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT);
+				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
 			_instance = this;
 			_cinemachineFollow = GetComponent<CinemachineFollow>();
 			_posiontDamping = _cinemachineFollow.TrackerSettings.PositionDamping;
-			GetComponent<BoxCollider2D>().size = WorldBuild.OrthographicToRealSize(GetComponent<CinemachineCamera>().Lens.OrthographicSize);
+			GetComponent<BoxCollider2D>().size = WorldBuild.OrthographicToRealSize( GetComponent<CinemachineCamera>().Lens.OrthographicSize );
 			SceneManager.sceneLoaded += SceneLoaded;
-			Sender.Include(this);
+			Sender.Include( this );
 		}
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
-			if (!_instance || this != _instance)
+			if ( !_instance || this != _instance )
 				return;
 			StopAllCoroutines();
 			SceneManager.sceneLoaded -= SceneLoaded;
-			Sender.Exclude(this);
+			Sender.Exclude( this );
 		}
 		private void OnEnable()
 		{
-			if (!_instance || this != _instance)
+			if ( !_instance || this != _instance )
 				return;
 			_cinemachineFollow.enabled = true;
 			_cinemachineFollow.TrackerSettings.PositionDamping = _posiontDamping;
 		}
 		private void OnDisable()
 		{
-			if (!_instance || this != _instance)
+			if ( !_instance || this != _instance )
 				return;
 			_cinemachineFollow.enabled = false;
 		}
 		private IEnumerator Start()
 		{
-			if (!_instance || this != _instance)
+			if ( !_instance || this != _instance )
 				yield break;
-			yield return new WaitWhile(() => SceneInitiator.IsInTrancision());
-			DontDestroyOnLoad(gameObject);
+			yield return new WaitWhile( () => SceneInitiator.IsInTrancision() );
+			DontDestroyOnLoad( gameObject );
 		}
-		private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
+		private void SceneLoaded( Scene scene, LoadSceneMode loadMode )
 		{
-			if (scene.name == _menuScene)
+			if ( scene.name == _menuScene )
 			{
-				Destroy(gameObject);
+				Destroy( gameObject );
 				return;
 			}
 			_cinemachineFollow.enabled = true;
 			_cinemachineFollow.TrackerSettings.PositionDamping = Vector2.zero;
 		}
-		private void SetOtherChildren(GameObject gameObject, bool activate)
+		private void SetOtherChildren( GameObject gameObject, bool activate )
 		{
-			if (!_instance || this != _instance)
+			if ( !_instance || this != _instance )
 				return;
-			if (gameObject.TryGetComponent<OcclusionObject>(out var occlusion))
-				occlusion.Execution(activate);
+			if ( gameObject.TryGetComponent<OcclusionObject>( out var occlusion ) )
+				occlusion.Execution( activate );
 		}
-		private void OnTriggerEnter2D(Collider2D other) => SetOtherChildren(other.gameObject, true);
-		private void OnTriggerExit2D(Collider2D other) => SetOtherChildren(other.gameObject, false);
-		public void Receive(MessageData message)
+		private void OnTriggerEnter2D( Collider2D other ) => SetOtherChildren( other.gameObject, true );
+		private void OnTriggerExit2D( Collider2D other ) => SetOtherChildren( other.gameObject, false );
+		public void Receive( MessageData message )
 		{
-			if (MessageFormat.Event == message.Format && message.ToggleValue.HasValue)
-				if (!message.ToggleValue.Value)
+			if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
+				if ( !message.ToggleValue.Value )
 					_cinemachineFollow.TrackerSettings.PositionDamping = Vector2.zero;
-				else if (message.ToggleValue.Value)
+				else if ( message.ToggleValue.Value )
 					_cinemachineFollow.TrackerSettings.PositionDamping = _posiontDamping;
 		}
 	};
