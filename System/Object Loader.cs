@@ -23,7 +23,6 @@ namespace GwambaPrimeAdventure
 				progressBar.value += ++SceneInitiator.ProgressIndex / SceneInitiator.ProgressIndex;
 			else
 				progressBar.value += ++SceneInitiator.ProgressIndex - progressBar.value;
-			_loader.Clear();
 			transform.DetachChildren();
 			Destroy( gameObject );
 		}
