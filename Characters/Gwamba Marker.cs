@@ -94,9 +94,7 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !Instance || this != Instance )
 				yield break;
-			_beginingPosition = StartPosition;
-			_turnLeft = TurnToLeft;
-			_reloadTransform = true;
+			(_beginingPosition, _turnLeft, _reloadTransform) = (StartPosition, TurnToLeft, true);
 			yield return StartCoroutine( StartLoad() );
 			_didStart = true;
 			DontDestroyOnLoad( gameObject );
@@ -105,9 +103,8 @@ namespace GwambaPrimeAdventure.Character
 		{
 			DisableInputs();
 			yield return new WaitUntil( () => _reloadTransform );
-			_reloadTransform = false;
 			transform.TurnScaleX( _turnLeft );
-			transform.position = _beginingPosition;
+			(transform.position, _reloadTransform) = (_beginingPosition, false);
 			if ( _animator.GetBool( Death ) )
 				_animator.SetBool( Death, _bunnyHopUsed = _offBunnyHop = !( _deathLoad = true ) );
 			yield return new WaitWhile( () => SceneInitiator.IsInTrancision() );
@@ -141,18 +138,14 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			}
 			if ( _isHubbyWorld = scene.name == HubbyWorldScene && _didStart )
-			{
-				_beginingPosition = PointSetter.CheckedPoint;
-				_turnLeft = PointSetter.TurnToLeft;
-				_reloadTransform = true;
-			}
+				(_beginingPosition, _turnLeft, _reloadTransform) = (PointSetter.CheckedPoint, PointSetter.TurnToLeft, true);
 			if ( _didStart )
 			{
-				RestartStatistics();
+				RestartState();
 				StartCoroutine( StartLoad() );
 			}
 		}
-		private void RestartStatistics()
+		private void RestartState()
 		{
 			for ( ushort i = 0; ( _vitality = (short) _gwambaCanvas.Vitality.Length ) > i; i++ )
 			{
@@ -180,7 +173,7 @@ namespace GwambaPrimeAdventure.Character
 					_animator.SetBool( AirJump, !( _canAirJump = false ) );
 					_animator.SetBool( AttackAirJump, ComboAttackBuffer );
 					transform.TurnScaleX( _localAtAny.z = _walkValue );
-					(_isJumping, _rigidbody.linearVelocity) = (false, Vector2.zero);
+					(_rigidbody.linearVelocity, _isJumping) = (Vector2.zero, false);
 					_rigidbody.AddForceX( ( AirJumpStrenght + BunnyHop( JumpBoost ) ) * _localAtAny.z * _rigidbody.mass, ForceMode2D.Impulse );
 					_rigidbody.AddForceY( ( AirJumpStrenght + BunnyHop( JumpBoost ) ) * _rigidbody.mass, ForceMode2D.Impulse );
 					EffectsController.SoundEffect( AirJumpSound, transform.position );
@@ -251,7 +244,7 @@ namespace GwambaPrimeAdventure.Character
 			if ( _invencibility || 0 >= damage )
 				return false;
 			EffectsController.SoundEffect( HurtSound, transform.position );
-			_vitality -= (short) damage;
+			(_vitality, _timerOfInvencibility, _invencibility) = ((short) ( _vitality - damage ), InvencibilityTime, true);
 			for ( ushort i = (ushort) _gwambaCanvas.Vitality.Length; ( 0 <= _vitality ? _vitality : 0 ) < i; i-- )
 			{
 				_gwambaCanvas.Vitality[ i - 1 ].style.backgroundColor = _gwambaCanvas.MissingColor;
@@ -260,7 +253,6 @@ namespace GwambaPrimeAdventure.Character
 				_gwambaCanvas.Vitality[ i - 1 ].style.borderRightColor = _gwambaCanvas.MissingColor;
 				_gwambaCanvas.Vitality[ i - 1 ].style.borderTopColor = _gwambaCanvas.MissingColor;
 			}
-			(_timerOfInvencibility, _invencibility) = (InvencibilityTime, true);
 			if ( 0 >= _vitality )
 			{
 				OnDisable();
@@ -318,13 +310,12 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( destructible.Hurt( gwambaDamager.AttackDamage ) )
 			{
-				EffectsController.SoundEffect( DamageAttackSound, gwambaDamager.transform.position );
 				destructible.Stun( gwambaDamager.AttackDamage, gwambaDamager.StunTime );
-				_screenShaker.ImpulseDefinition.ImpulseDuration = gwambaDamager.AttackShakeTime;
-				_screenShaker.GenerateImpulse( gwambaDamager.AttackShake );
 				EffectsController.HitStop( HitStopTime, HitSlowTime );
+				EffectsController.SoundEffect( DamageAttackSound, gwambaDamager.transform.position );
+				(_attackDelay, _screenShaker.ImpulseDefinition.ImpulseDuration) = (DelayAfterAttack, gwambaDamager.AttackShakeTime);
+				_screenShaker.GenerateImpulse( gwambaDamager.AttackShake );
 				gwambaDamager.damagedes.Add( destructible );
-				_attackDelay = DelayAfterAttack;
 				for ( ushort amount = 0; ( destructible.Health <= 0 ? gwambaDamager.AttackDamage + 1 : gwambaDamager.AttackDamage ) > amount; amount++ )
 					if ( _gwambaCanvas.RecoverVitality.Length <= _recoverVitality && _gwambaCanvas.Vitality.Length > _vitality )
 					{
@@ -540,12 +531,11 @@ namespace GwambaPrimeAdventure.Character
 				}
 				if ( _offGround )
 				{
-					_offGround = false;
 					if ( _animator.GetBool( Jump ) )
 						_animator.SetBool( Jump, false );
 					if ( _animator.GetBool( Fall ) )
 						_animator.SetBool( Fall, false );
-					(_lastGroundedTime, _canAirJump, _bunnyHopBoost) = (JumpCoyoteTime, !( _longJumping = _isJumping = false ), 0F < _lastJumpTime ? _bunnyHopBoost : (ushort) 0);
+					(_lastGroundedTime, _canAirJump, _bunnyHopBoost) = (JumpCoyoteTime, !( _offGround = _longJumping = _isJumping = false ), 0F < _lastJumpTime ? _bunnyHopBoost : (ushort) 0);
 					if ( 0 >= _bunnyHopBoost && _offBunnyHop )
 					{
 						_bunnyHopUsed = _offBunnyHop = false;
@@ -569,20 +559,20 @@ namespace GwambaPrimeAdventure.Character
 					if ( Mathf.Abs( _rigidbody.linearVelocityX ) <= _minimumVelocity )
 					{
 						_collider.GetContacts( _groundContacts );
-						_localAtStart.Set( Local.x + _collider.bounds.extents.x * ( 0F < transform.localScale.x ? 1F : -1F ), Local.y + WorldBuild.SNAP_LENGTH / 2F );
+						_localAtStart.Set( Local.x + _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F ), Local.y + WorldBuild.SNAP_LENGTH / 2F );
 						_localAtEnd.Set( WorldBuild.SNAP_LENGTH, _collider.size.y + WorldBuild.SNAP_LENGTH );
 						_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
-						_localAtStart.Set( Local.x + _collider.bounds.extents.x * ( 0F < transform.localScale.x ? 1F : -1F ), Local.y - ( _collider.size.y - UpStairsLength ) / 2F );
+						_localAtStart.Set( Local.x + _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F ), Local.y - ( _collider.size.y - UpStairsLength ) / 2F );
 						_localAtEnd.Set( WorldBuild.SNAP_LENGTH, UpStairsLength );
 						if ( _groundContacts.TrueForAll( contact => contact.point.InsideRectangle( _localAtStart, _localAtEnd ) ) )
 						{
-							_localAtAny.x = ( _collider.bounds.extents.x + WorldBuild.SNAP_LENGTH / 2F ) * ( 0F < transform.localScale.x ? 1F : -1F );
+							_localAtAny.x = ( _collider.bounds.extents.x + WorldBuild.SNAP_LENGTH / 2F ) * transform.localScale.x.CompareTo( 0F );
 							_localAtStart.Set( Local.x + _localAtAny.x, Local.y + _collider.bounds.extents.y );
 							_localAtEnd.Set( Local.x + _localAtAny.x, Local.y - _collider.bounds.extents.y );
 							if ( _castHit = Physics2D.Linecast( _localAtStart, _localAtEnd, WorldBuild.SCENE_LAYER_MASK ) )
 							{
 								_localAtAny.y = Mathf.Abs( _castHit.point.y - ( transform.position.y - _collider.bounds.extents.y ) );
-								_localAtSurface.Set( transform.position.x + WorldBuild.SNAP_LENGTH * ( 0F < transform.localScale.x ? 1F : -1F ), transform.position.y + _localAtAny.y );
+								_localAtSurface.Set( transform.position.x + WorldBuild.SNAP_LENGTH * transform.localScale.x.CompareTo( 0F ), transform.position.y + _localAtAny.y );
 								transform.position = _localAtSurface;
 								_rigidbody.linearVelocityX = MovementSpeed * _walkValue;
 							}
@@ -590,11 +580,11 @@ namespace GwambaPrimeAdventure.Character
 					}
 					else if ( 0F >= _lastJumpTime )
 					{
-						_localAtAny.x = Local.x - ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH / 2F * DownStairsDistance ) * ( 0F < transform.localScale.x ? 1F : -1F );
+						_localAtAny.x = Local.x - ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH / 2F * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
 						_localAtAny.y = WorldBuild.SNAP_LENGTH * DownStairsDistance;
 						if ( _groundContacts.TrueForAll( contact => _localAtAny.x + _localAtAny.y / 2F >= contact.point.x && _localAtAny.x - _localAtAny.y / 2F <= contact.point.x ) )
 						{
-							_localAtAny.x = ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * DownStairsDistance ) * ( 0F < transform.localScale.x ? 1F : -1F );
+							_localAtAny.x = ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
 							_localAtStart.Set( Local.x - _localAtAny.x, Local.y - _collider.bounds.extents.y );
 							if ( _downStairs = _castHit = Physics2D.Raycast( _localAtStart, -transform.up, WorldBuild.SNAP_LENGTH + 1F, WorldBuild.SCENE_LAYER_MASK ) )
 							{
@@ -633,7 +623,7 @@ namespace GwambaPrimeAdventure.Character
 			if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
 				if ( !message.ToggleValue.Value )
 				{
-					RestartStatistics();
+					RestartState();
 					_animator.SetBool( Death, _bunnyHopUsed = _offBunnyHop = false );
 					transform.TurnScaleX( PointSetter.TurnToLeft );
 					transform.position = PointSetter.CheckedPoint;
