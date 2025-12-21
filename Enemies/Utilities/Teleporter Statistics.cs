@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-namespace GwambaPrimeAdventure.Enemy.Utility
+namespace GwambaPrimeAdventure.Enemy.Supply
 {
 	[CreateAssetMenu( fileName = "Teleporter Enemy", menuName = "Enemy Statistics/Teleporter", order = 9 )]
 	public sealed class TeleporterStatistics : ScriptableObject
