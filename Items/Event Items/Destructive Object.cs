@@ -2,7 +2,7 @@ using UnityEngine;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( Collider2D ), typeof( Receptor ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( Receptor ) )]
 	internal sealed class DestructiveObject : StateController, IReceptorSignal, IDestructible
 	{
 		private readonly Sender _sender = Sender.Create();
