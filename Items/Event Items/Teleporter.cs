@@ -3,7 +3,7 @@ using NaughtyAttributes;
 using GwambaPrimeAdventure.Character;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( Collider2D ), typeof( Receptor ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( Receptor ) )]
 	internal sealed class Teleporter : StateController, IReceptorSignal, IInteractable
 	{
 		private readonly Sender _sender = Sender.Create();
