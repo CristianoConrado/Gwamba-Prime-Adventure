@@ -5,7 +5,7 @@ using Unity.Cinemachine;
 using System.Collections;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( Camera ), typeof( CinemachineBrain ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( Camera ), typeof( CinemachineBrain ) )]
 	internal sealed class BackgroundController : StateController, ILoader
 	{
 		private static BackgroundController _instance;
