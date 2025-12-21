@@ -2,10 +2,10 @@ using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
 using GwambaPrimeAdventure.Connection;
-using GwambaPrimeAdventure.Enemy.Utility;
+using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
 {
-	[DisallowMultipleComponent, SelectionBase, RequireComponent( typeof( Transform ), typeof( Rigidbody2D ), typeof( Collider2D ) ), RequireComponent( typeof( CinemachineImpulseSource ) )]
+	[RequireComponent( typeof( Rigidbody2D ), typeof( Collider2D ), typeof( CinemachineImpulseSource ) )]
 	internal sealed class EnemyController : Control, IConnector, IOccludee, IDestructible
 	{
 		private EnemyProvider[] _selfEnemies;
