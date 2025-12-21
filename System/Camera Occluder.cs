@@ -4,7 +4,7 @@ using Unity.Cinemachine;
 using System.Collections;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( CinemachineCamera ), typeof( CinemachineFollow ) ), RequireComponent( typeof( Rigidbody2D ), typeof( BoxCollider2D ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( CinemachineCamera ), typeof( CinemachineFollow ), typeof( Rigidbody2D ) ), RequireComponent( typeof( BoxCollider2D ) )]
 	internal sealed class CameraOccluder : StateController, IConnector
 	{
 		private static CameraOccluder _instance;
