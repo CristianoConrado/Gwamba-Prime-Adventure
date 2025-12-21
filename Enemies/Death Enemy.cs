@@ -1,5 +1,5 @@
 using UnityEngine;
-using GwambaPrimeAdventure.Enemy.Utility;
+using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
