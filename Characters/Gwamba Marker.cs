@@ -173,11 +173,10 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !isActiveAndEnabled || _animator.GetBool( Stun ) )
 				return;
-			_walkValue = 0F;
-			if ( Mathf.Abs( movement.ReadValue<Vector2>().x ) > MovementInputZone )
-				_walkValue = movement.ReadValue<Vector2>().x > 0F ? 1F : -1F;
+			_localAtStart = movement.ReadValue<Vector2>();
+			_walkValue = ( _localAtStart.x.CompareTo( MovementInputZone ) + _localAtStart.x.CompareTo( -MovementInputZone ) ).CompareTo( 0 );
 			if ( 0F != _walkValue && ( !AttackUsage || ComboAttackBuffer ) )
-				if ( movement.ReadValue<Vector2>().y > AirJumpInputZone && !_isOnGround && _canAirJump && !_animator.GetBool( AirJump ) )
+				if ( _localAtStart.y > AirJumpInputZone && !_isOnGround && _canAirJump && !_animator.GetBool( AirJump ) )
 				{
 					_animator.SetBool( AirJump, !( _canAirJump = false ) );
 					_animator.SetBool( AttackAirJump, ComboAttackBuffer );
@@ -189,7 +188,7 @@ namespace GwambaPrimeAdventure.Character
 					if ( ComboAttackBuffer )
 						StartAttackSound();
 				}
-				else if ( movement.ReadValue<Vector2>().y < DashSlideInputZone && _isOnGround && !_animator.GetBool( DashSlide ) )
+				else if ( _localAtStart.y < DashSlideInputZone && _isOnGround && !_animator.GetBool( DashSlide ) )
 				{
 					_animator.SetBool( DashSlide, true );
 					_animator.SetBool( AttackSlide, ComboAttackBuffer );
@@ -207,6 +206,8 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void JumpInput( InputAction.CallbackContext jump )
 		{
+			if ( !isActiveAndEnabled || _animator.GetBool( Stun ) )
+				return;
 			if ( jump.started )
 			{
 				_lastJumpTime = JumpBufferTime;
@@ -454,7 +455,7 @@ namespace GwambaPrimeAdventure.Character
 				{
 					_localAtAny.x = _longJumping ? DashSpeed : MovementSpeed + BunnyHop( VelocityBoost );
 					_localAtAny.y = _localAtAny.x * _walkValue - _rigidbody.linearVelocityX;
-					_localAtAny.z = ( Mathf.Abs( _localAtAny.x * _walkValue ) > 0F ? Acceleration : Decceleration ) + BunnyHop( PotencyBoost );
+					_localAtAny.z = ( 0F < Mathf.Abs( _localAtAny.x * _walkValue ) ? Acceleration : Decceleration ) + BunnyHop( PotencyBoost );
 					_rigidbody.AddForceX( Mathf.Pow( Mathf.Abs( _localAtAny.y ) * _localAtAny.z, VelocityPower ) * Mathf.Sign( _localAtAny.y ) * _rigidbody.mass );
 					if ( 0F != _walkValue && !AttackUsage )
 					{
