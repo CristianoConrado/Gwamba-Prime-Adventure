@@ -39,7 +39,7 @@ namespace GwambaPrimeAdventure.Enemy
 			PolygonCollider2D trail = GetComponent<PolygonCollider2D>();
 			_trail = new Vector2[ trail.points.Length ];
 			for ( ushort i = 0; trail.points.Length > i; i++ )
-				_trail[ i ] = transform.parent != null ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
+				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
 			(_movementDirection, _pointOrigin, _sizeDetection) = (Vector2.right * _movementSide, Rigidbody.position, _sizeDetection * _statistics.LookDistance);
 			yield return null;
 		}
