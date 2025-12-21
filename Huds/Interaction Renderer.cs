@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 using GwambaPrimeAdventure.Character;
 namespace GwambaPrimeAdventure.Hud
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( Collider2D ), typeof( IInteractable ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( IInteractable ) )]
 	internal sealed class InteractionRenderer : StateController, IConnector
 	{
 		private Animator _animator;
