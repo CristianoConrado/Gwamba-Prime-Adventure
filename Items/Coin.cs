@@ -2,7 +2,7 @@ using UnityEngine;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( SpriteRenderer ), typeof( Animator ) ), RequireComponent( typeof( CircleCollider2D ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( Animator ), typeof( CircleCollider2D ) )]
 	internal sealed class Coin : StateController, ICollectable, IConnector
 	{
 		private SpriteRenderer _spriteRenderer;
