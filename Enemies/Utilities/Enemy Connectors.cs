@@ -2,8 +2,9 @@ using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-namespace GwambaPrimeAdventure.Enemy.Utility
+namespace GwambaPrimeAdventure.Enemy.Supply
 {
+	[DisallowMultipleComponent, SelectionBase, RequireComponent( typeof( Transform ) )]
 	public abstract class Control : StateController
 	{
 		protected Rigidbody2D _rigidbody;
@@ -18,6 +19,7 @@ namespace GwambaPrimeAdventure.Enemy.Utility
 			_stunTimer = 0F;
 		protected bool _stunned = false;
 	};
+	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( SpriteRenderer ), typeof( Collider2D ) )]
 	public abstract class Projectile : StateController
 	{
 		protected Rigidbody2D _rigidbody;
