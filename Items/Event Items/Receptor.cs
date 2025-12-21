@@ -5,7 +5,7 @@ using NaughtyAttributes;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( IReceptorSignal ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( IReceptorSignal ) )]
 	internal sealed class Receptor : StateController, ILoader
 	{
 		private static readonly HashSet<Receptor> _selfes = new();
