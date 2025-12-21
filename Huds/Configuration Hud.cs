@@ -90,7 +90,7 @@ namespace GwambaPrimeAdventure.Hud
 			MusicVolume.lowValue = EffectsVolume.lowValue = GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			FrameRate.lowValue = 10;
 			VSync.lowValue = 0;
-			foreach ( Resolution resolution in WorldBuild.PixelPerfectResolutions() )
+			foreach ( Resolution resolution in BuildWorker.PixelPerfectResolutions() )
 				ScreenResolution.choices.Add( $@"{resolution.width} x {resolution.height}" );
 			foreach ( FullScreenMode mode in Enum.GetValues( typeof( FullScreenMode ) ) )
 				FullScreenModes.choices.Add( mode.ToString() );
