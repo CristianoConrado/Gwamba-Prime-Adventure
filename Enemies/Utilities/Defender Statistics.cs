@@ -1,6 +1,6 @@
 using UnityEngine;
 using NaughtyAttributes;
-namespace GwambaPrimeAdventure.Enemy.Utility
+namespace GwambaPrimeAdventure.Enemy.Supply
 {
 	[CreateAssetMenu( fileName = "Defender Enemy", menuName = "Enemy Statistics/Defender", order = 8 )]
 	public sealed class DefenderStatistics : ScriptableObject
