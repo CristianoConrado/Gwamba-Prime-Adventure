@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 using System.Collections;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( UIDocument ) )]
+	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( UIDocument ) )]
 	internal sealed class GwambaCanvas : MonoBehaviour
 	{
 		private static GwambaCanvas _instance;
