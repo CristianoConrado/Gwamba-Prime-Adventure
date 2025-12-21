@@ -21,10 +21,10 @@ namespace GwambaPrimeAdventure
 		{
 			_tilemap = GetComponent<Tilemap>();
 			_collider = GetComponent<TilemapCollider2D>();
-			for ( ushort i = 0; _surfaceSounds.Length > i; i++ )
-				for ( ushort j = 0; _surfaceSounds[ i ].Tiles.Length > j; j++ )
-					if ( !_tiles.ContainsKey( _surfaceSounds[ i ].Tiles[ j ] ) )
-						_tiles.Add( _surfaceSounds[ i ].Tiles[ j ], _surfaceSounds[ i ].Clip );
+			foreach ( SurfaceSound surfaceSound in _surfaceSounds )
+				foreach ( Tile tile in surfaceSound.Tiles )
+					if ( !_tiles.ContainsKey( tile ) )
+						_tiles.Add( tile, surfaceSound.Clip );
 			yield return null;
 		}
 		private void CheckPoint( Vector2 originPosition )
