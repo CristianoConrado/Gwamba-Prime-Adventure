@@ -16,7 +16,7 @@ namespace GwambaPrimeAdventure
 				NumberValue = null
 			};
 		}
-		private static readonly ConcurrentDictionary<MessagePath, HashSet<IConnector>> _connectors = new();
+		private static readonly ConcurrentDictionary<MessagePath, HashSet<IConnector>> _connectors = new ConcurrentDictionary<MessagePath, HashSet<IConnector>>();
 		private MessageData _messageData;
 		public static ValueTask Include( IConnector connector )
 		{
@@ -34,7 +34,7 @@ namespace GwambaPrimeAdventure
 			}
 			return new ValueTask( Task.CompletedTask );
 		}
-		public static Sender Create() => new();
+		public static Sender Create() => new Sender();
 		public void SetFormat( MessageFormat format ) => _messageData.Format = format;
 		public void SetAdditionalData( object additionalData ) => _messageData.AdditionalData = additionalData;
 		public void SetToggle( bool toggle ) => _messageData.ToggleValue = toggle;
