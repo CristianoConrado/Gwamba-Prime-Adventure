@@ -1,6 +1,6 @@
 using UnityEngine;
 using GwambaPrimeAdventure.Character;
-namespace GwambaPrimeAdventure.Enemy.Utility
+namespace GwambaPrimeAdventure.Enemy.Supply
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( Collider2D ) )]
 	public sealed class JumpPoint : StateController
