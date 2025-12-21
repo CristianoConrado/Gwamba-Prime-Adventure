@@ -2,7 +2,7 @@ using UnityEngine;
 using GwambaPrimeAdventure.Character;
 namespace GwambaPrimeAdventure.Enemy.Supply
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( Collider2D ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ) )]
 	public sealed class SummonPoint : StateController
 	{
 		private ISummoner _summoner;
