@@ -11,7 +11,7 @@ namespace GwambaPrimeAdventure
 		private Tilemap _tilemap;
 		private TilemapCollider2D _collider;
 		private Tile _returnedTile;
-		private readonly Dictionary<Tile, AudioClip> _tiles = new();
+		private readonly Dictionary<Tile, AudioClip> _tiles = new Dictionary<Tile, AudioClip>();
 		private static AudioClip _surfaceSoundClip;
 		private static UnityAction<Vector2> _getSurface;
 		[SerializeField, Tooltip( "The sounds of the surfaces that will be played." )] private SurfaceSound[] _surfaceSounds;
