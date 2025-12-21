@@ -3,7 +3,7 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( BoxCollider2D ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( BoxCollider2D ) )]
 	internal sealed class PointSetter : StateController, ILoader
 	{
 		private static PointSetter Instance;
