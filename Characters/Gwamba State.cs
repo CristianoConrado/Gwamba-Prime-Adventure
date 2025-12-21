@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Character
 {
-	[DisallowMultipleComponent, SelectionBase, RequireComponent( typeof( Transform ), typeof( SortingGroup ), typeof( CircleCollider2D ) )]
+	[DisallowMultipleComponent, SelectionBase, RequireComponent( typeof( SortingGroup ), typeof( CircleCollider2D ) )]
 	internal abstract class GwambaState<StateT> : StateController, IConnector where StateT : GwambaState<StateT>
 	{
 		protected GwambaCanvas _gwambaCanvas;
