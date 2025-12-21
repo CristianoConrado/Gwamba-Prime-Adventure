@@ -8,7 +8,7 @@ namespace GwambaPrimeAdventure.Connection
 	public sealed class EffectsController : StateController
 	{
 		private static EffectsController _instance;
-		private readonly List<Light2DBase> _lightsStack = new();
+		private readonly List<Light2DBase> _lightsStack = new List<Light2DBase>();
 		private bool _canHitStop = true;
 		[SerializeField, Tooltip( "The source where the sounds came from." )] private AudioSource _sourceObject;
 		private new void Awake()
