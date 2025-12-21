@@ -3,10 +3,10 @@ using Unity.Cinemachine;
 using System.Collections;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Connection;
-using GwambaPrimeAdventure.Enemy.Utility;
+using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( SpriteRenderer ), typeof( Rigidbody2D ) ), RequireComponent( typeof( CinemachineImpulseSource ), typeof( Collider2D ) )]
+	[RequireComponent( typeof( Rigidbody2D ), typeof( CinemachineImpulseSource ) )]
 	internal sealed class EnemyProjectile : Projectile, IDestructible
 	{
 		[Header( "Projectile" )]
