@@ -39,7 +39,7 @@ namespace GwambaPrimeAdventure
 		public static Vector2 OrthographicToScreenSize( float orthographicSize ) => OrthographicToRealSize( orthographicSize ) * PIXELS_PER_UNIT;
 		public static Resolution[] PixelPerfectResolutions()
 		{
-			List<Resolution> resolutions = new();
+			List<Resolution> resolutions = new List<Resolution>();
 			for ( ushort i = 0; Screen.resolutions.Length > i; i++ )
 				if ( Screen.resolutions[ i ].width % PIXEL_PERFECT_WIDTH == 0 && Screen.resolutions[ i ].height % PIXEL_PERFECT_HEIGHT == 0 )
 					resolutions.Add( Screen.resolutions[ i ] );
