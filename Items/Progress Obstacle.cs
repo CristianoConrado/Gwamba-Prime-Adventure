@@ -3,7 +3,7 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( Collider2D ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ) )]
 	internal sealed class ProgressObstacle : StateController, ILoader
 	{
 		[Header( "Progress Interactions" )]
