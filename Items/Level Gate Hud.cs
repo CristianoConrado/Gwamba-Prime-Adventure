@@ -12,7 +12,8 @@ namespace GwambaPrimeAdventure.Item
 		internal Button Scenes { get; private set; }
 		private void Awake()
 		{
-			(Document, RootElement) = (GetComponent<UIDocument>(), Document.rootVisualElement.Q<VisualElement>( nameof( RootElement ) ));
+			Document = GetComponent<UIDocument>();
+			RootElement = Document.rootVisualElement.Q<VisualElement>( nameof( RootElement ) );
 			(Level, Boss, Scenes) = (RootElement.Q<Button>( nameof( Level ) ), RootElement.Q<Button>( nameof( Boss ) ), RootElement.Q<Button>( nameof( Scenes ) ));
 		}
 	};
