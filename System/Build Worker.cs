@@ -17,7 +17,7 @@ namespace GwambaPrimeAdventure
 		}
 		public static void TurnScaleX( this Transform transform, float valueChanger )
 		{
-			_scaleTurner.Set( Mathf.Abs( transform.localScale.x ) * valueChanger, transform.localScale.y, transform.localScale.z );
+			_scaleTurner.Set( Mathf.Abs( transform.localScale.x ) * ( WorldBuild.MINIMUM_TIME_SPACE_LIMIT >= Mathf.Abs( valueChanger ) ? 1F : valueChanger ), transform.localScale.y, transform.localScale.z );
 			transform.localScale = _scaleTurner;
 		}
 		public static void TurnScaleX( this Transform transform, bool conditionChanger ) => TurnScaleX( transform, conditionChanger ? -1F : 1F );
