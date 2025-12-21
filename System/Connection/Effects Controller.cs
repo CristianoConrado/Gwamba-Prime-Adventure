@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 namespace GwambaPrimeAdventure.Connection
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( Light2DBase ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( Light2DBase ) )]
 	public sealed class EffectsController : StateController
 	{
 		private static EffectsController _instance;
