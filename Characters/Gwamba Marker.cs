@@ -167,7 +167,7 @@ namespace GwambaPrimeAdventure.Character
 			if ( !isActiveAndEnabled || _animator.GetBool( Stun ) )
 				return;
 			_localAtStart = movement.ReadValue<Vector2>();
-			if ( 0F != ( _walkValue = ( _localAtStart.x.CompareTo( MovementInputZone ) + _localAtStart.x.CompareTo( -MovementInputZone ) ).CompareTo( 0 ) ) && ( !AttackUsage || ComboAttackBuffer ) )
+			if ( 0F != ( _walkValue = _localAtStart.x.RangeNormalize( MovementInputZone ) ) && ( !AttackUsage || ComboAttackBuffer ) )
 				if ( _localAtStart.y > AirJumpInputZone && !_isOnGround && _canAirJump && !_animator.GetBool( AirJump ) )
 				{
 					_animator.SetBool( AirJump, !( _canAirJump = false ) );
