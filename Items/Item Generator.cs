@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Enemy
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ) )]
+	[DisallowMultipleComponent]
 	internal sealed class ItemGenerator : StateController
 	{
 		private readonly List<GameObject> _itemsGenerated = new();
