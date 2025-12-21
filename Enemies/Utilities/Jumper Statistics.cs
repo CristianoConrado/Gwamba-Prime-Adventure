@@ -1,6 +1,6 @@
 using UnityEngine;
 using NaughtyAttributes;
-namespace GwambaPrimeAdventure.Enemy.Utility
+namespace GwambaPrimeAdventure.Enemy.Supply
 {
 	[CreateAssetMenu( fileName = "Jumper Enemy", menuName = "Enemy Statistics/Jumper", order = 3 )]
 	public sealed class JumperStatistics : MovingStatistics
