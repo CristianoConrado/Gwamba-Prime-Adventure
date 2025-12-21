@@ -173,7 +173,7 @@ namespace GwambaPrimeAdventure.Enemy
 					else
 					{
 						_originCast.Set( transform.position.x + _collider.offset.x + _collider.bounds.extents.x * _movementSide, transform.position.y + _collider.offset.y );
-						_direction = Quaternion.AngleAxis( _statistics.DetectionAngle, Vector3.forward ) * transform.right * ( transform.localScale.x < 0F ? -1F : 1F );
+						_direction = Quaternion.AngleAxis( _statistics.DetectionAngle, Vector3.forward ) * transform.right * transform.localScale.x.CompareTo( 0F );
 						for ( int i = Physics2D.RaycastNonAlloc( _originCast, _direction, _perceptionRaycasts, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK ); 0 < i; i-- )
 							if ( _perceptionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 							{
@@ -188,7 +188,7 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( _contunuosFollow )
 				{
 					_targetPosition.x = _statistics.RandomFollow
-						? ( Random.Range( -1, 1 ) >= 0F ? CharacterExporter.GwambaLocalization().x : _otherTarget )
+						? ( 0 <= Random.Range( -1, 1 ) ? CharacterExporter.GwambaLocalization().x : _otherTarget )
 						: ( _useTarget ? _otherTarget : CharacterExporter.GwambaLocalization().x );
 					_movementSide = (short) ( _targetPosition.x < transform.position.x ? -1 : 1 );
 					if ( _turnFollow )
