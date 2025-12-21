@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Threading.Tasks;
-using GwambaPrimeAdventure.Enemy.Utility;
+using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
