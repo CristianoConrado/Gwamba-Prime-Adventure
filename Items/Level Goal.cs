@@ -3,7 +3,7 @@ using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( SpriteRenderer ), typeof( CircleCollider2D ) ), RequireComponent( typeof( Transitioner ), typeof( IInteractable ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( CircleCollider2D ), typeof( Transitioner ) ), RequireComponent( typeof( IInteractable ) )]
 	internal sealed class LevelGoal : StateController
 	{
 		private static LevelGoal Instance;
