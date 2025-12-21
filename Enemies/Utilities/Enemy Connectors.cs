@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 namespace GwambaPrimeAdventure.Enemy.Supply
 {
-	[DisallowMultipleComponent, SelectionBase, RequireComponent( typeof( Transform ) )]
+	[DisallowMultipleComponent, SelectionBase]
 	public abstract class Control : StateController
 	{
 		protected Rigidbody2D _rigidbody;
@@ -19,12 +19,12 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			_stunTimer = 0F;
 		protected bool _stunned = false;
 	};
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( SpriteRenderer ), typeof( Collider2D ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( Collider2D ) )]
 	public abstract class Projectile : StateController
 	{
 		protected Rigidbody2D _rigidbody;
 		protected CinemachineImpulseSource _screenShaker;
-		protected readonly List<Projectile> _projectiles = new();
+		protected readonly List<Projectile> _projectiles = new List<Projectile>();
 		protected IEnumerator _parabolicEvent;
 		protected Vector2 _projectilePosition = Vector2.zero;
 		protected Quaternion _projectileRotation = Quaternion.identity;
