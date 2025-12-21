@@ -41,8 +41,7 @@ namespace GwambaPrimeAdventure
 		{
 			if ( !_instance || this != _instance )
 				return;
-			_cinemachineFollow.enabled = true;
-			_cinemachineFollow.TrackerSettings.PositionDamping = _posiontDamping;
+			(_cinemachineFollow.TrackerSettings.PositionDamping, _cinemachineFollow.enabled) = (_posiontDamping, true);
 		}
 		private void OnDisable()
 		{
@@ -64,8 +63,7 @@ namespace GwambaPrimeAdventure
 				Destroy( gameObject );
 				return;
 			}
-			_cinemachineFollow.enabled = true;
-			_cinemachineFollow.TrackerSettings.PositionDamping = Vector2.zero;
+			(_cinemachineFollow.TrackerSettings.PositionDamping, _cinemachineFollow.enabled) = (Vector2.zero, true);
 		}
 		private void SetOtherChildren( GameObject gameObject, bool activate )
 		{
