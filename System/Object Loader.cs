@@ -4,10 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 namespace GwambaPrimeAdventure
 {
-	[Icon( WorldBuild.PROJECT_ICON )]
+	[Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
 	internal sealed class ObjectLoader : MonoBehaviour
 	{
-		private static readonly List<ILoader> _loader = new();
+		private static readonly List<ILoader> _loader = new List<ILoader>();
 		public IEnumerator Load( ProgressBar progressBar )
 		{
 			_loader.Clear();
