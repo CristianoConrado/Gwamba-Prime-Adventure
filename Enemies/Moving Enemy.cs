@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using GwambaPrimeAdventure.Character;
-using GwambaPrimeAdventure.Enemy.Utility;
+using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
 {
 	internal abstract class MovingEnemy : EnemyProvider, IConnector
