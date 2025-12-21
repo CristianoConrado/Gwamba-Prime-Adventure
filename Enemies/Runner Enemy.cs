@@ -204,7 +204,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.ReactToDamage && _canRetreat )
 			{
 				(_stoppedTime, _stopWorking, _retreatLocation) = (0F, _stopRunning = _canRetreat = !( _invencibility = _retreat = true ), transform.position.x);
-				transform.TurnScaleX( _movementSide = (short) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) );
+				transform.TurnScaleX( _movementSide = (short) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
 				_sender.SetFormat( MessageFormat.State );
 				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Enemy );
