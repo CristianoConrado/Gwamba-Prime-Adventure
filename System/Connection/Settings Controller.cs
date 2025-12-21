@@ -33,7 +33,7 @@ namespace GwambaPrimeAdventure.Connection
 				? FileEncoder.ReadData<Settings>( SettingsPath ) 
 				: new Settings()
 				{
-					ScreenResolution = new Vector2Int( WorldBuild.PixelPerfectResolutions()[ ^1 ].width, WorldBuild.PixelPerfectResolutions()[ ^1 ].height ),
+					ScreenResolution = new Vector2Int( Builder.PixelPerfectResolutions()[ ^1 ].width, Builder.PixelPerfectResolutions()[ ^1 ].height ),
 					FullScreenMode = FullScreenMode.FullScreenWindow,
 					ScreenBrightness = 1F,
 					GeneralVolume = 1F,
