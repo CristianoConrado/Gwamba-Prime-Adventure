@@ -10,7 +10,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private IEnumerator _summonEvent;
 		private Vector2 _summonPosition = Vector2.zero;
 		private Vector2Int _summonIndex = Vector2Int.zero;
-		private InstantiateParameters _instantiateParameters = new();
+		private InstantiateParameters _instantiateParameters = new InstantiateParameters();
 		private ushort _randomSummonIndex = 0;
 		private float[]
 			_summonTime,
