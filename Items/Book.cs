@@ -3,7 +3,7 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( Transform ), typeof( SpriteRenderer ), typeof( BoxCollider2D ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( BoxCollider2D ) )]
 	internal sealed class Book : StateController, ILoader, ICollectable
 	{
 		[Header( "Conditions" )]
