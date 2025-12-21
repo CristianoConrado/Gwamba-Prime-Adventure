@@ -3,7 +3,6 @@ using System.Collections;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
-	[RequireComponent( typeof( Transform ) )]
 	internal abstract class Activator : StateController, ILoader
 	{
 		private Animator _animator;
