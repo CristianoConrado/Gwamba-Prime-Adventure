@@ -1,5 +1,6 @@
 using UnityEngine;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
@@ -18,16 +19,20 @@ namespace GwambaPrimeAdventure
 			}
 			_instance = this;
 		}
-		private IEnumerator Start()
+		private async void Start()
 		{
 			if ( !_instance || this != _instance )
-				yield break;
+				return;
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			TransicionHud transicionHud = Instantiate( _transicionHud, transform );
 			(transicionHud.RootElement.style.opacity, transicionHud.LoadingBar.highValue, ProgressIndex) = (1F, _objectLoaders.Length, 0);
 			foreach ( ObjectLoader loader in _objectLoaders )
-				yield return StartCoroutine( Instantiate( loader ).Load( transicionHud.LoadingBar ) );
+				await Instantiate( loader ).Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken );
 			for ( float i = 1F; 0F < transicionHud.RootElement.style.opacity.value; i -= 1E-1F )
-				yield return transicionHud.RootElement.style.opacity = i;
+			{
+				transicionHud.RootElement.style.opacity = i;
+				await UniTask.WaitForEndOfFrame( destroyToken );
+			}
 			Destroy( gameObject );
 			StateController.SetState( true );
 		}
