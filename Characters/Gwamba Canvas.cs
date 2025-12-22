@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure.Character
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( UIDocument ) )]
@@ -38,7 +38,7 @@ namespace GwambaPrimeAdventure.Character
 			(RecoverVitality, StunResistance, BunnyHop) = (new VisualElement[ _recoverVitality ], new VisualElement[ _stunResistance ], new VisualElement[ _bunnyHop ]);
 			(FallDamageText, LifeText, CoinText) = (RootElement.Q<Label>( nameof( FallDamageText ) ), RootElement.Q<Label>( nameof( LifeText ) ), RootElement.Q<Label>( nameof( CoinText ) ));
 		}
-		internal IEnumerator LoadHud()
+		internal async UniTask LoadHud()
 		{
 			VisualElement vitality = RootElement.Q<VisualElement>( nameof( Vitality ) ), VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) ), vitalityPieceClone;
 			vitality.style.width = _totalWidth;
@@ -58,7 +58,7 @@ namespace GwambaPrimeAdventure.Character
 				Vitality[ i ] = vitality[ i + 1 ];
 			}
 			vitality.Remove( VitalityPiece );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 			VisualElement recoverVitality = RootElement.Q<VisualElement>( nameof( RecoverVitality ) ),
 				 RecoverVitalityPiece = RootElement.Q<VisualElement>( nameof( RecoverVitalityPiece ) ), recoverVitalityPieceClone;
 			recoverVitality.style.width = _totalWidth;
@@ -71,7 +71,7 @@ namespace GwambaPrimeAdventure.Character
 				RecoverVitality[ i ] = recoverVitality[ i + 1 ];
 			}
 			recoverVitality.Remove( RecoverVitalityPiece );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 			VisualElement stunResistance = RootElement.Q<VisualElement>( nameof( StunResistance ) ),
 				 StunResistancePiece = RootElement.Q<VisualElement>( nameof( StunResistancePiece ) ), stunResistancePieceClone;
 			stunResistance.style.width = _totalWidth;
@@ -84,7 +84,7 @@ namespace GwambaPrimeAdventure.Character
 				StunResistance[ i ] = stunResistance[ i + 1 ];
 			}
 			stunResistance.Remove( StunResistancePiece );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 			VisualElement bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ), BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) ), bunnyHopPieceClone;
 			bunnyHop.style.width = _totalWidth;
 			for ( ushort i = 0; i < _bunnyHop; i++ )
@@ -96,7 +96,7 @@ namespace GwambaPrimeAdventure.Character
 				BunnyHop[ i ] = bunnyHop[ i + 1 ];
 			}
 			bunnyHop.Remove( BunnyHopPiece );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 	};
 };
