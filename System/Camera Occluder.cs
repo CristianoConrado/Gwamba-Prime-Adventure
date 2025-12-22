@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Cinemachine;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
@@ -53,7 +54,10 @@ namespace GwambaPrimeAdventure
 		{
 			if ( !_instance || this != _instance )
 				return;
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, this.GetCancellationTokenOnDestroy() );
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			DontDestroyOnLoad( gameObject );
 		}
 		private void SceneLoaded( Scene scene, LoadSceneMode loadMode )
