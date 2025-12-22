@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item
 {
@@ -8,17 +8,18 @@ namespace GwambaPrimeAdventure.Item
 	{
 		[Header( "Conditions" )]
 		[SerializeField, Tooltip( "The sprite to show when the book gor cacthed." )] private Sprite _bookCacthed;
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			SaveController.Load( out SaveFile saveFile );
 			if ( saveFile.Books.ContainsKey( name ) )
 			{
 				if ( saveFile.Books[ name ] )
 					GetComponent<SpriteRenderer>().sprite = _bookCacthed;
-				yield break;
+				await UniTask.WaitForEndOfFrame();
+				return;
 			}
 			saveFile.Books.Add( name, false );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		public void Collect()
 		{
