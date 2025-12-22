@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Cinemachine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( CinemachineCamera ), typeof( CinemachineFollow ), typeof( Rigidbody2D ) ), RequireComponent( typeof( BoxCollider2D ) )]
@@ -49,11 +49,11 @@ namespace GwambaPrimeAdventure
 				return;
 			_cinemachineFollow.enabled = false;
 		}
-		private IEnumerator Start()
+		private async void Start()
 		{
 			if ( !_instance || this != _instance )
-				yield break;
-			yield return new WaitWhile( () => SceneInitiator.IsInTrancision() );
+				return;
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, this.GetCancellationTokenOnDestroy() );
 			DontDestroyOnLoad( gameObject );
 		}
 		private void SceneLoaded( Scene scene, LoadSceneMode loadMode )
