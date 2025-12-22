@@ -21,7 +21,12 @@ namespace GwambaPrimeAdventure.Connection
 			for ( float i = 0F; 1F > transicionHud.RootElement.style.opacity.value; i += 1E-1F )
 			{
 				transicionHud.RootElement.style.opacity = i;
-				await UniTask.WaitForEndOfFrame( destroyToken );
+				await UniTask.WaitForEndOfFrame( destroyToken ).SuppressCancellationThrow();
+				if ( destroyToken.IsCancellationRequested )
+				{
+					Application.Quit();
+					return;
+				}
 			}
 			SceneField newScene = scene ?? _sceneTransicion;
 			SaveController.Load( out SaveFile saveFile );
@@ -30,14 +35,26 @@ namespace GwambaPrimeAdventure.Connection
 					saveFile.LastLevelEntered = newScene;
 			AsyncOperation asyncOperation = SceneManager.LoadSceneAsync( newScene, LoadSceneMode.Single );
 			if ( newScene != _menuScene )
-				await UniTask.WaitUntil( () => asyncOperation.isDone, PlayerLoopTiming.Update, destroyToken );
+			{
+				await UniTask.WaitUntil( () => asyncOperation.isDone, PlayerLoopTiming.Update, destroyToken ).SuppressCancellationThrow();
+				if ( destroyToken.IsCancellationRequested )
+				{
+					Application.Quit();
+					return;
+				}
+			}
 			else
 			{
 				transicionHud.LoadingBar.highValue = 100F;
 				while ( !asyncOperation.isDone )
 				{
 					transicionHud.LoadingBar.value = asyncOperation.progress * 100F;
-					await UniTask.WaitForEndOfFrame( destroyToken );
+					await UniTask.WaitForEndOfFrame( destroyToken ).SuppressCancellationThrow();
+					if ( destroyToken.IsCancellationRequested )
+					{
+						Application.Quit();
+						return;
+					}
 				}
 			}
 			asyncOperation.allowSceneActivation = true;
