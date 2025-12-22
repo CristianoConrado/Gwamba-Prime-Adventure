@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
 {
@@ -77,7 +77,7 @@ namespace GwambaPrimeAdventure.Hud
 			FrameRateText = RootElement.Q<Label>( nameof( FrameRateText ) );
 			VSyncText = RootElement.Q<Label>( nameof( VSyncText ) );
 		}
-		internal IEnumerator LoadHud()
+		internal async UniTask LoadHud()
 		{
 			SettingsController.Load( out Settings settings );
 			if ( !SettingsController.FileExists() )
@@ -112,14 +112,14 @@ namespace GwambaPrimeAdventure.Hud
 			MusicVolume.value = settings.MusicVolume;
 			FrameRate.value = settings.FrameRate;
 			VSync.value = settings.VSync;
-			ScreenBrightnessText.text = settings.ScreenBrightness.ToString();
-			GeneralVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.GeneralVolume ? ( settings.GeneralVolume / 1F ).ToString() : "0";
-			EffectsVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.EffectsVolume ? ( settings.EffectsVolume / 1F ).ToString() : "0";
-			MusicVolumeText.text = WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.MusicVolume ? ( settings.MusicVolume / 1F ).ToString() : "0";
-			SpeachDelayText.text = ( settings.SpeachDelay * 10F ).ToString();
-			FrameRateText.text = settings.FrameRate.ToString();
-			VSyncText.text = settings.VSync.ToString();
-			yield return null;
+			ScreenBrightnessText.text = $"{settings.ScreenBrightness}";
+			GeneralVolumeText.text = $"{( WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.GeneralVolume ? settings.GeneralVolume / 1F : 0 )}";
+			EffectsVolumeText.text = $"{(WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.EffectsVolume ? settings.EffectsVolume / 1F : 0)}";
+			MusicVolumeText.text = $"{(WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.MusicVolume ? settings.MusicVolume / 1F : 0)}";
+			SpeachDelayText.text = $"{settings.SpeachDelay * 10F}";
+			FrameRateText.text = $"{settings.FrameRate}";
+			VSyncText.text = $"{settings.VSync}";
+			await UniTask.WaitForEndOfFrame();
 		}
 	};
 };
