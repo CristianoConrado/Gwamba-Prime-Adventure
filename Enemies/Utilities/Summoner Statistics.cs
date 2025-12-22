@@ -12,6 +12,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		[field: SerializeField, Tooltip( "If this enemy will summon randomized in the react." )] public bool RandomReactSummons { get; private set; }
 		[field: SerializeField, Tooltip( "If this enemy will summon randomized timed." )] public bool RandomTimedSummons { get; private set; }
 		[field: SerializeField, Tooltip( "If this enemy will react to any damage taken." )] public bool HasEventSummon { get; private set; }
+		[field: SerializeField, Tooltip( "The amount of time to cancel the summon that is waiting to perform." )] public float TimeToCancel { get; private set; }
 	};
 	[Serializable]
 	public struct SummonPointStructure
