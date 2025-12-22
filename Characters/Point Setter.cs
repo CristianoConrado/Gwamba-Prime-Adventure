@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Character
 {
@@ -12,13 +12,13 @@ namespace GwambaPrimeAdventure.Character
 		[SerializeField, Tooltip( "Which point setter is setted when scene is the hubby world." )] private ushort _selfIndex;
 		internal static Vector2 CheckedPoint => Instance ? Instance.transform.position : Vector2.zero;
 		internal static bool TurnToLeft => Instance ? Instance._turnToLeft : false;
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			SaveController.Load( out SaveFile saveFile );
 			if ( gameObject.scene.name == _hubbyWorldScene && !string.IsNullOrEmpty( saveFile.LastLevelEntered ) )
 				if ( saveFile.LastLevelEntered.Contains( $"{_selfIndex}" ) )
 					Instance = this;
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
