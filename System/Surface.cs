@@ -19,8 +19,7 @@ namespace GwambaPrimeAdventure
 		private void OnDisable() => _getSurface -= CheckPoint;
 		public async UniTask Load()
 		{
-			_tilemap = GetComponent<Tilemap>();
-			_collider = GetComponent<TilemapCollider2D>();
+			(_tilemap, _collider) = (GetComponent<Tilemap>(), GetComponent<TilemapCollider2D>());
 			foreach ( SurfaceSound surfaceSound in _surfaceSounds )
 				foreach ( Tile tile in surfaceSound.Tiles )
 					if ( !_tiles.ContainsKey( tile ) )
