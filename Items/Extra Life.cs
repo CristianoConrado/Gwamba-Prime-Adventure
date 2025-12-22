@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item
 {
@@ -8,12 +8,12 @@ namespace GwambaPrimeAdventure.Item
 	{
 		[Header( "Condition" )]
 		[SerializeField, Tooltip( "If this object will be saved as already existent object." )] private bool _saveOnSpecifics;
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			SaveController.Load( out SaveFile saveFile );
 			if ( saveFile.LifesAcquired.Contains( name ) )
 				Destroy( gameObject );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		public void Collect()
 		{
