@@ -17,7 +17,9 @@ namespace GwambaPrimeAdventure
 			float progress = 0F;
 			for ( ushort i = 0; _loader.Count > i; i++ )
 			{
-				await _loader[ i ].Load().AttachExternalCancellation( destroyToken );
+				await _loader[ i ].Load().AttachExternalCancellation( destroyToken ).SuppressCancellationThrow();
+				if ( destroyToken.IsCancellationRequested )
+					return;
 				progressBar.value -= progress;
 				progressBar.value += progress = ( i + 1F ) / _loader.Count;
 			}
