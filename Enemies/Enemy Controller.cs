@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Cinemachine;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
@@ -43,17 +44,18 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		internal void OnEnable() => (_rigidbody.linearVelocity, _rigidbody.gravityScale) = (_guardedLinearVelocity, _statistics.GravityScale);
 		internal void OnDisable() => (_guardedLinearVelocity, _rigidbody.linearVelocity, _rigidbody.gravityScale) = (_rigidbody.linearVelocity, Vector2.zero, 0F);
-		private IEnumerator Start()
+		private async void Start()
 		{
 			SaveController.Load( out SaveFile saveFile );
 			if ( _statistics.SaveOnSpecifics && saveFile.GeneralObjects.Contains( name ) )
 			{
 				Destroy( gameObject );
-				yield break;
+				return;
 			}
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = false;
-			yield return new WaitWhile( () => SceneInitiator.IsInTrancision() );
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken );
 			(_vitality, _armorResistance, _fadeTime) = ((short) _statistics.Vitality, (short) _statistics.HitResistance, _statistics.TimeToFadeAway);
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = true;
