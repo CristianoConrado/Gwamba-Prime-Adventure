@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.U2D;
 using Unity.Cinemachine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Camera ), typeof( CinemachineBrain ) )]
@@ -32,7 +32,7 @@ namespace GwambaPrimeAdventure
 			}
 			_instance = this;
 		}
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			_childrenTransforms = new Transform[ _backgroundImages.Length ];
 			_childrenRederers = new SpriteRenderer[ _backgroundImages.Length ];
@@ -62,7 +62,7 @@ namespace GwambaPrimeAdventure
 							childRenderer.sortingOrder = _childrenRederers[ i ].sortingOrder;
 						}
 			}
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		private void LateUpdate()
 		{
