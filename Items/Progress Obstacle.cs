@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item
 {
@@ -10,7 +10,7 @@ namespace GwambaPrimeAdventure.Item
 		[SerializeField, Tooltip( "The index that this object will check if theres anything completed." )] private ushort _progressIndex;
 		[SerializeField, Tooltip( "If the index is about the boss." )] private bool _isBossProgress;
 		[SerializeField, Tooltip( "If this object will be saved as already existent object." )] private bool _saveOnSpecifics;
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			SaveController.Load( out SaveFile saveFile );
 			if ( _isBossProgress ? saveFile.DeafetedBosses[ _progressIndex - 1 ] : saveFile.LevelsCompleted[ _progressIndex - 1 ] )
@@ -22,7 +22,7 @@ namespace GwambaPrimeAdventure.Item
 				}
 				Destroy( gameObject );
 			}
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 	};
 };
