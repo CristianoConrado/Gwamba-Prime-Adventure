@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
 {
@@ -11,11 +11,11 @@ namespace GwambaPrimeAdventure.Enemy
 		private bool _canTeleport = true;
 		[Header( "Teleporter Enemy" )]
 		[SerializeField, Tooltip( "The teleporter statitics of this enemy." )] private TeleporterStatistics _statistics;
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			for ( ushort i = 0; _statistics.TeleportPointStructures.Length > i; i++ )
 				Instantiate( _statistics.TeleportPointStructures[ i ].TeleportPointObject, _statistics.TeleportPointStructures[ i ].InstancePoint, Quaternion.identity ).GetTouch( this, i );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		private void Update()
 		{
