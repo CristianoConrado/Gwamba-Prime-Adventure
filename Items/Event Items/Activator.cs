@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
@@ -33,12 +33,12 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			if ( _animator )
 				_animator.SetFloat( IsOn, 0F );
 		}
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			SaveController.Load( out SaveFile saveFile );
 			if ( _saveOnSpecifics && saveFile.GeneralObjects.Contains( name ) )
 				Activation();
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		protected void Activation()
 		{
