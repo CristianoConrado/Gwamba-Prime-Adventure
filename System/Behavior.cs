@@ -1,9 +1,9 @@
-using System.Collections;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	public interface ILoader
 	{
-		public IEnumerator Load();
+		public UniTask Load();
 	};
 	public interface IConnector
 	{
