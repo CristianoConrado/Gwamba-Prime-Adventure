@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Connection;
@@ -18,6 +19,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_selfLight,
 			_followLight;
 		private readonly Sender _sender = Sender.Create();
+		private CancellationToken _destroyToken;
 		private bool
 			_activation = false,
 			_follow = false;
@@ -48,7 +50,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		}
 		private void Start()
 		{
-			_activation = !_fadeActivation;
+			(_destroyToken, _activation) = (this.GetCancellationTokenOnDestroy(), !_fadeActivation);
 			if ( _isReceptor )
 				(_tilemapRenderer.enabled, _tilemapCollider.enabled) = (_fadeActivation, _fadeActivation && !_useOtherCollider);
 		}
@@ -57,14 +59,14 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			if ( _follow )
 				_followLight.transform.position = CharacterExporter.GwambaLocalization();
 		}
-		private IEnumerator Fade( bool appear )
+		private async UniTask Fade( bool appear )
 		{
 			bool onFirst = false;
 			if ( _otherPlace )
 				if ( onFirst = _otherPlace._appearFirst && _otherPlace._activation )
-					yield return StartCoroutine( _otherPlace.Fade( true ) );
+					await _otherPlace.Fade( true ).AttachExternalCancellation( _destroyToken );
 				else if ( onFirst = _otherPlace._fadeFirst && !_otherPlace._activation )
-					yield return StartCoroutine( _otherPlace.Fade( false ) );
+					await _otherPlace.Fade( false ).AttachExternalCancellation( _destroyToken );
 			if ( _isReceptor )
 				_activation = !_activation;
 			if ( appear )
@@ -81,9 +83,9 @@ namespace GwambaPrimeAdventure.Item.EventItem
 					_sender.Send( MessagePath.System );
 				}
 			}
-			IEnumerator OpacityLevel( float alpha )
+			async UniTask OpacityLevel( float alpha )
 			{
-				yield return new WaitUntil( () => isActiveAndEnabled );
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken );
 				Color color = _tilemap.color;
 				color.a = alpha;
 				_tilemap.color = color;
@@ -100,7 +102,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				}
 				else
 					for ( float i = 0F; 1F > _tilemap.color.a; i += 1E-1F )
-						yield return OpacityLevel( i );
+						await OpacityLevel( i ).AttachExternalCancellation( _destroyToken );
 			}
 			else
 			{
@@ -112,7 +114,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				}
 				else
 					for ( float i = 1F; 0F < _tilemap.color.a; i -= 1E-1F )
-						yield return OpacityLevel( i );
+						await OpacityLevel( i ).AttachExternalCancellation( _destroyToken );
 				_tilemapRenderer.enabled = false;
 				Occlusion();
 			}
@@ -120,31 +122,31 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				_tilemapCollider.enabled = appear;
 			if ( _otherPlace && !onFirst )
 				if ( !_otherPlace._appearFirst && _otherPlace._activation )
-					StartCoroutine( _otherPlace.Fade( true ) );
+					_otherPlace.Fade( true ).Forget();
 				else if ( !_otherPlace._fadeFirst && !_otherPlace._activation )
-					StartCoroutine( _otherPlace.Fade( false ) );
+					_otherPlace.Fade( false ).Forget();
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
 			if ( !_isReceptor && CharacterExporter.EqualGwamba( other.gameObject ) )
-				StartCoroutine( Fade( false ) );
+				Fade( false ).Forget();
 		}
 		private void OnTriggerExit2D( Collider2D other )
 		{
 			if ( !_isReceptor && CharacterExporter.EqualGwamba( other.gameObject ) )
-				StartCoroutine( Fade( true ) );
+				Fade( true ).Forget();
 		}
 		public void Execute()
 		{
 			if ( 0F < _timeToFadeAppearAgain )
-				StartCoroutine( FadeTimed( _activation ) );
+				FadeTimed( _activation ).Forget();
 			else
-				StartCoroutine( Fade( _activation ) );
-			IEnumerator FadeTimed( bool appear )
+				Fade( _activation ).Forget();
+			async UniTask FadeTimed( bool appear )
 			{
-				yield return Fade( appear );
-				yield return new WaitTime( this, _timeToFadeAppearAgain, true );
-				StartCoroutine( Fade( !appear ) );
+				await Fade( appear ).AttachExternalCancellation( _destroyToken );
+				await UniTask.WaitForSeconds( _timeToFadeAppearAgain, true, PlayerLoopTiming.Update, _destroyToken );
+				Fade( !appear ).Forget();
 			}
 		}
 	};
