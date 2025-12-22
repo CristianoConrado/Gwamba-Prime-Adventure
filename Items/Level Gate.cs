@@ -77,7 +77,9 @@ namespace GwambaPrimeAdventure.Item
 		private async UniTask OnHud()
 		{
 			_isOnInteraction = true;
-			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken );
+			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			_gateCamera.Priority.Value = _overlayPriority;
 			_isOnTransicion = true;
 			float time;
@@ -87,7 +89,9 @@ namespace GwambaPrimeAdventure.Item
 				time = elapsedTime / _brain.DefaultBlend.Time;
 				_levelGateWorld.Document.worldSpaceSize = Vector2.Lerp( _transitionSize, _activeSize, time );
 				elapsedTime = elapsedTime >= _brain.DefaultBlend.Time ? _brain.DefaultBlend.Time : elapsedTime + Time.deltaTime;
-				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken );
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 			}
 			_transitionSize = _levelGateWorld.Document.worldSpaceSize;
 			_isOnTransicion = false;
@@ -99,7 +103,9 @@ namespace GwambaPrimeAdventure.Item
 		private async UniTask OffHud()
 		{
 			_isOnInteraction = false;
-			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken );
+			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			_gateCamera.Priority.Value = _defaultPriority;
 			_levelGateScreen.RootElement.style.display = DisplayStyle.None;
 			_levelGateWorld.RootElement.style.display = DisplayStyle.Flex;
@@ -111,7 +117,9 @@ namespace GwambaPrimeAdventure.Item
 				time = elapsedTime / _brain.DefaultBlend.Time;
 				_levelGateWorld.Document.worldSpaceSize = Vector2.Lerp( _transitionSize, _worldSpaceSize, time );
 				elapsedTime = elapsedTime >= _brain.DefaultBlend.Time ? _brain.DefaultBlend.Time : elapsedTime + Time.deltaTime;
-				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken );
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 			}
 			_transitionSize = _levelGateWorld.Document.worldSpaceSize;
 			_isOnTransicion = false;
