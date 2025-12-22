@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Story
 {
@@ -10,8 +11,8 @@ namespace GwambaPrimeAdventure.Story
 		private DialogHud _dialogHud;
 		private StoryTeller _storyTeller;
 		private Animator _animator;
-		private WaitForSeconds _dialogWait;
 		private readonly Sender _sender = Sender.Create();
+		private CancellationToken _destroyToken;
 		private readonly int IsOn = Animator.StringToHash( nameof( IsOn ) );
 		private string _text = "";
 		private ushort _speachIndex = 0;
@@ -23,8 +24,7 @@ namespace GwambaPrimeAdventure.Story
 		public MessagePath Path => MessagePath.Story;
 		private void Awake()
 		{
-			_storyTeller = GetComponent<StoryTeller>();
-			_animator = GetComponent<Animator>();
+			(_storyTeller, _animator, _destroyToken) = (GetComponent<StoryTeller>(), GetComponent<Animator>(), this.GetCancellationTokenOnDestroy());
 			_sender.SetFormat( MessageFormat.State );
 			_sender.SetAdditionalData( gameObject );
 		}
@@ -38,15 +38,14 @@ namespace GwambaPrimeAdventure.Story
 			if ( _animator )
 				_animator.SetFloat( IsOn, 0F );
 		}
-		private IEnumerator TextDigitation()
+		private async UniTask TextDigitation()
 		{
 			if ( _nextSlide )
 			{
 				_nextSlide = false;
-				yield return StartCoroutine( _storyTeller.NextSlide() );
+				await _storyTeller.NextSlide().AttachExternalCancellation( _destroyToken );
 				_dialogHud.RootElement.style.display = DisplayStyle.Flex;
 			}
-			_dialogWait = new WaitForSeconds( _dialogTime );
 			_dialogHud.CharacterIcon.style.backgroundImage = new StyleBackground( _dialogObject.Speachs[ _speachIndex ].Model );
 			_dialogHud.CharacterName.text = _dialogObject.Speachs[ _speachIndex ].CharacterName;
 			_text = _dialogObject.Speachs[ _speachIndex ].SpeachText;
@@ -54,7 +53,7 @@ namespace GwambaPrimeAdventure.Story
 			foreach ( char letter in _text.ToCharArray() )
 			{
 				_dialogHud.CharacterSpeach.text += letter;
-				yield return _dialogWait;
+				await UniTask.WaitForSeconds( _dialogTime, true, PlayerLoopTiming.Update, _destroyToken );
 			}
 		}
 		private void AdvanceSpeach()
@@ -71,7 +70,7 @@ namespace GwambaPrimeAdventure.Story
 						_dialogHud.RootElement.style.display = DisplayStyle.None;
 					}
 					_speachIndex += 1;
-					StartCoroutine( TextDigitation() );
+					TextDigitation().Forget();
 				}
 				else
 				{
@@ -120,7 +119,7 @@ namespace GwambaPrimeAdventure.Story
 				_dialogHud = Instantiate( _dialogHudObject, transform );
 				_dialogTime = settings.SpeachDelay;
 				_dialogHud.AdvanceSpeach.clicked += AdvanceSpeach;
-				StartCoroutine( TextDigitation() );
+				TextDigitation().Forget();
 				if ( _storyTeller )
 					_storyTeller.ShowScene();
 			}
