@@ -1,21 +1,23 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	[Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
 	internal sealed class ObjectLoader : MonoBehaviour
 	{
 		private static readonly List<ILoader> _loader = new List<ILoader>();
-		public IEnumerator Load( ProgressBar progressBar )
+		public async UniTask Load( ProgressBar progressBar )
 		{
 			_loader.Clear();
 			GetComponentsInChildren<ILoader>( _loader );
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			float progress = 0F;
 			for ( ushort i = 0; _loader.Count > i; i++ )
 			{
-				yield return StartCoroutine( _loader[ i ].Load() );
+				await _loader[ i ].Load().AttachExternalCancellation( destroyToken );
 				progressBar.value -= progress;
 				progressBar.value += progress = ( i + 1F ) / _loader.Count;
 			}
