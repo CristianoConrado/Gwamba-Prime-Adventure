@@ -1,6 +1,7 @@
 using UnityEngine;
-using System.Collections;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( BoxCollider2D ) )]
@@ -17,11 +18,12 @@ namespace GwambaPrimeAdventure
 			Sender.Include( this );
 		}
 		private void OnDestroy() => Sender.Exclude( this );
-		private IEnumerator Start()
+		private async void Start()
 		{
-			yield return new WaitWhile( () => SceneInitiator.IsInTrancision() );
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken );
 			StateController[] states = GetComponentsInChildren<StateController>( true );
-			yield return new WaitUntil( () => states.All( state => state && state.enabled ) );
+			await UniTask.WaitUntil( () => states.All( state => state && state.enabled ), PlayerLoopTiming.Update, destroyToken );
 			Execution( _initialActive );
 		}
 		internal void Execution( bool activate )
