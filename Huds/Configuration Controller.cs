@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using System;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
 {
@@ -14,6 +15,7 @@ namespace GwambaPrimeAdventure.Hud
 		private static ConfigurationController _instance;
 		private ConfigurationHud _configurationHud;
 		private InputController _inputController;
+		private CancellationToken _destroyToken;
 		[Header( "Interaction Objects" )]
 		[SerializeField, Tooltip( "The object that handles the hud of the configurations." )] private ConfigurationHud _configurationHudObject;
 		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField _menuScene;
@@ -27,7 +29,7 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, _configurationHud) = (this, Instantiate( _configurationHudObject, transform ));
+			(_instance, _configurationHud, _destroyToken) = (this, Instantiate( _configurationHudObject, transform ), this.GetCancellationTokenOnDestroy());
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include( this );
 		}
@@ -74,11 +76,11 @@ namespace GwambaPrimeAdventure.Hud
 			_inputController.Commands.HideHud.Disable();
 			_inputController.Dispose();
 		}
-		private IEnumerator Start()
+		private async void Start()
 		{
 			if ( !_instance || this != _instance )
-				yield break;
-			yield return _configurationHud.LoadHud();
+				return;
+			await _configurationHud.LoadHud();
 			SettingsController.Load( out Settings settings );
 			Screen.SetResolution( settings.ScreenResolution.x, settings.ScreenResolution.y, settings.FullScreenMode );
 			Screen.brightness = settings.ScreenBrightness;
@@ -88,7 +90,7 @@ namespace GwambaPrimeAdventure.Hud
 			_mixer.SetFloat( nameof( GeneralVolume ), settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
 			_mixer.SetFloat( nameof( EffectsVolume ), settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
 			_mixer.SetFloat( nameof( MusicVolume ), settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
-			yield return StartCoroutine( StartLoad() );
+			await StartLoad();
 			_configurationHud.Close.clicked += CloseConfigurations;
 			_configurationHud.OutLevel.clicked += OutLevel;
 			_configurationHud.SaveGame.clicked += SaveGame;
@@ -111,14 +113,14 @@ namespace GwambaPrimeAdventure.Hud
 			_configurationHud.No.clicked += NoBackLevel;
 			DontDestroyOnLoad( gameObject );
 		}
-		private IEnumerator StartLoad()
+		private async UniTask StartLoad()
 		{
 			_inputController.Commands.HideHud.Disable();
 			_configurationHud.RootElement.style.display = DisplayStyle.None;
-			yield return new WaitWhile( () => SceneInitiator.IsInTrancision() );
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken );
 			_inputController.Commands.HideHud.Enable();
 		}
-		private void SceneLoaded( Scene scene, LoadSceneMode loadMode ) => StartCoroutine( StartLoad() );
+		private void SceneLoaded( Scene scene, LoadSceneMode loadMode ) => StartLoad().Forget();
 		private void HideHudAction( InputAction.CallbackContext hideHud ) => OpenCloseConfigurations();
 		private void CloseConfigurations()
 		{
