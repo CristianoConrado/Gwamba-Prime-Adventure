@@ -368,7 +368,7 @@ namespace GwambaPrimeAdventure.Character
 			if ( 0F < _fadeTimer )
 				if ( 0F >= ( _fadeTimer -= Time.deltaTime ) )
 					(_gwambaCanvas.FallDamageText.style.opacity, _gwambaCanvas.FallDamageText.text) = (0F, $"X 0");
-			if ( !_animator.GetBool( DashSlide ) && !_isOnGround && Mathf.Abs( _rigidbody.linearVelocityY ) != 0F && !_downStairs && ( 0F < _lastGroundedTime || 0F < _lastJumpTime ) )
+			if ( !_animator.GetBool( DashSlide ) && !_isOnGround && Mathf.Abs( _rigidbody.linearVelocityY ) > _minimumVelocity && !_downStairs && ( 0F < _lastGroundedTime || 0F < _lastJumpTime ) )
 				(_lastGroundedTime, _lastJumpTime) = (_lastGroundedTime - Time.deltaTime, _lastJumpTime - Time.deltaTime);
 			if ( 0F < _attackDelay )
 				if ( 0F >= ( _attackDelay -= Time.deltaTime ) )
@@ -493,8 +493,7 @@ namespace GwambaPrimeAdventure.Character
 				if ( ComboAttackBuffer )
 					StartAttackSound();
 			}
-			_offGround = !_isOnGround;
-			_downStairs = false;
+			(_offGround, _downStairs) = (!_isOnGround, false);
 		}
 		private void OnCollisionStay2D( Collision2D collision )
 		{
