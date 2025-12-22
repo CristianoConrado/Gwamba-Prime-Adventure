@@ -43,7 +43,9 @@ namespace GwambaPrimeAdventure.Story
 			if ( _nextSlide )
 			{
 				_nextSlide = false;
-				await _storyTeller.NextSlide().AttachExternalCancellation( _destroyToken );
+				await _storyTeller.NextSlide().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 				_dialogHud.RootElement.style.display = DisplayStyle.Flex;
 			}
 			_dialogHud.CharacterIcon.style.backgroundImage = new StyleBackground( _dialogObject.Speachs[ _speachIndex ].Model );
@@ -53,7 +55,9 @@ namespace GwambaPrimeAdventure.Story
 			foreach ( char letter in _text.ToCharArray() )
 			{
 				_dialogHud.CharacterSpeach.text += letter;
-				await UniTask.WaitForSeconds( _dialogTime, true, PlayerLoopTiming.Update, _destroyToken );
+				await UniTask.WaitForSeconds( _dialogTime, true, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 			}
 		}
 		private void AdvanceSpeach()
@@ -74,11 +78,9 @@ namespace GwambaPrimeAdventure.Story
 				}
 				else
 				{
-					_text = null;
 					_speachIndex = 0;
 					_dialogHud.CharacterIcon.style.backgroundImage = null;
-					_dialogHud.CharacterName.text = "";
-					_dialogHud.CharacterSpeach.text = "";
+					_dialogHud.CharacterSpeach.text = _dialogHud.CharacterName.text = _text = "";
 					_dialogHud.AdvanceSpeach.clicked -= AdvanceSpeach;
 					Destroy( _dialogHud.gameObject );
 					StateController.SetState( true );
@@ -116,8 +118,7 @@ namespace GwambaPrimeAdventure.Story
 				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Hud );
 				StateController.SetState( false );
-				_dialogHud = Instantiate( _dialogHudObject, transform );
-				_dialogTime = settings.SpeachDelay;
+				(_dialogHud, _dialogTime) = (Instantiate( _dialogHudObject, transform ), settings.SpeachDelay);
 				_dialogHud.AdvanceSpeach.clicked += AdvanceSpeach;
 				TextDigitation().Forget();
 				if ( _storyTeller )
