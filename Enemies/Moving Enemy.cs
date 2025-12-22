@@ -1,6 +1,7 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
@@ -31,9 +32,10 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		protected IEnumerator Start()
+		protected async void Start()
 		{
-			yield return new WaitWhile( () => SceneInitiator.IsInTrancision() );
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken );
 			transform.TurnScaleX( _movementSide = (short) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) ) );
 		}
 		protected void OnCollisionStay2D( Collision2D collision )
