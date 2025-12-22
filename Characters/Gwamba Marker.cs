@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Unity.Cinemachine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Character
 {
@@ -38,7 +38,6 @@ namespace GwambaPrimeAdventure.Character
 			base.OnDestroy();
 			if ( !Instance || this != Instance )
 				return;
-			StopAllCoroutines();
 			for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
 			{
 				_gwambaDamagers[ i ].DamagerHurt -= DamagerHurt;
@@ -90,34 +89,34 @@ namespace GwambaPrimeAdventure.Character
 			_inputController.Commands.Interaction.Disable();
 			(_localAtLinearVelocity, _rigidbody.linearVelocity, _rigidbody.gravityScale, _walkValue) = (_rigidbody.linearVelocity, Vector2.zero, 0F, 0F);
 		}
-		private IEnumerator Start()
+		private async void Start()
 		{
 			if ( !Instance || this != Instance )
-				yield break;
-			(_beginingPosition, _turnLeft, _reloadTransform) = (StartPosition, TurnToLeft, true);
-			yield return StartCoroutine( StartLoad() );
+				return;
+			(_destroyToken, _beginingPosition, _turnLeft, _reloadTransform) = (this.GetCancellationTokenOnDestroy(), StartPosition, TurnToLeft, true);
+			await StartLoad();
 			_didStart = true;
 			DontDestroyOnLoad( gameObject );
 		}
-		public IEnumerator StartLoad()
+		public async UniTask StartLoad()
 		{
 			DisableInputs();
-			yield return new WaitUntil( () => _reloadTransform );
+			await UniTask.WaitUntil( () => _reloadTransform, PlayerLoopTiming.Update, _destroyToken );
 			transform.TurnScaleX( _turnLeft );
 			(transform.position, _reloadTransform) = (_beginingPosition, false);
 			if ( _animator.GetBool( Death ) )
 				_animator.SetBool( Death, _bunnyHopUsed = _offBunnyHop = !( _deathLoad = true ) );
-			yield return new WaitWhile( () => SceneInitiator.IsInTrancision() );
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken );
 			if ( _deathLoad )
 				OnEnable();
 			else
 				EnableInputs();
 		}
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			if ( !Instance || Instance != this )
-				yield break;
-			yield return _gwambaCanvas.LoadHud();
+				return;
+			await _gwambaCanvas.LoadHud();
 			SaveController.Load( out SaveFile saveFile );
 			(_gwambaCanvas.LifeText.text, _gwambaCanvas.CoinText.text) = ($"X {saveFile.Lifes}", $"X {saveFile.Coins}");
 			(_vitality, _stunResistance) = ((short) _gwambaCanvas.Vitality.Length, (short) _gwambaCanvas.StunResistance.Length);
@@ -128,7 +127,7 @@ namespace GwambaPrimeAdventure.Character
 				_gwambaDamagers[ i ].DamagerAttack += DamagerAttack;
 			}
 			SceneLoaded( SceneManager.GetActiveScene(), LoadSceneMode.Single );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		private void SceneLoaded( Scene scene, LoadSceneMode loadMode )
 		{
@@ -142,7 +141,7 @@ namespace GwambaPrimeAdventure.Character
 			if ( _didStart )
 			{
 				RestartState();
-				StartCoroutine( StartLoad() );
+				StartLoad().Forget();
 			}
 		}
 		private void RestartState()
@@ -256,7 +255,6 @@ namespace GwambaPrimeAdventure.Character
 			if ( 0 >= _vitality )
 			{
 				OnDisable();
-				StopAllCoroutines();
 				EffectsController.SoundEffect( DeathSound, transform.position );
 				SaveController.Load( out SaveFile saveFile );
 				(_gwambaCanvas.LifeText.text, _localAtLinearVelocity, _rigidbody.gravityScale, _invencibility) = ($"X {saveFile.Lifes -= 1}", Vector2.zero, GravityScale, false);
