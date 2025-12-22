@@ -19,13 +19,17 @@ namespace GwambaPrimeAdventure.Story
 				for ( float i = 0F; 1F > _storySceneHud.SceneImage.style.opacity.value; i += 1E-1F )
 				{
 					_storySceneHud.SceneImage.style.opacity = i;
-					await UniTask.WaitForEndOfFrame( _destroyToken );
+					await UniTask.WaitForEndOfFrame( _destroyToken ).SuppressCancellationThrow();
+					if ( _destroyToken.IsCancellationRequested )
+						return;
 				}
 			else
 				for ( float i = 1F; 0F < _storySceneHud.SceneImage.style.opacity.value; i -= 1E-1F )
 				{
 					_storySceneHud.SceneImage.style.opacity = i;
-					await UniTask.WaitForEndOfFrame( _destroyToken );
+					await UniTask.WaitForEndOfFrame( _destroyToken ).SuppressCancellationThrow();
+					if ( _destroyToken.IsCancellationRequested )
+						return;
 				}
 		}
 		internal void ShowScene()
@@ -38,20 +42,30 @@ namespace GwambaPrimeAdventure.Story
 		{
 			if ( _storySceneObject.SceneComponents[ _imageIndex ].Equals( _storySceneObject.SceneComponents[ ^1 ] ) )
 				return;
-			await FadeImage( false ).AttachExternalCancellation( _destroyToken );
+			await FadeImage( false ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			_imageIndex = (ushort) ( _storySceneObject.SceneComponents.Length - 1 > _imageIndex ? _imageIndex + 1 : 0 );
 			_storySceneHud.SceneImage.style.backgroundImage = Background.FromTexture2D( _storySceneObject.SceneComponents[ _imageIndex ].Image );
-			await FadeImage( true ).AttachExternalCancellation( _destroyToken );
+			await FadeImage( true ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			if ( _storySceneObject.SceneComponents[ _imageIndex ].OffDialog )
 			{
-				await UniTask.WaitForSeconds( _storySceneObject.SceneComponents[ _imageIndex ].TimeToDesapear, true, PlayerLoopTiming.Update, _destroyToken );
+				await UniTask.WaitForSeconds( _storySceneObject.SceneComponents[ _imageIndex ].TimeToDesapear, true, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 				if ( _storySceneObject.SceneComponents[ _imageIndex ].JumpToNext )
-					await NextSlide().AttachExternalCancellation( _destroyToken );
+					await NextSlide().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 			}
 		}
 		internal async void CloseScene()
 		{
-			await FadeImage( false ).AttachExternalCancellation( _destroyToken );
+			await FadeImage( false ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			Destroy( _storySceneHud.gameObject );
 		}
 	};
