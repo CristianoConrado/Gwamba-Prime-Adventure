@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Unity.Cinemachine;
 using System.Collections.Generic;
+using System.Threading;
 using NaughtyAttributes;
 namespace GwambaPrimeAdventure.Character
 {
@@ -19,6 +20,7 @@ namespace GwambaPrimeAdventure.Character
 		protected readonly Collider2D[] _interactions = new Collider2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
 		protected readonly List<ContactPoint2D> _groundContacts = new List<ContactPoint2D>( (int) WorldBuild.PIXELS_PER_UNIT );
 		protected IInteractable[] _interactionsPerObject;
+		protected CancellationToken _destroyToken;
 		protected Vector2
 			_localAtStart = Vector2.zero,
 			_localAtEnd = Vector2.zero,
