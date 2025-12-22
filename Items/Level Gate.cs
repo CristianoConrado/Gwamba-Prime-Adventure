@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using Unity.Cinemachine;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item
@@ -15,6 +16,7 @@ namespace GwambaPrimeAdventure.Item
 			_levelGateScreen;
 		private CinemachineCamera _gateCamera;
 		private readonly Sender _sender = Sender.Create();
+		private CancellationToken _destroyToken;
 		private Vector2
 			_transitionSize = Vector2.zero,
 			_worldSpaceSize = Vector2.zero,
@@ -33,7 +35,7 @@ namespace GwambaPrimeAdventure.Item
 		[SerializeField, Tooltip( "Where the this camera have to be in the hierarchy." )] private short _overlayPriority;
 		private void Awake()
 		{
-			_gateCamera = GetComponentInChildren<CinemachineCamera>();
+			(_gateCamera, _destroyToken) = (GetComponentInChildren<CinemachineCamera>(), this.GetCancellationTokenOnDestroy());
 			_sender.SetFormat( MessageFormat.Event );
 			_sender.SetAdditionalData( gameObject );
 		}
@@ -49,7 +51,7 @@ namespace GwambaPrimeAdventure.Item
 				Destroy( _levelGateScreen.gameObject );
 			}
 		}
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			(_levelGateWorld, _levelGateScreen) = (Instantiate( _levelGateWorldObject, transform ), Instantiate( _levelGateScreenObject, transform ));
 			_levelGateScreen.RootElement.style.display = DisplayStyle.None;
@@ -67,16 +69,15 @@ namespace GwambaPrimeAdventure.Item
 			if ( saveFile.DeafetedBosses[ ushort.Parse( $"{_levelScene.SceneName[ ^1 ]}" ) - 1 ] )
 				_levelGateScreen.Scenes.clicked += ShowScenes;
 			_defaultPriority = (short) _gateCamera.Priority.Value;
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		private void EnterLevel() => GetComponent<Transitioner>().Transicion( _levelScene );
 		private void EnterBoss() => GetComponent<Transitioner>().Transicion( _bossScene );
 		private void ShowScenes() => _sender.Send( MessagePath.Story );
-		private IEnumerator OnHud()
+		private async UniTask OnHud()
 		{
 			_isOnInteraction = true;
-			while ( _isOnTransicion )
-				yield return null;
+			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken );
 			_gateCamera.Priority.Value = _overlayPriority;
 			_isOnTransicion = true;
 			float time;
@@ -86,20 +87,19 @@ namespace GwambaPrimeAdventure.Item
 				time = elapsedTime / _brain.DefaultBlend.Time;
 				_levelGateWorld.Document.worldSpaceSize = Vector2.Lerp( _transitionSize, _activeSize, time );
 				elapsedTime = elapsedTime >= _brain.DefaultBlend.Time ? _brain.DefaultBlend.Time : elapsedTime + Time.deltaTime;
-				yield return null;
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken );
 			}
 			_transitionSize = _levelGateWorld.Document.worldSpaceSize;
 			_isOnTransicion = false;
 			if ( !_isOnInteraction )
-				yield break;
+				return;
 			_levelGateWorld.RootElement.style.display = DisplayStyle.None;
 			_levelGateScreen.RootElement.style.display = DisplayStyle.Flex;
 		}
-		private IEnumerator OffHud()
+		private async UniTask OffHud()
 		{
 			_isOnInteraction = false;
-			while ( _isOnTransicion )
-				yield return null;
+			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken );
 			_gateCamera.Priority.Value = _defaultPriority;
 			_levelGateScreen.RootElement.style.display = DisplayStyle.None;
 			_levelGateWorld.RootElement.style.display = DisplayStyle.Flex;
@@ -111,7 +111,7 @@ namespace GwambaPrimeAdventure.Item
 				time = elapsedTime / _brain.DefaultBlend.Time;
 				_levelGateWorld.Document.worldSpaceSize = Vector2.Lerp( _transitionSize, _worldSpaceSize, time );
 				elapsedTime = elapsedTime >= _brain.DefaultBlend.Time ? _brain.DefaultBlend.Time : elapsedTime + Time.deltaTime;
-				yield return null;
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken );
 			}
 			_transitionSize = _levelGateWorld.Document.worldSpaceSize;
 			_isOnTransicion = false;
@@ -120,13 +120,13 @@ namespace GwambaPrimeAdventure.Item
 		{
 			if ( _isOnInteraction || !CharacterExporter.EqualGwamba( other.gameObject ) )
 				return;
-			StartCoroutine( OnHud() );
+			OnHud().Forget();
 		}
 		private void OnTriggerExit2D( Collider2D other )
 		{
 			if ( !_isOnInteraction || !CharacterExporter.EqualGwamba( other.gameObject ) )
 				return;
-			StartCoroutine( OffHud() );
+			OffHud().Forget();
 		}
 	};
 };
