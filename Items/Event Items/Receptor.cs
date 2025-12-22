@@ -1,6 +1,6 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item.EventItem
@@ -8,8 +8,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	[DisallowMultipleComponent, RequireComponent( typeof( IReceptorSignal ) )]
 	internal sealed class Receptor : StateController, ILoader
 	{
-		private static readonly HashSet<Receptor> _selfes = new();
-		private readonly HashSet<Activator> _activatorsNeeded = new();
+		private static readonly HashSet<Receptor> _selfes = new HashSet<Receptor>();
+		private readonly HashSet<Activator> _activatorsNeeded = new HashSet<Activator>();
 		private IReceptorSignal _receptor;
 		private ushort
 			_signals = 0,
@@ -37,7 +37,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			base.OnDestroy();
 			_selfes.Remove( this );
 		}
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			SaveController.Load( out SaveFile saveFile );
 			if ( 0 < _specificsObjects.Length )
@@ -46,7 +46,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 						_receptor.Execute();
 			foreach ( Activator activator in _activators )
 				_activatorsNeeded.Add( activator );
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		private void Update()
 		{
