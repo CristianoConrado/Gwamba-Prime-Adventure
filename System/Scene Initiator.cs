@@ -27,11 +27,23 @@ namespace GwambaPrimeAdventure
 			TransicionHud transicionHud = Instantiate( _transicionHud, transform );
 			(transicionHud.RootElement.style.opacity, transicionHud.LoadingBar.highValue, ProgressIndex) = (1F, _objectLoaders.Length, 0);
 			foreach ( ObjectLoader loader in _objectLoaders )
-				await Instantiate( loader ).Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken );
+			{
+				await Instantiate( loader ).Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow();
+				if ( destroyToken.IsCancellationRequested )
+				{
+					Application.Quit();
+					return;
+				}
+			}
 			for ( float i = 1F; 0F < transicionHud.RootElement.style.opacity.value; i -= 1E-1F )
 			{
 				transicionHud.RootElement.style.opacity = i;
-				await UniTask.WaitForEndOfFrame( destroyToken );
+				await UniTask.WaitForEndOfFrame( destroyToken ).SuppressCancellationThrow();
+				if ( destroyToken.IsCancellationRequested )
+				{
+					Application.Quit();
+					return;
+				}
 			}
 			Destroy( gameObject );
 			StateController.SetState( true );
