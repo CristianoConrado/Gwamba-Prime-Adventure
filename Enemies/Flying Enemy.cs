@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
@@ -34,14 +34,14 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			PolygonCollider2D trail = GetComponent<PolygonCollider2D>();
 			_trail = new Vector2[ trail.points.Length ];
 			for ( ushort i = 0; trail.points.Length > i; i++ )
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
 			(_movementDirection, _pointOrigin, _sizeDetection) = (Vector2.right * _movementSide, Rigidbody.position, _sizeDetection * _statistics.LookDistance);
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		private void Chase()
 		{
