@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.U2D;
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure.Connection
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Light2DBase ) )]
@@ -9,6 +10,7 @@ namespace GwambaPrimeAdventure.Connection
 	{
 		private static EffectsController _instance;
 		private readonly List<Light2DBase> _lightsStack = new List<Light2DBase>();
+		private CancellationToken _destroyToken;
 		private bool _canHitStop = true;
 		[SerializeField, Tooltip( "The source where the sounds came from." )] private AudioSource _sourceObject;
 		private new void Awake()
@@ -21,27 +23,24 @@ namespace GwambaPrimeAdventure.Connection
 			}
 			_instance = this;
 			_lightsStack.Add( GetComponent<Light2DBase>() );
+			_destroyToken = this.GetCancellationTokenOnDestroy();
 		}
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
-			StopAllCoroutines();
 			_lightsStack.Clear();
 		}
 		private void OnEnable() => AudioListener.pause = false;
 		private void OnDisable() => AudioListener.pause = true;
-		private void PrvateHitStop( float stopTime, float slowTime )
+		private async void PrvateHitStop( float stopTime, float slowTime )
 		{
-			if ( _canHitStop )
-				StartCoroutine( HitStop() );
-			IEnumerator HitStop()
-			{
-				_canHitStop = false;
-				Time.timeScale = slowTime;
-				yield return new WaitTime( this, stopTime, true );
-				Time.timeScale = 1F;
-				_canHitStop = true;
-			}
+			if ( !_canHitStop )
+				return;
+			_canHitStop = false;
+			Time.timeScale = slowTime;
+			await UniTask.WaitForSeconds( stopTime, true, PlayerLoopTiming.Update, _destroyToken );
+			Time.timeScale = 1F;
+			_canHitStop = true;
 		}
 		private void PrivateGlobalLight( Light2DBase globalLight, bool active )
 		{
@@ -57,7 +56,7 @@ namespace GwambaPrimeAdventure.Connection
 				_lightsStack[ ^1 ].enabled = true;
 			}
 		}
-		private void PrivateSoundEffect( AudioClip clip, Vector2 originSound )
+		private async void PrivateSoundEffect( AudioClip clip, Vector2 originSound )
 		{
 			if ( !clip )
 				return;
@@ -65,16 +64,13 @@ namespace GwambaPrimeAdventure.Connection
 			source.clip = clip;
 			source.volume = 1F;
 			source.Play();
-			StartCoroutine( SoundPlay( source, clip.length ) );
-			IEnumerator SoundPlay( AudioSource source, float playTime )
+			float time = clip.length;
+			while ( 0F < time )
 			{
-				while ( 0F < playTime )
-				{
-					playTime -= Time.deltaTime;
-					yield return new WaitUntil( () => isActiveAndEnabled );
-				}
-				Destroy( source.gameObject );
+				time -= Time.deltaTime;
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken );
 			}
+			Destroy( source.gameObject );
 		}
 		private void PrivateSurfaceSound( Vector2 originPosition ) => PrivateSoundEffect( Surface.CheckSurface( originPosition ), originPosition );
 		public static void HitStop( float stopTime, float slowTime ) => _instance.PrvateHitStop( stopTime, slowTime );
