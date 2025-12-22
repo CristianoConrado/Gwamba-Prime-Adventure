@@ -16,6 +16,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		[field: SerializeField, Tooltip( "If the react to damage will use other target." )] public bool UseTarget { get; private set; }
 		[field: SerializeField, ShowIf( nameof( UseTarget ) ), Tooltip( "The other target to move to on jump." )] public float OtherTarget { get; private set; }
 		[field: SerializeField, ShowIf( nameof( UseTarget ) ), Tooltip( "If the target to follow will be random." )] public bool RandomFollow { get; private set; }
+		[field: SerializeField, Tooltip( "The amount of time to cancel the jump that is waiting to perform." )] public float TimeToCancel { get; private set; }
 		[field: SerializeField, Min( 0F ), Tooltip( "The strenght of the basic jump." )] public float JumpStrenght { get; private set; }
 		[field: SerializeField, Min( 0F ), Tooltip( "The amount of time to jump again." )] public float TimeToJump { get; private set; }
 		[field: SerializeField, Min( 0F ), HideIf( nameof( CircularDetection ) ), Tooltip( "The angle of the detection ray." )] public float DetectionAngle { get; private set; }
