@@ -1,54 +1,58 @@
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure.Story
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
 	internal sealed class StoryTeller : MonoBehaviour
 	{
 		private StorySceneHud _storySceneHud;
+		private CancellationToken _destroyToken;
 		private ushort _imageIndex = 0;
 		[Header( "Scene Objects" )]
 		[SerializeField, Tooltip( "The object that handles the hud of the story scene." )] private StorySceneHud _storySceneHudObject;
 		[SerializeField, Tooltip( "The object that carry the scene settings." )] private StorySceneObject _storySceneObject;
-		private IEnumerator FadeImage( bool appear )
+		private async UniTask FadeImage( bool appear )
 		{
 			if ( appear )
 				for ( float i = 0F; 1F > _storySceneHud.SceneImage.style.opacity.value; i += 1E-1F )
-					yield return _storySceneHud.SceneImage.style.opacity = i;
+				{
+					_storySceneHud.SceneImage.style.opacity = i;
+					await UniTask.WaitForEndOfFrame( _destroyToken );
+				}
 			else
 				for ( float i = 1F; 0F < _storySceneHud.SceneImage.style.opacity.value; i -= 1E-1F )
-					yield return _storySceneHud.SceneImage.style.opacity = i;
+				{
+					_storySceneHud.SceneImage.style.opacity = i;
+					await UniTask.WaitForEndOfFrame( _destroyToken );
+				}
 		}
 		internal void ShowScene()
 		{
-			_storySceneHud = Instantiate( _storySceneHudObject, transform );
+			(_storySceneHud, _destroyToken) = (Instantiate( _storySceneHudObject, transform ), this.GetCancellationTokenOnDestroy());
 			_storySceneHud.SceneImage.style.backgroundImage = Background.FromTexture2D( _storySceneObject.SceneComponents[ _imageIndex = 0 ].Image );
-			StartCoroutine( FadeImage( true ) );
+			FadeImage( true ).Forget();
 		}
-		internal IEnumerator NextSlide()
+		internal async UniTask NextSlide()
 		{
 			if ( _storySceneObject.SceneComponents[ _imageIndex ].Equals( _storySceneObject.SceneComponents[ ^1 ] ) )
-				yield break;
-			yield return StartCoroutine( FadeImage( false ) );
+				return;
+			await FadeImage( false ).AttachExternalCancellation( _destroyToken );
 			_imageIndex = (ushort) ( _storySceneObject.SceneComponents.Length - 1 > _imageIndex ? _imageIndex + 1 : 0 );
 			_storySceneHud.SceneImage.style.backgroundImage = Background.FromTexture2D( _storySceneObject.SceneComponents[ _imageIndex ].Image );
-			yield return StartCoroutine( FadeImage( true ) );
+			await FadeImage( true ).AttachExternalCancellation( _destroyToken );
 			if ( _storySceneObject.SceneComponents[ _imageIndex ].OffDialog )
 			{
-				yield return new WaitForSeconds( _storySceneObject.SceneComponents[ _imageIndex ].TimeToDesapear );
+				await UniTask.WaitForSeconds( _storySceneObject.SceneComponents[ _imageIndex ].TimeToDesapear, true, PlayerLoopTiming.Update, _destroyToken );
 				if ( _storySceneObject.SceneComponents[ _imageIndex ].JumpToNext )
-					yield return StartCoroutine( NextSlide() );
+					await NextSlide().AttachExternalCancellation( _destroyToken );
 			}
 		}
-		internal void CloseScene()
+		internal async void CloseScene()
 		{
-			StartCoroutine( DestroyScene() );
-			IEnumerator DestroyScene()
-			{
-				yield return StartCoroutine( FadeImage( false ) );
-				Destroy( _storySceneHud.gameObject );
-			}
+			await FadeImage( false ).AttachExternalCancellation( _destroyToken );
+			Destroy( _storySceneHud.gameObject );
 		}
 	};
 };
