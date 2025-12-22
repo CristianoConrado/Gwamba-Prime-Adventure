@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
@@ -35,10 +35,10 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		public IEnumerator Load()
+		public async UniTask Load()
 		{
 			(_timeRun, _dashTime) = (_statistics.RunOfTime, _statistics.TimeToDash);
-			yield return null;
+			await UniTask.WaitForEndOfFrame();
 		}
 		private void InvencibleDash()
 		{
