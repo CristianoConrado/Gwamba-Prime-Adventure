@@ -38,7 +38,9 @@ namespace GwambaPrimeAdventure.Connection
 				return;
 			_canHitStop = false;
 			Time.timeScale = slowTime;
-			await UniTask.WaitForSeconds( stopTime, true, PlayerLoopTiming.Update, _destroyToken );
+			await UniTask.WaitForSeconds( stopTime, true, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			Time.timeScale = 1F;
 			_canHitStop = true;
 		}
@@ -68,7 +70,9 @@ namespace GwambaPrimeAdventure.Connection
 			while ( 0F < time )
 			{
 				time -= Time.deltaTime;
-				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken );
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 			}
 			Destroy( source.gameObject );
 		}
