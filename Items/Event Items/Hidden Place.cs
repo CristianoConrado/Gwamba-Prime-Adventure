@@ -106,9 +106,11 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				}
 				else
 					for ( float i = 0F; 1F > _tilemap.color.a; i += 1E-1F )
-						await OpacityLevel( i ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
-				if ( _destroyToken.IsCancellationRequested )
-					return;
+					{
+						await OpacityLevel( i ).SuppressCancellationThrow();
+						if ( _destroyToken.IsCancellationRequested )
+							return;
+					}
 			}
 			else
 			{
@@ -120,9 +122,11 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				}
 				else
 					for ( float i = 1F; 0F < _tilemap.color.a; i -= 1E-1F )
-						await OpacityLevel( i ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
-				if ( _destroyToken.IsCancellationRequested )
-					return;
+					{
+						await OpacityLevel( i ).SuppressCancellationThrow();
+						if ( _destroyToken.IsCancellationRequested )
+							return;
+					}
 				_tilemapRenderer.enabled = false;
 				Occlusion();
 			}
@@ -152,7 +156,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				Fade( _activation ).Forget();
 			async UniTask FadeTimed( bool appear )
 			{
-				await Fade( appear ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+				await Fade( appear ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 				await UniTask.WaitForSeconds( _timeToFadeAppearAgain, true, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
