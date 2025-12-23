@@ -1,8 +1,8 @@
-using UnityEngine;
-using UnityEngine.UIElements;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure
 {
 	[Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
