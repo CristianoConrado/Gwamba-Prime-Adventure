@@ -54,7 +54,7 @@ namespace GwambaPrimeAdventure.Story
 			_dialogHud.CharacterSpeach.text = "";
 			foreach ( char letter in _text.ToCharArray() )
 			{
-				await UniTask.WaitForSeconds( _dialogTime, true, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				await UniTask.WaitForSeconds( _dialogTime, true, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 				_dialogHud.CharacterSpeach.text += letter;
