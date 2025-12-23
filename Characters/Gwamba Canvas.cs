@@ -41,7 +41,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		internal async UniTask LoadCanvas( CancellationToken cancellationToken )
 		{
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken ).SuppressCancellationThrow();
 			if ( cancellationToken.IsCancellationRequested )
 				return;
 			VisualElement vitality = RootElement.Q<VisualElement>( nameof( Vitality ) ), VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) ), vitalityPieceClone;
@@ -62,7 +62,7 @@ namespace GwambaPrimeAdventure.Character
 				Vitality[ i ] = vitality[ i + 1 ];
 			}
 			vitality.Remove( VitalityPiece );
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken ).SuppressCancellationThrow();
 			if ( cancellationToken.IsCancellationRequested )
 				return;
 			VisualElement recoverVitality = RootElement.Q<VisualElement>( nameof( RecoverVitality ) ),
@@ -77,7 +77,7 @@ namespace GwambaPrimeAdventure.Character
 				RecoverVitality[ i ] = recoverVitality[ i + 1 ];
 			}
 			recoverVitality.Remove( RecoverVitalityPiece );
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken ).SuppressCancellationThrow();
 			if ( cancellationToken.IsCancellationRequested )
 				return;
 			VisualElement stunResistance = RootElement.Q<VisualElement>( nameof( StunResistance ) ),
@@ -92,7 +92,7 @@ namespace GwambaPrimeAdventure.Character
 				StunResistance[ i ] = stunResistance[ i + 1 ];
 			}
 			stunResistance.Remove( StunResistancePiece );
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken ).SuppressCancellationThrow();
 			if ( cancellationToken.IsCancellationRequested )
 				return;
 			VisualElement bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ), BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) ), bunnyHopPieceClone;
@@ -106,7 +106,7 @@ namespace GwambaPrimeAdventure.Character
 				BunnyHop[ i ] = bunnyHop[ i + 1 ];
 			}
 			bunnyHop.Remove( BunnyHopPiece );
-			await UniTask.Yield( PlayerLoopTiming.Update, cancellationToken, true ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.Update, cancellationToken ).SuppressCancellationThrow();
 			if ( cancellationToken.IsCancellationRequested )
 				return;
 		}
