@@ -1,7 +1,8 @@
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( PolygonCollider2D ) )]
@@ -36,12 +37,15 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			PolygonCollider2D trail = GetComponent<PolygonCollider2D>();
 			_trail = new Vector2[ trail.points.Length ];
 			for ( ushort i = 0; trail.points.Length > i; i++ )
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
 			(_movementDirection, _pointOrigin, _sizeDetection) = (Vector2.right * _movementSide, Rigidbody.position, _sizeDetection * _statistics.LookDistance);
-			await UniTask.WaitForEndOfFrame();
 		}
 		private void Chase()
 		{
