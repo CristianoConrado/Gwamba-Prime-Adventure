@@ -26,11 +26,13 @@ namespace GwambaPrimeAdventure
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			TransicionHud transicionHud = Instantiate( _transicionHud, transform );
 			(transicionHud.RootElement.style.opacity, transicionHud.LoadingBar.highValue, ProgressIndex) = (1F, _objectLoaders.Length, 0);
+			ObjectLoader requestedLoader;
 			foreach ( ObjectLoader loader in _objectLoaders )
 			{
-				await Instantiate( loader ).Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow();
+				await ( requestedLoader = Instantiate( loader ) ).Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow();
 				if ( destroyToken.IsCancellationRequested )
 				{
+					Destroy( requestedLoader.gameObject );
 					Application.Quit();
 					return;
 				}
