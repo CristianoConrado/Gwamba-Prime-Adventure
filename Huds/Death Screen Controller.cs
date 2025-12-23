@@ -75,7 +75,7 @@ namespace GwambaPrimeAdventure.Hud
 			for ( float i = 0F; 1F > _deathScreenHud.Curtain.style.opacity.value; i += 5E-2F )
 			{
 				_deathScreenHud.Curtain.style.opacity = i;
-				await UniTask.WaitForEndOfFrame( _destroyToken ).SuppressCancellationThrow();
+				await UniTask.Yield( PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 			}
@@ -87,7 +87,7 @@ namespace GwambaPrimeAdventure.Hud
 			for ( float i = 1F; 0F < _deathScreenHud.Curtain.style.opacity.value; i -= 5E-2F )
 			{
 				_deathScreenHud.Curtain.style.opacity = i;
-				await UniTask.WaitForEndOfFrame( _destroyToken ).SuppressCancellationThrow();
+				await UniTask.Yield( PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 			}
