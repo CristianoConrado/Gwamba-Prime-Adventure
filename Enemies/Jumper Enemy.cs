@@ -65,7 +65,7 @@ namespace GwambaPrimeAdventure.Enemy
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			_cancellationSource.RegisterRaiseCancelOnDestroy( gameObject );
@@ -108,7 +108,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( !gameObject.activeSelf && !_cancelTimerActivated )
 			{
 				_cancelTimerActivated = true;
-				await UniTask.WaitForSeconds( _statistics.TimeToCancel, false, PlayerLoopTiming.Update, _cancelTimerSource.Token ).SuppressCancellationThrow();
+				await UniTask.WaitForSeconds( _statistics.TimeToCancel, false, PlayerLoopTiming.Update, _cancelTimerSource.Token, true ).SuppressCancellationThrow();
 				if ( _cancelTimerSource.IsCancellationRequested )
 					return;
 				_cancellationSource.Cancel( !( _cancelTimerActivated = false ) );
@@ -124,7 +124,7 @@ namespace GwambaPrimeAdventure.Enemy
 					{
 						WaitToCancel();
 						return OnGround;
-					}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+					}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
 					if ( _cancellationSource.IsCancellationRequested )
 						return;
 					(_isJumping, _contunuosFollow, _turnFollow) = (true, _follow = _statistics.TimedJumps[ jumpIndex ].Follow, _statistics.TimedJumps[ jumpIndex ].TurnFollow);
@@ -232,7 +232,7 @@ namespace GwambaPrimeAdventure.Enemy
 			{
 				WaitToCancel();
 				return !OnGround || _detected || !isActiveAndEnabled || IsStunned;
-			}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+			}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
 			if ( _cancellationSource.IsCancellationRequested )
 				return;
 			if ( _stopJump || 0F < _jumpTime )
@@ -244,7 +244,7 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					WaitToCancel();
 					return OnGround;
-				}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+				}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
 				if ( _cancellationSource.IsCancellationRequested )
 					return;
 				(_isJumping, _contunuosFollow) = (true, _follow = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Follow);
@@ -276,7 +276,7 @@ namespace GwambaPrimeAdventure.Enemy
 							{
 								WaitToCancel();
 								return OnGround;
-							}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+							}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
 							if ( _cancellationSource.IsCancellationRequested )
 								return;
 							(_otherTarget, _contunuosFollow, _turnFollow) = (_statistics.OtherTarget, _follow = _statistics.FollowReact, _statistics.TurnFollowReact);
