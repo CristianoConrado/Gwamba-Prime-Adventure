@@ -1,8 +1,9 @@
+using Cysharp.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Tilemaps;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Tilemap ), typeof( TilemapRenderer ) ), RequireComponent( typeof( TilemapCollider2D ) )]
@@ -19,12 +20,15 @@ namespace GwambaPrimeAdventure
 		private void OnDisable() => _getSurface -= CheckPoint;
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			(_tilemap, _collider) = (GetComponent<Tilemap>(), GetComponent<TilemapCollider2D>());
 			foreach ( SurfaceSound surfaceSound in _surfaceSounds )
 				foreach ( Tile tile in surfaceSound.Tiles )
 					if ( !_tiles.ContainsKey( tile ) )
 						_tiles.Add( tile, surfaceSound.Clip );
-			await UniTask.WaitForEndOfFrame();
 		}
 		private void CheckPoint( Vector2 originPosition )
 		{
