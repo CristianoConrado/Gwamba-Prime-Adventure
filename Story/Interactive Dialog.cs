@@ -54,10 +54,10 @@ namespace GwambaPrimeAdventure.Story
 			_dialogHud.CharacterSpeach.text = "";
 			foreach ( char letter in _text.ToCharArray() )
 			{
-				_dialogHud.CharacterSpeach.text += letter;
 				await UniTask.WaitForSeconds( _dialogTime, true, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
+				_dialogHud.CharacterSpeach.text += letter;
 			}
 		}
 		private void AdvanceSpeach()
