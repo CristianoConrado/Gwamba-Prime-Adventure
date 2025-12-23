@@ -1,6 +1,7 @@
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
 	internal abstract class Activator : StateController, ILoader
@@ -35,10 +36,13 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		}
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			SaveController.Load( out SaveFile saveFile );
 			if ( _saveOnSpecifics && saveFile.GeneralObjects.Contains( name ) )
 				Activation();
-			await UniTask.WaitForEndOfFrame();
 		}
 		protected void Activation()
 		{
