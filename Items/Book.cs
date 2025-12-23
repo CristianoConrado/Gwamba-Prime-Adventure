@@ -20,7 +20,7 @@ namespace GwambaPrimeAdventure.Item
 			{
 				if ( saveFile.Books[ name ] )
 					GetComponent<SpriteRenderer>().sprite = _bookCacthed;
-				await UniTask.WaitForEndOfFrame();
+				await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 				return;
 			}
 			saveFile.Books.Add( name, false );
