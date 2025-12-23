@@ -80,7 +80,7 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			if ( !_instance || this != _instance )
 				return;
-			await _configurationHud.LoadHud( _destroyToken ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			await _configurationHud.LoadHud().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			SettingsController.Load( out Settings settings );
@@ -92,7 +92,7 @@ namespace GwambaPrimeAdventure.Hud
 			_mixer.SetFloat( nameof( GeneralVolume ), settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
 			_mixer.SetFloat( nameof( EffectsVolume ), settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
 			_mixer.SetFloat( nameof( MusicVolume ), settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
-			await StartLoad().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			await StartLoad().SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			_configurationHud.Close.clicked += CloseConfigurations;
