@@ -1,9 +1,8 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-using System;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
+using System;
+using UnityEngine;
+using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure.Hud
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( UIDocument ) )]
@@ -92,10 +91,10 @@ namespace GwambaPrimeAdventure.Hud
 			MusicVolume.lowValue = EffectsVolume.lowValue = GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			FrameRate.lowValue = 10;
 			VSync.lowValue = 0;
-			foreach ( Resolution resolution in BuildWorker.PixelPerfectResolutions() )
+			foreach ( Resolution resolution in BuildMathemathics.PixelPerfectResolutions() )
 				ScreenResolution.choices.Add( $@"{resolution.width} x {resolution.height}" );
 			foreach ( FullScreenMode mode in Enum.GetValues( typeof( FullScreenMode ) ) )
-				FullScreenModes.choices.Add( mode.ToString() );
+				FullScreenModes.choices.Add( $"{mode}" );
 			SimulationHertz.choices.Add( $"{WorldBuild.DEFAULT_HERTZ} hertz" );
 			SimulationHertz.choices.Add( $"{WorldBuild.MEDIUM_HERTZ} hertz" );
 			SimulationHertz.choices.Add( $"{WorldBuild.MAXIMUM_HERTZ} hertz" );
