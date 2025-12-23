@@ -80,7 +80,7 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			if ( !_instance || this != _instance )
 				return;
-			await _configurationHud.LoadHud().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			await _configurationHud.LoadHud( _destroyToken ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			SettingsController.Load( out Settings settings );
