@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 namespace GwambaPrimeAdventure
 {
-    public static class BuildWorker
-    {
+	public static class BuildMathemathics
+	{
 		private static Vector3 _scaleTurner = Vector3.zero;
 		private static float _outpuNormalized = 0F;
 		public static Vector2 OrthographicToRealSize( float orthographicSize ) => orthographicSize * 2F * new Vector2( WorldBuild.HEIGHT_WIDTH_PROPORTION, 1F );
