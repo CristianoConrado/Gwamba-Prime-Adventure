@@ -35,7 +35,9 @@ namespace GwambaPrimeAdventure.Enemy
 		protected async void Start()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken );
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			transform.TurnScaleX( _movementSide = (short) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) ) );
 		}
 		protected void OnCollisionStay2D( Collision2D collision )
