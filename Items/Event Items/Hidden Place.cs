@@ -87,7 +87,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			}
 			async UniTask OpacityLevel( float alpha )
 			{
-				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 				Color color = _tilemap.color;
@@ -155,7 +155,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				await Fade( appear ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
-				await UniTask.WaitForSeconds( _timeToFadeAppearAgain, true, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				await UniTask.WaitForSeconds( _timeToFadeAppearAgain, true, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 				Fade( !appear ).Forget();
