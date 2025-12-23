@@ -37,7 +37,7 @@ namespace GwambaPrimeAdventure.Enemy
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			_projectileParameters = new InstantiateParameters() { parent = transform, worldSpace = false };
