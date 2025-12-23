@@ -1,6 +1,7 @@
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Item
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( BoxCollider2D ) )]
@@ -10,6 +11,10 @@ namespace GwambaPrimeAdventure.Item
 		[SerializeField, Tooltip( "The sprite to show when the book gor cacthed." )] private Sprite _bookCacthed;
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			SaveController.Load( out SaveFile saveFile );
 			if ( saveFile.Books.ContainsKey( name ) )
 			{
@@ -19,7 +24,6 @@ namespace GwambaPrimeAdventure.Item
 				return;
 			}
 			saveFile.Books.Add( name, false );
-			await UniTask.WaitForEndOfFrame();
 		}
 		public void Collect()
 		{
