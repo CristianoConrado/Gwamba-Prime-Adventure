@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Cinemachine;
-using System.Collections;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Connection;
 using GwambaPrimeAdventure.Enemy.Supply;
@@ -12,16 +11,6 @@ namespace GwambaPrimeAdventure.Enemy
 		[Header( "Projectile" )]
 		[SerializeField, Tooltip( "The statitics of this projectile." )] private ProjectileStatistics _statistics;
 		public short Health => _vitality;
-		private new void Awake()
-		{
-			base.Awake();
-			(_rigidbody, _screenShaker) = (GetComponent<Rigidbody2D>(), GetComponent<CinemachineImpulseSource>());
-		}
-		private new void OnDestroy()
-		{
-			base.OnDestroy();
-			StopAllCoroutines();
-		}
 		private void CommonInstance()
 		{
 			for ( ushort i = 0; _statistics.QuantityToSummon > i; i++ )
@@ -70,23 +59,9 @@ namespace GwambaPrimeAdventure.Enemy
 				CellInstance();
 			}
 		}
-		private IEnumerator ParabolicProjectile()
-		{
-			float time = 0F;
-			float x;
-			float y;
-			while ( _statistics.TimeToFade > time )
-			{
-				time += Time.fixedDeltaTime;
-				x = Mathf.Cos( _statistics.BaseAngle * Mathf.Deg2Rad );
-				y = Mathf.Sin( _statistics.BaseAngle * Mathf.Deg2Rad );
-				_rigidbody.MovePosition( _statistics.MovementSpeed * time * new Vector2( x, y - 5E-1F * -Physics2D.gravity.y * Mathf.Pow( time, 2 ) ) );
-				yield return null;
-			}
-			_parabolicEvent = null;
-		}
 		private void Start()
 		{
+			(_rigidbody, _screenShaker) = (GetComponent<Rigidbody2D>(), GetComponent<CinemachineImpulseSource>());
 			(_vitality, _pointToJump, _breakInUse, _internalBreakPoint) = ((short) _statistics.Vitality, _statistics.JumpPoints, _statistics.UseBreak, _statistics.BreakPoint);
 			(_internalReturnPoint, _deathTimer) = (_statistics.ReturnPoint, _statistics.TimeToFade);
 			if ( _statistics.RandomBreak )
@@ -161,12 +136,7 @@ namespace GwambaPrimeAdventure.Enemy
 				CellInstance();
 			}
 			_rigidbody.rotation += _statistics.RotationSpeed * Time.fixedDeltaTime;
-			if ( _statistics.ParabolicMovement )
-				if ( _parabolicEvent is null )
-					_parabolicEvent = ParabolicProjectile();
-				else
-					_parabolicEvent?.MoveNext();
-			else if ( !_statistics.StayInPlace && _statistics.RotationMatter )
+			if ( !_statistics.StayInPlace && _statistics.RotationMatter )
 				_rigidbody.linearVelocity = ( _statistics.InvertSide ? -transform.up : transform.up ) * _statistics.MovementSpeed;
 		}
 		private void OnTriggerEnter2D( Collider2D other )
