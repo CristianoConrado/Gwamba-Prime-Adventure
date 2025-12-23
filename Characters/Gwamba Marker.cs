@@ -91,7 +91,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private async void Start()
 		{
-			if ( !Instance || this != Instance || _destroyToken.IsCancellationRequested )
+			if ( !Instance || this != Instance )
 				return;
 			(_destroyToken, _beginingPosition, _turnLeft, _reloadTransform) = (this.GetCancellationTokenOnDestroy(), StartPosition, TurnToLeft, true);
 			await StartLoad().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
