@@ -38,7 +38,7 @@ namespace GwambaPrimeAdventure
 			for ( float i = 1F; 0F < transicionHud.RootElement.style.opacity.value; i -= 1E-1F )
 			{
 				transicionHud.RootElement.style.opacity = i;
-				await UniTask.Yield( PlayerLoopTiming.Update, destroyToken ).SuppressCancellationThrow();
+				await UniTask.Yield( PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 				if ( destroyToken.IsCancellationRequested )
 				{
 					Application.Quit();
