@@ -1,6 +1,7 @@
-using UnityEngine;
-using System.Threading;
 using Cysharp.Threading.Tasks;
+using System.Collections;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
@@ -19,32 +20,31 @@ namespace GwambaPrimeAdventure
 			}
 			_instance = this;
 		}
-		private async void Start()
+		private IEnumerator Start()
 		{
 			if ( !_instance || this != _instance )
-				return;
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+				yield break;
 			TransicionHud transicionHud = Instantiate( _transicionHud, transform );
 			(transicionHud.RootElement.style.opacity, transicionHud.LoadingBar.highValue, ProgressIndex) = (1F, _objectLoaders.Length, 0);
 			ObjectLoader requestedLoader;
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			foreach ( ObjectLoader loader in _objectLoaders )
 			{
-				await ( requestedLoader = Instantiate( loader ) ).Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow();
+				yield return ( requestedLoader = Instantiate( loader ) ).Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow().ToCoroutine();
 				if ( destroyToken.IsCancellationRequested )
 				{
 					Destroy( requestedLoader.gameObject );
 					Application.Quit();
-					return;
+					yield break;
 				}
 			}
 			for ( float i = 1F; 0F < transicionHud.RootElement.style.opacity.value; i -= 1E-1F )
 			{
-				transicionHud.RootElement.style.opacity = i;
-				await UniTask.Yield( PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
+				yield return transicionHud.RootElement.style.opacity = i;
 				if ( destroyToken.IsCancellationRequested )
 				{
 					Application.Quit();
-					return;
+					yield break;
 				}
 			}
 			Destroy( gameObject );
