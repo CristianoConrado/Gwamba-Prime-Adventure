@@ -1,9 +1,9 @@
-using UnityEngine;
-using UnityEngine.Rendering;
-using Unity.Cinemachine;
+using NaughtyAttributes;
 using System.Collections.Generic;
 using System.Threading;
-using NaughtyAttributes;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.Rendering;
 namespace GwambaPrimeAdventure.Character
 {
 	[DisallowMultipleComponent, SelectionBase, RequireComponent( typeof( SortingGroup ), typeof( CircleCollider2D ) )]
