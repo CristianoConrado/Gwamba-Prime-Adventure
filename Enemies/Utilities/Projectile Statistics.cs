@@ -19,8 +19,6 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		public ForceMode2D ForceMode { get; private set; }
 		[field: SerializeField, HideIf( EConditionOperator.Or, nameof( StayInPlace ), nameof( EndlessPursue ) ), Tooltip( "If this projectile will use force mode to move." )]
 		public bool UseForce { get; private set; }
-		[field: SerializeField, HideIf( EConditionOperator.Or, nameof( StayInPlace ), nameof( EndlessPursue ) ), Tooltip( "If this projectile will use parabolic movement." )]
-		public bool ParabolicMovement { get; private set; }
 		[field: SerializeField, HideIf( nameof( StayInPlace ) ), Tooltip( "The amount of speed this projectile will move." )] public float MovementSpeed { get; private set; }
 		[field: SerializeField, HideIf( nameof( StayInPlace ) ), Tooltip( "If the rotation of this projectile impacts its movement." )] public bool RotationMatter { get; private set; }
 		[field: SerializeField, Tooltip( "If the rotation of this projectile will be used." )] public bool UseSelfRotation { get; private set; }
