@@ -80,7 +80,7 @@ namespace GwambaPrimeAdventure.Item
 		private async UniTask OnHud()
 		{
 			_isOnInteraction = true;
-			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			_gateCamera.Priority.Value = _overlayPriority;
@@ -92,7 +92,7 @@ namespace GwambaPrimeAdventure.Item
 				time = elapsedTime / _brain.DefaultBlend.Time;
 				_levelGateWorld.Document.worldSpaceSize = Vector2.Lerp( _transitionSize, _activeSize, time );
 				elapsedTime = elapsedTime >= _brain.DefaultBlend.Time ? _brain.DefaultBlend.Time : elapsedTime + Time.deltaTime;
-				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 			}
@@ -106,7 +106,7 @@ namespace GwambaPrimeAdventure.Item
 		private async UniTask OffHud()
 		{
 			_isOnInteraction = false;
-			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => _isOnTransicion, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			_gateCamera.Priority.Value = _defaultPriority;
@@ -120,7 +120,7 @@ namespace GwambaPrimeAdventure.Item
 				time = elapsedTime / _brain.DefaultBlend.Time;
 				_levelGateWorld.Document.worldSpaceSize = Vector2.Lerp( _transitionSize, _worldSpaceSize, time );
 				elapsedTime = elapsedTime >= _brain.DefaultBlend.Time ? _brain.DefaultBlend.Time : elapsedTime + Time.deltaTime;
-				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 			}
