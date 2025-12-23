@@ -1,8 +1,9 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.U2D;
-using Unity.Cinemachine;
-using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Camera ), typeof( CinemachineBrain ) )]
@@ -34,6 +35,10 @@ namespace GwambaPrimeAdventure
 		}
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			_childrenTransforms = new Transform[ _backgroundImages.Length ];
 			_childrenRederers = new SpriteRenderer[ _backgroundImages.Length ];
 			_startPosition = new Vector2[ _backgroundImages.Length ];
@@ -62,7 +67,6 @@ namespace GwambaPrimeAdventure
 							childRenderer.sortingOrder = _childrenRederers[ i ].sortingOrder;
 						}
 			}
-			await UniTask.WaitForEndOfFrame();
 		}
 		private void LateUpdate()
 		{
