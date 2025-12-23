@@ -1,10 +1,10 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-using Unity.Cinemachine;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Connection;
+using System.Threading;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure.Item
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( SpriteRenderer ), typeof( BoxCollider2D ) )]
@@ -65,7 +65,7 @@ namespace GwambaPrimeAdventure.Item
 			_levelGateWorld.transform.localPosition = _offsetPosition;
 			_levelGateScreen.transform.localPosition = _offsetPosition;
 			_transitionSize = _worldSpaceSize = _levelGateWorld.Document.worldSpaceSize;
-			_activeSize = BuildWorker.OrthographicToScreenSize( _gateCamera.Lens.OrthographicSize );
+			_activeSize = BuildMathemathics.OrthographicToScreenSize( _gateCamera.Lens.OrthographicSize );
 			SaveController.Load( out SaveFile saveFile );
 			_levelGateScreen.Level.clicked += EnterLevel;
 			if ( saveFile.LevelsCompleted[ ushort.Parse( $"{_levelScene.SceneName[ ^1 ]}" ) - 1 ] )
