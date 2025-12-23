@@ -21,7 +21,7 @@ namespace GwambaPrimeAdventure.Connection
 			for ( float i = 0F; 1F > transicionHud.RootElement.style.opacity.value; i += 1E-1F )
 			{
 				transicionHud.RootElement.style.opacity = i;
-				await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+				await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 				if ( destroyToken.IsCancellationRequested )
 				{
 					Application.Quit();
@@ -36,7 +36,7 @@ namespace GwambaPrimeAdventure.Connection
 			AsyncOperation asyncOperation = SceneManager.LoadSceneAsync( newScene, LoadSceneMode.Single );
 			if ( newScene != _menuScene )
 			{
-				await UniTask.WaitUntil( () => asyncOperation.isDone, PlayerLoopTiming.Update, destroyToken ).SuppressCancellationThrow();
+				await UniTask.WaitUntil( () => asyncOperation.isDone, PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 				if ( destroyToken.IsCancellationRequested )
 				{
 					Application.Quit();
@@ -49,7 +49,7 @@ namespace GwambaPrimeAdventure.Connection
 				while ( !asyncOperation.isDone )
 				{
 					transicionHud.LoadingBar.value = asyncOperation.progress * 100F;
-					await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+					await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 					if ( destroyToken.IsCancellationRequested )
 					{
 						Application.Quit();
