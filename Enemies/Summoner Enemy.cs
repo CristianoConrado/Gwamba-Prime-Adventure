@@ -51,7 +51,7 @@ namespace GwambaPrimeAdventure.Enemy
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			_cancellationSource.RegisterRaiseCancelOnDestroy(gameObject);
@@ -76,14 +76,14 @@ namespace GwambaPrimeAdventure.Enemy
 					WaitToCancel();
 					async void WaitToCancel()
 					{
-						await UniTask.WaitForSeconds( _statistics.TimeToCancel, false, PlayerLoopTiming.Update, _cancelTimerSource.Token ).SuppressCancellationThrow();
+						await UniTask.WaitForSeconds( _statistics.TimeToCancel, false, PlayerLoopTiming.Update, _cancelTimerSource.Token, true ).SuppressCancellationThrow();
 						if ( _cancelTimerSource.IsCancellationRequested )
 							return;
 						_cancellationSource.Cancel( !( _cancelTimerActivated = false ) );
 					}
 				}
 				return _summonEvent is not null;
-			}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+			}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
 			if ( _cancellationSource.IsCancellationRequested )
 				return;
 			_summonEvent = StopToSummon();
