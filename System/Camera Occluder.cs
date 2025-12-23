@@ -55,7 +55,7 @@ namespace GwambaPrimeAdventure
 			if ( !_instance || this != _instance )
 				return;
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			DontDestroyOnLoad( gameObject );
