@@ -25,7 +25,7 @@ namespace GwambaPrimeAdventure
 			_instance = this;
 			_cinemachineFollow = GetComponent<CinemachineFollow>();
 			_posiontDamping = _cinemachineFollow.TrackerSettings.PositionDamping;
-			GetComponent<BoxCollider2D>().size = BuildWorker.OrthographicToRealSize( GetComponent<CinemachineCamera>().Lens.OrthographicSize );
+			GetComponent<BoxCollider2D>().size = BuildMathemathics.OrthographicToRealSize( GetComponent<CinemachineCamera>().Lens.OrthographicSize );
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include( this );
 		}
