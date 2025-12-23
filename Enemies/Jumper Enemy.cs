@@ -49,7 +49,10 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
-			StopAllCoroutines();
+			_cancellationSource?.Cancel();
+			_cancelTimerSource?.Cancel();
+			_cancellationSource?.Dispose();
+			_cancelTimerSource?.Dispose();
 			if ( _statistics.UseInput )
 			{
 				_inputController.Commands.Jump.started -= Jump;
@@ -61,6 +64,10 @@ namespace GwambaPrimeAdventure.Enemy
 		private void OnEnable() => _cancelTimerSource.Cancel( !( _cancelTimerActivated = false ) );
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			_cancellationSource.RegisterRaiseCancelOnDestroy( gameObject );
 			_cancelTimerSource.RegisterRaiseCancelOnDestroy( gameObject );
 			(_timedJumpTime, _jumpCount) = (new float[ _statistics.TimedJumps.Length ], new short[ _statistics.JumpPointStructures.Length ]);
@@ -71,7 +78,6 @@ namespace GwambaPrimeAdventure.Enemy
 				Instantiate( _statistics.JumpPointStructures[ i ].JumpPointObject, _statistics.JumpPointStructures[ i ].Point, Quaternion.identity ).GetTouch( this, i );
 				_jumpCount[ i ] = (short) _statistics.JumpPointStructures[ i ].JumpCount;
 			}
-			await UniTask.WaitForEndOfFrame();
 		}
 		private void Jump( InputAction.CallbackContext jump )
 		{
@@ -102,7 +108,9 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( !gameObject.activeSelf && !_cancelTimerActivated )
 			{
 				_cancelTimerActivated = true;
-				await UniTask.WaitForSeconds( _statistics.TimeToCancel, false, PlayerLoopTiming.Update, _cancelTimerSource.Token );
+				await UniTask.WaitForSeconds( _statistics.TimeToCancel, false, PlayerLoopTiming.Update, _cancelTimerSource.Token ).SuppressCancellationThrow();
+				if ( _cancelTimerSource.IsCancellationRequested )
+					return;
 				_cancellationSource.Cancel( !( _cancelTimerActivated = false ) );
 			}
 		}
@@ -116,7 +124,9 @@ namespace GwambaPrimeAdventure.Enemy
 					{
 						WaitToCancel();
 						return OnGround;
-					}, PlayerLoopTiming.Update, _cancellationSource.Token );
+					}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+					if ( _cancellationSource.IsCancellationRequested )
+						return;
 					(_isJumping, _contunuosFollow, _turnFollow) = (true, _follow = _statistics.TimedJumps[ jumpIndex ].Follow, _statistics.TimedJumps[ jumpIndex ].TurnFollow);
 					(_useTarget, _otherTarget) = (_statistics.TimedJumps[ jumpIndex ].UseTarget, _statistics.TimedJumps[ jumpIndex ].OtherTarget);
 					if ( _statistics.SequentialTimmedJumps )
@@ -222,7 +232,9 @@ namespace GwambaPrimeAdventure.Enemy
 			{
 				WaitToCancel();
 				return !OnGround || _detected || !isActiveAndEnabled || IsStunned;
-			}, PlayerLoopTiming.Update, _cancellationSource.Token );
+			}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+			if ( _cancellationSource.IsCancellationRequested )
+				return;
 			if ( _stopJump || 0F < _jumpTime )
 				return;
 			if ( 0 >= _jumpCount[ jumpIndex ]-- )
@@ -232,7 +244,9 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					WaitToCancel();
 					return OnGround;
-				}, PlayerLoopTiming.Update, _cancellationSource.Token );
+				}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+				if ( _cancellationSource.IsCancellationRequested )
+					return;
 				(_isJumping, _contunuosFollow) = (true, _follow = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Follow);
 				(_turnFollow, _useTarget) = (_statistics.JumpPointStructures[ jumpIndex ].JumpStats.TurnFollow, _statistics.JumpPointStructures[ jumpIndex ].JumpStats.UseTarget);
 				(_otherTarget, _jumpCount[ jumpIndex ]) = (_statistics.JumpPointStructures[ jumpIndex ].JumpStats.OtherTarget, (short) _statistics.JumpPointStructures[ jumpIndex ].JumpCount);
@@ -262,7 +276,9 @@ namespace GwambaPrimeAdventure.Enemy
 							{
 								WaitToCancel();
 								return OnGround;
-							}, PlayerLoopTiming.Update, _cancellationSource.Token );
+							}, PlayerLoopTiming.Update, _cancellationSource.Token ).SuppressCancellationThrow();
+							if ( _cancellationSource.IsCancellationRequested )
+								return;
 							(_otherTarget, _contunuosFollow, _turnFollow) = (_statistics.OtherTarget, _follow = _statistics.FollowReact, _statistics.TurnFollowReact);
 							(_useTarget, _isJumping) = (_statistics.UseTarget, true);
 							if ( _statistics.StopMoveReact )
