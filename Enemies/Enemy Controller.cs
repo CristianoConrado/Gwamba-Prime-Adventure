@@ -55,7 +55,7 @@ namespace GwambaPrimeAdventure.Enemy
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = false;
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			(_vitality, _armorResistance, _fadeTime) = ((short) _statistics.Vitality, (short) _statistics.HitResistance, _statistics.TimeToFadeAway);
