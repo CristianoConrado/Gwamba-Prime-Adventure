@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
@@ -13,9 +14,12 @@ namespace GwambaPrimeAdventure.Enemy
 		[SerializeField, Tooltip( "The teleporter statitics of this enemy." )] private TeleporterStatistics _statistics;
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			for ( ushort i = 0; _statistics.TeleportPointStructures.Length > i; i++ )
 				Instantiate( _statistics.TeleportPointStructures[ i ].TeleportPointObject, _statistics.TeleportPointStructures[ i ].InstancePoint, Quaternion.identity ).GetTouch( this, i );
-			await UniTask.WaitForEndOfFrame();
 		}
 		private void Update()
 		{
