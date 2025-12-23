@@ -121,7 +121,7 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			_inputController.Commands.HideHud.Disable();
 			_configurationHud.RootElement.style.display = DisplayStyle.None;
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			_inputController.Commands.HideHud.Enable();
