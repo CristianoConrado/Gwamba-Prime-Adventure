@@ -42,12 +42,12 @@ namespace GwambaPrimeAdventure.Story
 		{
 			if ( _storySceneObject.SceneComponents[ _imageIndex ].Equals( _storySceneObject.SceneComponents[ ^1 ] ) )
 				return;
-			await FadeImage( false ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			await FadeImage( false ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			_imageIndex = (ushort) ( _storySceneObject.SceneComponents.Length - 1 > _imageIndex ? _imageIndex + 1 : 0 );
 			_storySceneHud.SceneImage.style.backgroundImage = Background.FromTexture2D( _storySceneObject.SceneComponents[ _imageIndex ].Image );
-			await FadeImage( true ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			await FadeImage( true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			if ( _storySceneObject.SceneComponents[ _imageIndex ].OffDialog )
@@ -56,14 +56,14 @@ namespace GwambaPrimeAdventure.Story
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 				if ( _storySceneObject.SceneComponents[ _imageIndex ].JumpToNext )
-					await NextSlide().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+					await NextSlide().SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 			}
 		}
 		internal async void CloseScene()
 		{
-			await FadeImage( false ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			await FadeImage( false ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			Destroy( _storySceneHud.gameObject );
