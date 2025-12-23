@@ -1,10 +1,7 @@
-using Cysharp.Threading.Tasks;
-using GwambaPrimeAdventure.Connection;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
-	internal abstract class Activator : StateController, ILoader
+	internal abstract class Activator : StateController
 	{
 		private Animator _animator;
 		private readonly int
@@ -17,9 +14,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_usable = true;
 		[Header( "Activator" )]
 		[SerializeField, Tooltip( "The activator only can be activeted one time." )] private bool _oneActivation;
-		[SerializeField, Tooltip( "If this object have been activeted before it will always be activeted." )] private bool _saveOnSpecifics;
 		protected bool Usable => _usable;
-		protected new void Awake()
+		private new void Awake()
 		{
 			base.Awake();
 			_animator = GetComponent<Animator>();
@@ -33,16 +29,6 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		{
 			if ( _animator )
 				_animator.SetFloat( IsOn, 0F );
-		}
-		public async UniTask Load()
-		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
-			SaveController.Load( out SaveFile saveFile );
-			if ( _saveOnSpecifics && saveFile.GeneralObjects.Contains( name ) )
-				Activation();
 		}
 		protected void Activation()
 		{
@@ -58,12 +44,6 @@ namespace GwambaPrimeAdventure.Item.EventItem
 					_animator.SetTrigger( UseAgain );
 			_usedOne = true;
 			Receptor.ReceiveSignal( this );
-			SaveController.Load( out SaveFile saveFile );
-			if ( _saveOnSpecifics && !saveFile.GeneralObjects.Contains( name ) )
-			{
-				saveFile.GeneralObjects.Add( name );
-				SaveController.WriteSave( saveFile );
-			}
 		}
 	};
 };
