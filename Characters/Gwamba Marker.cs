@@ -94,7 +94,7 @@ namespace GwambaPrimeAdventure.Character
 			if ( !Instance || this != Instance )
 				return;
 			(_destroyToken, _beginingPosition, _turnLeft, _reloadTransform) = (this.GetCancellationTokenOnDestroy(), StartPosition, TurnToLeft, true);
-			await StartLoad().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			await StartLoad().SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			_didStart = true;
@@ -122,7 +122,7 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !Instance || Instance != this )
 				return;
-			await _gwambaCanvas.LoadCanvas( _destroyToken ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			await _gwambaCanvas.LoadCanvas().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			SaveController.Load( out SaveFile saveFile );
