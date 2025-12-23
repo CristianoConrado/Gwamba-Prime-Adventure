@@ -28,8 +28,9 @@ namespace GwambaPrimeAdventure
 		public static bool OutsideRectangle( this Vector2 pointOutside, Vector2 originPoint, Vector2 sizePoint ) => !InsideRectangle( pointOutside, originPoint, sizePoint );
 		public static bool InsideCircle( this Vector2 pointInside, Vector2 originPoint, float radius ) => Vector2.Distance( originPoint, pointInside ) <= radius;
 		public static bool OutsideCircle( this Vector2 pointOutside, Vector2 originPoint, float radius ) => !InsideCircle( pointOutside, originPoint, radius );
+		public static float Negative(this float input) => -Mathf.Abs( input );
 		public static short RangeNormalize( this float input, float maxDelimiter, float minDelimiter ) =>
-			(short) ( input.CompareTo( Mathf.Abs( maxDelimiter ) ) + input.CompareTo( -Mathf.Abs( minDelimiter ) ) ).CompareTo( 0 );
+			(short) ( input.CompareTo( Mathf.Abs( maxDelimiter ) ) + input.CompareTo( minDelimiter.Negative() ) ).CompareTo( 0 );
 		public static short RangeNormalize( this float input, float rangeDelimiter ) => RangeNormalize( input, rangeDelimiter, rangeDelimiter );
 		public static short RangeNormalizeWithoutZero( this float input, float maxDelimiter, float minDelimiter, bool negativePriority = false ) =>
 			(short) ( ( _outpuNormalized = RangeNormalize( input, maxDelimiter, minDelimiter ) ) + ( 0F == _outpuNormalized ? ( negativePriority ? -1F : 1F ) : 0F ) );
