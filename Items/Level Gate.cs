@@ -53,6 +53,10 @@ namespace GwambaPrimeAdventure.Item
 		}
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			(_levelGateWorld, _levelGateScreen) = (Instantiate( _levelGateWorldObject, transform ), Instantiate( _levelGateScreenObject, transform ));
 			_levelGateScreen.RootElement.style.display = DisplayStyle.None;
 			_levelGateScreen.Level.SetEnabled( true );
@@ -69,7 +73,6 @@ namespace GwambaPrimeAdventure.Item
 			if ( saveFile.DeafetedBosses[ ushort.Parse( $"{_levelScene.SceneName[ ^1 ]}" ) - 1 ] )
 				_levelGateScreen.Scenes.clicked += ShowScenes;
 			_defaultPriority = (short) _gateCamera.Priority.Value;
-			await UniTask.WaitForEndOfFrame();
 		}
 		private void EnterLevel() => GetComponent<Transitioner>().Transicion( _levelScene );
 		private void EnterBoss() => GetComponent<Transitioner>().Transicion( _bossScene );
