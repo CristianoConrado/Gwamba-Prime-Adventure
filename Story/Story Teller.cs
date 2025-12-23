@@ -19,7 +19,7 @@ namespace GwambaPrimeAdventure.Story
 				for ( float i = 0F; 1F > _storySceneHud.SceneImage.style.opacity.value; i += 1E-1F )
 				{
 					_storySceneHud.SceneImage.style.opacity = i;
-					await UniTask.WaitForEndOfFrame( _destroyToken ).SuppressCancellationThrow();
+					await UniTask.Yield( PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
 					if ( _destroyToken.IsCancellationRequested )
 						return;
 				}
@@ -27,7 +27,7 @@ namespace GwambaPrimeAdventure.Story
 				for ( float i = 1F; 0F < _storySceneHud.SceneImage.style.opacity.value; i -= 1E-1F )
 				{
 					_storySceneHud.SceneImage.style.opacity = i;
-					await UniTask.WaitForEndOfFrame( _destroyToken ).SuppressCancellationThrow();
+					await UniTask.Yield( PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
 					if ( _destroyToken.IsCancellationRequested )
 						return;
 				}
