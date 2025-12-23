@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure
 {
-	[Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
+	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
 	internal sealed class ObjectLoader : MonoBehaviour
 	{
 		private static readonly List<ILoader> _loader = new List<ILoader>();
