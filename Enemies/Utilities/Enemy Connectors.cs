@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Cinemachine;
-using System.Collections;
 using System.Collections.Generic;
 namespace GwambaPrimeAdventure.Enemy.Supply
 {
@@ -25,7 +24,6 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		protected Rigidbody2D _rigidbody;
 		protected CinemachineImpulseSource _screenShaker;
 		protected readonly List<Projectile> _projectiles = new List<Projectile>();
-		protected IEnumerator _parabolicEvent;
 		protected Vector2 _projectilePosition = Vector2.zero;
 		protected Quaternion _projectileRotation = Quaternion.identity;
 		protected Vector2Int
