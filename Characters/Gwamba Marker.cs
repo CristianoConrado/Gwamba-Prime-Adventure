@@ -135,7 +135,9 @@ namespace GwambaPrimeAdventure.Character
 				_gwambaDamagers[ i ].DamagerAttack += DamagerAttack;
 			}
 			SceneLoaded( SceneManager.GetActiveScene(), LoadSceneMode.Single );
-			await UniTask.WaitForEndOfFrame();
+			await UniTask.Yield( PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 		}
 		private void SceneLoaded( Scene scene, LoadSceneMode loadMode )
 		{
