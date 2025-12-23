@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure.Character
 {
@@ -38,8 +39,11 @@ namespace GwambaPrimeAdventure.Character
 			(RecoverVitality, StunResistance, BunnyHop) = (new VisualElement[ _recoverVitality ], new VisualElement[ _stunResistance ], new VisualElement[ _bunnyHop ]);
 			(FallDamageText, LifeText, CoinText) = (RootElement.Q<Label>( nameof( FallDamageText ) ), RootElement.Q<Label>( nameof( LifeText ) ), RootElement.Q<Label>( nameof( CoinText ) ));
 		}
-		internal async UniTask LoadHud()
+		internal async UniTask LoadCanvas( CancellationToken cancellationToken )
 		{
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			if ( cancellationToken.IsCancellationRequested )
+				return;
 			VisualElement vitality = RootElement.Q<VisualElement>( nameof( Vitality ) ), VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) ), vitalityPieceClone;
 			vitality.style.width = _totalWidth;
 			for ( ushort i = 0; i < _vitality; i++ )
@@ -58,7 +62,9 @@ namespace GwambaPrimeAdventure.Character
 				Vitality[ i ] = vitality[ i + 1 ];
 			}
 			vitality.Remove( VitalityPiece );
-			await UniTask.WaitForEndOfFrame();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			if ( cancellationToken.IsCancellationRequested )
+				return;
 			VisualElement recoverVitality = RootElement.Q<VisualElement>( nameof( RecoverVitality ) ),
 				 RecoverVitalityPiece = RootElement.Q<VisualElement>( nameof( RecoverVitalityPiece ) ), recoverVitalityPieceClone;
 			recoverVitality.style.width = _totalWidth;
@@ -71,7 +77,9 @@ namespace GwambaPrimeAdventure.Character
 				RecoverVitality[ i ] = recoverVitality[ i + 1 ];
 			}
 			recoverVitality.Remove( RecoverVitalityPiece );
-			await UniTask.WaitForEndOfFrame();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			if ( cancellationToken.IsCancellationRequested )
+				return;
 			VisualElement stunResistance = RootElement.Q<VisualElement>( nameof( StunResistance ) ),
 				 StunResistancePiece = RootElement.Q<VisualElement>( nameof( StunResistancePiece ) ), stunResistancePieceClone;
 			stunResistance.style.width = _totalWidth;
@@ -84,7 +92,9 @@ namespace GwambaPrimeAdventure.Character
 				StunResistance[ i ] = stunResistance[ i + 1 ];
 			}
 			stunResistance.Remove( StunResistancePiece );
-			await UniTask.WaitForEndOfFrame();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			if ( cancellationToken.IsCancellationRequested )
+				return;
 			VisualElement bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ), BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) ), bunnyHopPieceClone;
 			bunnyHop.style.width = _totalWidth;
 			for ( ushort i = 0; i < _bunnyHop; i++ )
@@ -96,7 +106,9 @@ namespace GwambaPrimeAdventure.Character
 				BunnyHop[ i ] = bunnyHop[ i + 1 ];
 			}
 			bunnyHop.Remove( BunnyHopPiece );
-			await UniTask.WaitForEndOfFrame();
+			await UniTask.Yield( PlayerLoopTiming.Update, cancellationToken, true ).SuppressCancellationThrow();
+			if ( cancellationToken.IsCancellationRequested )
+				return;
 		}
 	};
 };
