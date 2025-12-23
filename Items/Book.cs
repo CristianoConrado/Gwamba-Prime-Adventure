@@ -12,7 +12,7 @@ namespace GwambaPrimeAdventure.Item
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			SaveController.Load( out SaveFile saveFile );
@@ -20,7 +20,7 @@ namespace GwambaPrimeAdventure.Item
 			{
 				if ( saveFile.Books[ name ] )
 					GetComponent<SpriteRenderer>().sprite = _bookCacthed;
-				await UniTask.Yield( PlayerLoopTiming.Update, destroyToken ).SuppressCancellationThrow();
+				await UniTask.Yield( PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 				return;
 			}
 			saveFile.Books.Add( name, false );
