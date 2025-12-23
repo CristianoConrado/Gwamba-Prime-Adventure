@@ -1,7 +1,7 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure.Character
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( UIDocument ) )]
