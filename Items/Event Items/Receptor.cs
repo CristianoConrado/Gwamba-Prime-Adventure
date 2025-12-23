@@ -1,8 +1,9 @@
-using UnityEngine;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using NaughtyAttributes;
 using GwambaPrimeAdventure.Connection;
+using NaughtyAttributes;
+using System.Collections.Generic;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( IReceptorSignal ) )]
@@ -39,6 +40,10 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		}
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			SaveController.Load( out SaveFile saveFile );
 			if ( 0 < _specificsObjects.Length )
 				foreach ( string specificObject in _specificsObjects )
@@ -46,7 +51,6 @@ namespace GwambaPrimeAdventure.Item.EventItem
 						_receptor.Execute();
 			foreach ( Activator activator in _activators )
 				_activatorsNeeded.Add( activator );
-			await UniTask.WaitForEndOfFrame();
 		}
 		private void Update()
 		{
