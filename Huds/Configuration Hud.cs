@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
@@ -77,8 +78,11 @@ namespace GwambaPrimeAdventure.Hud
 			FrameRateText = RootElement.Q<Label>( nameof( FrameRateText ) );
 			VSyncText = RootElement.Q<Label>( nameof( VSyncText ) );
 		}
-		internal async UniTask LoadHud()
+		internal async UniTask LoadHud( CancellationToken cancellationToken )
 		{
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			if ( cancellationToken.IsCancellationRequested )
+				return;
 			SettingsController.Load( out Settings settings );
 			if ( !SettingsController.FileExists() )
 				SettingsController.WriteSave( settings );
@@ -119,7 +123,9 @@ namespace GwambaPrimeAdventure.Hud
 			SpeachDelayText.text = $"{settings.SpeachDelay * 10F}";
 			FrameRateText.text = $"{settings.FrameRate}";
 			VSyncText.text = $"{settings.VSync}";
-			await UniTask.WaitForEndOfFrame();
+			await UniTask.Yield( PlayerLoopTiming.Update, cancellationToken, true ).SuppressCancellationThrow();
+			if ( cancellationToken.IsCancellationRequested )
+				return;
 		}
 	};
 };
