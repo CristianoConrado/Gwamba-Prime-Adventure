@@ -1,9 +1,9 @@
+using Cysharp.Threading.Tasks;
+using GwambaPrimeAdventure.Connection;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using Unity.Cinemachine;
-using Cysharp.Threading.Tasks;
-using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Character
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Animator ), typeof( Rigidbody2D ), typeof( BoxCollider2D ) ), RequireComponent( typeof( CinemachineImpulseSource ) )]
