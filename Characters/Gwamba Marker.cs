@@ -91,22 +91,28 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private async void Start()
 		{
-			if ( !Instance || this != Instance )
+			if ( !Instance || this != Instance || _destroyToken.IsCancellationRequested )
 				return;
 			(_destroyToken, _beginingPosition, _turnLeft, _reloadTransform) = (this.GetCancellationTokenOnDestroy(), StartPosition, TurnToLeft, true);
-			await StartLoad();
+			await StartLoad().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			_didStart = true;
 			DontDestroyOnLoad( gameObject );
 		}
 		public async UniTask StartLoad()
 		{
 			DisableInputs();
-			await UniTask.WaitUntil( () => _reloadTransform, PlayerLoopTiming.Update, _destroyToken );
+			await UniTask.WaitUntil( () => _reloadTransform, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			transform.TurnScaleX( _turnLeft );
 			(transform.position, _reloadTransform) = (_beginingPosition, false);
 			if ( _animator.GetBool( Death ) )
 				_animator.SetBool( Death, _bunnyHopUsed = _offBunnyHop = !( _deathLoad = true ) );
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken );
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			if ( _deathLoad )
 				OnEnable();
 			else
@@ -116,7 +122,9 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !Instance || Instance != this )
 				return;
-			await _gwambaCanvas.LoadHud();
+			await _gwambaCanvas.LoadCanvas( _destroyToken ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			SaveController.Load( out SaveFile saveFile );
 			(_gwambaCanvas.LifeText.text, _gwambaCanvas.CoinText.text) = ($"X {saveFile.Lifes}", $"X {saveFile.Coins}");
 			(_vitality, _stunResistance) = ((short) _gwambaCanvas.Vitality.Length, (short) _gwambaCanvas.StunResistance.Length);
@@ -165,8 +173,7 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !isActiveAndEnabled || _animator.GetBool( Stun ) )
 				return;
-			_localAtStart = movement.ReadValue<Vector2>();
-			if ( 0F != ( _walkValue = _localAtStart.x.RangeNormalize( MovementInputZone ) ) && ( !AttackUsage || ComboAttackBuffer ) )
+			if ( 0F != ( _walkValue = ( _localAtStart = movement.ReadValue<Vector2>() ).x.RangeNormalize( MovementInputZone ) ) && ( !AttackUsage || ComboAttackBuffer ) )
 				if ( _localAtStart.y > AirJumpInputZone && !_isOnGround && _canAirJump && !_animator.GetBool( AirJump ) )
 				{
 					_animator.SetBool( AirJump, !( _canAirJump = false ) );
