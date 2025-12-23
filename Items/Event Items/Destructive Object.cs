@@ -1,9 +1,10 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
-using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( Receptor ) )]
-	internal sealed class DestructiveObject : StateController, IReceptorSignal, IDestructible
+	internal sealed class DestructiveObject : StateController, ILoader, IReceptorSignal, IDestructible
 	{
 		private readonly Sender _sender = Sender.Create();
 		[Header( "Destructive Object" )]
@@ -11,31 +12,21 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		[SerializeField, Tooltip( "The vitality of this object before it destruction." )] private short _vitality;
 		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )] private short _biggerDamage;
 		[SerializeField, Tooltip( "If this object will be destructed on collision with another object." )] private bool _destroyOnCollision;
-		[SerializeField, Tooltip( "If this object will be saved as already existent object." )] private bool _saveOnSpecifics;
 		public short Health => _vitality;
-		private new void Awake()
+		public async UniTask Load()
 		{
-			base.Awake();
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			_sender.SetFormat( MessageFormat.State );
 			_sender.SetAdditionalData( _occlusionObject );
 			_sender.SetToggle( true );
-		}
-		private void Start()
-		{
-			SaveController.Load( out SaveFile saveFile );
-			if ( _saveOnSpecifics && saveFile.GeneralObjects.Contains( name ) )
-				Destroy( gameObject );
 		}
 		public void Execute()
 		{
 			if ( _occlusionObject )
 				_sender.Send( MessagePath.System );
-			SaveController.Load( out SaveFile saveFile );
-			if ( _saveOnSpecifics && !saveFile.GeneralObjects.Contains( name ) )
-			{
-				saveFile.GeneralObjects.Add( name );
-				SaveController.WriteSave( saveFile );
-			}
 			Destroy( gameObject );
 		}
 		private void DestroyOnCollision()
