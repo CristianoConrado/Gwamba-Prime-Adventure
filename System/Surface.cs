@@ -21,7 +21,7 @@ namespace GwambaPrimeAdventure
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			(_tilemap, _collider) = (GetComponent<Tilemap>(), GetComponent<TilemapCollider2D>());
