@@ -1,6 +1,7 @@
-using UnityEngine;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Character
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( BoxCollider2D ) )]
@@ -14,11 +15,14 @@ namespace GwambaPrimeAdventure.Character
 		internal static bool TurnToLeft => Instance ? Instance._turnToLeft : false;
 		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			SaveController.Load( out SaveFile saveFile );
 			if ( gameObject.scene.name == _hubbyWorldScene && !string.IsNullOrEmpty( saveFile.LastLevelEntered ) )
 				if ( saveFile.LastLevelEntered.Contains( $"{_selfIndex}" ) )
 					Instance = this;
-			await UniTask.WaitForEndOfFrame();
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
