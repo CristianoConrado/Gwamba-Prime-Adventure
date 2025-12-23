@@ -103,14 +103,14 @@ namespace GwambaPrimeAdventure.Character
 		public async UniTask StartLoad()
 		{
 			DisableInputs();
-			await UniTask.WaitUntil( () => _reloadTransform, PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			await UniTask.WaitUntil( () => _reloadTransform, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			transform.TurnScaleX( _turnLeft );
 			(transform.position, _reloadTransform) = (_beginingPosition, false);
 			if ( _animator.GetBool( Death ) )
 				_animator.SetBool( Death, _bunnyHopUsed = _offBunnyHop = !( _deathLoad = true ) );
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			if ( _deathLoad )
@@ -135,7 +135,7 @@ namespace GwambaPrimeAdventure.Character
 				_gwambaDamagers[ i ].DamagerAttack += DamagerAttack;
 			}
 			SceneLoaded( SceneManager.GetActiveScene(), LoadSceneMode.Single );
-			await UniTask.Yield( PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 		}
