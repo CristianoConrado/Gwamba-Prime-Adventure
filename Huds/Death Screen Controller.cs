@@ -44,7 +44,9 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			if ( !_instance || this != _instance )
 				return;
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken );
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			_deathScreenHud.Continue.clicked += Continue;
 			_deathScreenHud.OutLevel.clicked += OutLevel;
 			_deathScreenHud.GameOver.clicked += GameOver;
@@ -73,7 +75,9 @@ namespace GwambaPrimeAdventure.Hud
 			for ( float i = 0F; 1F > _deathScreenHud.Curtain.style.opacity.value; i += 5E-2F )
 			{
 				_deathScreenHud.Curtain.style.opacity = i;
-				await UniTask.WaitForEndOfFrame( _destroyToken );
+				await UniTask.WaitForEndOfFrame( _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 			}
 			_sender.SetToggle( false );
 			_sender.SetFormat( MessageFormat.Event );
@@ -83,7 +87,9 @@ namespace GwambaPrimeAdventure.Hud
 			for ( float i = 1F; 0F < _deathScreenHud.Curtain.style.opacity.value; i -= 5E-2F )
 			{
 				_deathScreenHud.Curtain.style.opacity = i;
-				await UniTask.WaitForEndOfFrame(_destroyToken );
+				await UniTask.WaitForEndOfFrame( _destroyToken ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
 			}
 			_sender.SetToggle( true );
 			_sender.Send( MessagePath.System );
