@@ -80,7 +80,7 @@ namespace GwambaPrimeAdventure.Hud
 		}
 		internal async UniTask LoadHud( CancellationToken cancellationToken )
 		{
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken, true ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, cancellationToken ).SuppressCancellationThrow();
 			if ( cancellationToken.IsCancellationRequested )
 				return;
 			SettingsController.Load( out Settings settings );
@@ -123,7 +123,7 @@ namespace GwambaPrimeAdventure.Hud
 			SpeachDelayText.text = $"{settings.SpeachDelay * 10F}";
 			FrameRateText.text = $"{settings.FrameRate}";
 			VSyncText.text = $"{settings.VSync}";
-			await UniTask.Yield( PlayerLoopTiming.Update, cancellationToken, true ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.Update, cancellationToken ).SuppressCancellationThrow();
 			if ( cancellationToken.IsCancellationRequested )
 				return;
 		}
