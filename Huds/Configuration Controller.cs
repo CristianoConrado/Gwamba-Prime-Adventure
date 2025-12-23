@@ -80,7 +80,9 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			if ( !_instance || this != _instance )
 				return;
-			await _configurationHud.LoadHud();
+			await _configurationHud.LoadHud().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			SettingsController.Load( out Settings settings );
 			Screen.SetResolution( settings.ScreenResolution.x, settings.ScreenResolution.y, settings.FullScreenMode );
 			Screen.brightness = settings.ScreenBrightness;
@@ -90,7 +92,9 @@ namespace GwambaPrimeAdventure.Hud
 			_mixer.SetFloat( nameof( GeneralVolume ), settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
 			_mixer.SetFloat( nameof( EffectsVolume ), settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
 			_mixer.SetFloat( nameof( MusicVolume ), settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
-			await StartLoad();
+			await StartLoad().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			_configurationHud.Close.clicked += CloseConfigurations;
 			_configurationHud.OutLevel.clicked += OutLevel;
 			_configurationHud.SaveGame.clicked += SaveGame;
@@ -117,7 +121,9 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			_inputController.Commands.HideHud.Disable();
 			_configurationHud.RootElement.style.display = DisplayStyle.None;
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken );
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
+				return;
 			_inputController.Commands.HideHud.Enable();
 		}
 		private void SceneLoaded( Scene scene, LoadSceneMode loadMode ) => StartLoad().Forget();
