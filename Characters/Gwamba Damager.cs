@@ -1,8 +1,10 @@
-using UnityEngine;
-using UnityEngine.Events;
+using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 using System;
 using System.Collections.Generic;
-using NaughtyAttributes;
+using System.Threading;
+using UnityEngine;
+using UnityEngine.Events;
 namespace GwambaPrimeAdventure.Character
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( Collider2D ) )]
@@ -29,9 +31,12 @@ namespace GwambaPrimeAdventure.Character
 			}
 		}
 		public short Health => 0;
-		private new void Awake()
+		private async void Start()
 		{
-			base.Awake();
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			_spriteRenderer = GetComponent<SpriteRenderer>();
 			_alphaChanger = _spriteRenderer.color;
 		}
