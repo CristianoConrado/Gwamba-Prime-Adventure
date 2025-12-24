@@ -100,7 +100,7 @@ namespace GwambaPrimeAdventure.Character
 			_didStart = true;
 			DontDestroyOnLoad( gameObject );
 		}
-		public async UniTask StartLoad()
+		private async UniTask StartLoad()
 		{
 			DisableInputs();
 			await UniTask.WaitUntil( () => _reloadTransform, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
