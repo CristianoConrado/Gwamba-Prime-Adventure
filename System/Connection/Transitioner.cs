@@ -23,10 +23,7 @@ namespace GwambaPrimeAdventure.Connection
 				transicionHud.RootElement.style.opacity = i;
 				await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 				if ( destroyToken.IsCancellationRequested )
-				{
-					Application.Quit();
 					return;
-				}
 			}
 			SceneField newScene = scene ?? _sceneTransicion;
 			SaveController.Load( out SaveFile saveFile );
@@ -38,10 +35,7 @@ namespace GwambaPrimeAdventure.Connection
 			{
 				await UniTask.WaitUntil( () => asyncOperation.isDone, PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 				if ( destroyToken.IsCancellationRequested )
-				{
-					Application.Quit();
 					return;
-				}
 			}
 			else
 			{
@@ -51,10 +45,7 @@ namespace GwambaPrimeAdventure.Connection
 					transicionHud.LoadingBar.value = asyncOperation.progress * 100F;
 					await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 					if ( destroyToken.IsCancellationRequested )
-					{
-						Application.Quit();
 						return;
-					}
 				}
 			}
 			asyncOperation.allowSceneActivation = true;
