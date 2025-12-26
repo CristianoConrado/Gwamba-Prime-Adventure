@@ -8,7 +8,8 @@ namespace GwambaPrimeAdventure
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
 	internal sealed class ObjectLoader : MonoBehaviour
 	{
-		private static readonly List<ILoader> _loader = new List<ILoader>();
+		private static readonly List<ILoader>
+			_loader = new List<ILoader>();
 		public async UniTask Load( ProgressBar progressBar )
 		{
 			_loader.Clear();
