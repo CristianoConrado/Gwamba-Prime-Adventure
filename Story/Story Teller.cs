@@ -1,7 +1,7 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure.Story
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
@@ -9,10 +9,12 @@ namespace GwambaPrimeAdventure.Story
 	{
 		private StorySceneHud _storySceneHud;
 		private CancellationToken _destroyToken;
-		private ushort _imageIndex = 0;
-		[Header( "Scene Objects" )]
-		[SerializeField, Tooltip( "The object that handles the hud of the story scene." )] private StorySceneHud _storySceneHudObject;
-		[SerializeField, Tooltip( "The object that carry the scene settings." )] private StorySceneObject _storySceneObject;
+		private ushort
+			_imageIndex = 0;
+		[SerializeField, Tooltip( "The object that handles the hud of the story scene." ), Header( "Scene Objects" )] private StorySceneHud
+			_storySceneHudObject;
+		[SerializeField, Tooltip( "The object that carry the scene settings." )] private StorySceneObject
+			_storySceneObject;
 		private async UniTask FadeImage( bool appear )
 		{
 			if ( appear )
@@ -34,7 +36,8 @@ namespace GwambaPrimeAdventure.Story
 		}
 		internal void ShowScene()
 		{
-			(_storySceneHud, _destroyToken) = (Instantiate( _storySceneHudObject, transform ), this.GetCancellationTokenOnDestroy());
+			_storySceneHud = Instantiate( _storySceneHudObject, transform );
+			_destroyToken = this.GetCancellationTokenOnDestroy();
 			_storySceneHud.SceneImage.style.backgroundImage = Background.FromTexture2D( _storySceneObject.SceneComponents[ _imageIndex = 0 ].Image );
 			FadeImage( true ).Forget();
 		}
