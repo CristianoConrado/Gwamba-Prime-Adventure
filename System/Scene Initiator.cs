@@ -8,9 +8,12 @@ namespace GwambaPrimeAdventure
 	public sealed class SceneInitiator : MonoBehaviour
 	{
 		private static SceneInitiator _instance;
-		[SerializeField, Tooltip( "The object that handles the hud of the trancision." )] private TransicionHud _transicionHud;
-		[SerializeField, Tooltip( "The objects to be lodaed." )] private ObjectLoader[] _objectLoaders;
-		internal static ushort ProgressIndex = 0;
+		[SerializeField, Tooltip( "The object that handles the hud of the trancision." )] private TransicionHud
+			_transicionHud;
+		[SerializeField, Tooltip( "The objects to be lodaed." )] private ObjectLoader[]
+			_objectLoaders;
+		internal static ushort
+			ProgressIndex = 0;
 		private void Awake()
 		{
 			if ( _instance )
