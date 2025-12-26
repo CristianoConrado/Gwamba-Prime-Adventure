@@ -9,7 +9,8 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		protected Rigidbody2D _rigidbody;
 		protected CinemachineImpulseSource _screenShaker;
 		protected IDestructible _destructibleEnemy;
-		protected Vector2 _guardedLinearVelocity = Vector2.zero;
+		protected Vector2
+			_guardedLinearVelocity = Vector2.zero;
 		protected short
 			_vitality = 0,
 			_armorResistance = 0;
@@ -23,13 +24,17 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	{
 		protected Rigidbody2D _rigidbody;
 		protected CinemachineImpulseSource _screenShaker;
-		protected readonly List<Projectile> _projectiles = new List<Projectile>();
-		protected Vector2 _projectilePosition = Vector2.zero;
-		protected Quaternion _projectileRotation = Quaternion.identity;
+		protected readonly List<Projectile>
+			_projectiles = new List<Projectile>();
+		protected Vector2
+			_projectilePosition = Vector2.zero;
+		protected Quaternion
+			_projectileRotation = Quaternion.identity;
 		protected Vector2Int
 			_oldCellPosition = Vector2Int.zero,
 			_cellPosition = Vector2Int.zero;
-		protected short _vitality = 0;
+		protected short
+			_vitality = 0;
 		protected ushort
 			_angleMulti = 0,
 			_pointToJump = 0,
@@ -40,7 +45,8 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		protected float
 			_deathTimer = 0F,
 			_stunTimer = 0F;
-		protected bool _breakInUse = false;
+		protected bool
+			_breakInUse = false;
 	};
 	public interface IJumper
 	{
