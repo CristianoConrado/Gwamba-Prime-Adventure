@@ -1,12 +1,12 @@
+using Cysharp.Threading.Tasks;
+using GwambaPrimeAdventure.Connection;
+using System;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
-using System;
-using System.Threading;
-using Cysharp.Threading.Tasks;
-using GwambaPrimeAdventure.Connection;
+using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure.Hud
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Transitioner ) )]
@@ -16,12 +16,16 @@ namespace GwambaPrimeAdventure.Hud
 		private ConfigurationHud _configurationHud;
 		private InputController _inputController;
 		private CancellationToken _destroyToken;
-		[Header( "Interaction Objects" )]
-		[SerializeField, Tooltip( "The object that handles the hud of the configurations." )] private ConfigurationHud _configurationHudObject;
-		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField _menuScene;
-		[SerializeField, Tooltip( "The scene of the level selector." )] private SceneField _levelSelectorScene;
-		[SerializeField, Tooltip( "The mixer of the sounds." )] private AudioMixer _mixer;
-		public MessagePath Path => MessagePath.Hud;
+		[SerializeField, Tooltip( "The object that handles the hud of the configurations." ), Header( "Interaction Objects" )] private ConfigurationHud
+			_configurationHudObject;
+		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField
+			_menuScene;
+		[SerializeField, Tooltip( "The scene of the level selector." )] private SceneField
+			_levelSelectorScene;
+		[SerializeField, Tooltip( "The mixer of the sounds." )] private AudioMixer
+			_mixer;
+		public MessagePath Path =>
+			MessagePath.Hud;
 		private void Awake()
 		{
 			if ( _instance )
@@ -29,7 +33,9 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, _configurationHud, _destroyToken) = (this, Instantiate( _configurationHudObject, transform ), this.GetCancellationTokenOnDestroy());
+			_instance = this;
+			_configurationHud = Instantiate( _configurationHudObject, transform );
+			_destroyToken = this.GetCancellationTokenOnDestroy();
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include( this );
 		}
@@ -130,10 +136,15 @@ namespace GwambaPrimeAdventure.Hud
 		private void HideHudAction( InputAction.CallbackContext hideHud ) => OpenCloseConfigurations();
 		private void CloseConfigurations()
 		{
-			(_configurationHud.Confirmation.style.display, _configurationHud.Settings.style.display) = (_configurationHud.RootElement.style.display = DisplayStyle.None, DisplayStyle.Flex);
+			_configurationHud.Confirmation.style.display = _configurationHud.RootElement.style.display = DisplayStyle.None;
+			_configurationHud.Settings.style.display = DisplayStyle.Flex;
 			StateController.SetState( true );
 		}
-		private void OutLevel() => (_configurationHud.Settings.style.display, _configurationHud.Confirmation.style.display) = (DisplayStyle.None, DisplayStyle.Flex);
+		private void OutLevel()
+		{
+			_configurationHud.Settings.style.display = DisplayStyle.None;
+			_configurationHud.Confirmation.style.display = DisplayStyle.Flex;
+		}
 		private void SaveGame() => SaveController.SaveData();
 		private void ScreenResolution( ChangeEvent<string> resolution )
 		{
@@ -165,21 +176,27 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			SettingsController.Load( out Settings settings );
 			settings.GeneralVolumeToggle = toggle.newValue;
-			_mixer.SetFloat( nameof( GeneralVolume ), settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( GeneralVolume ),
+				value: ( settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) : Mathf.Log10( _configurationHud.GeneralVolume.lowValue ) ) * 20F );
 			SettingsController.WriteSave( settings );
 		}
 		private void EffectsVolumeToggle( ChangeEvent<bool> toggle )
 		{
 			SettingsController.Load( out Settings settings );
 			settings.EffectsVolumeToggle = toggle.newValue;
-			_mixer.SetFloat( nameof( EffectsVolume ), settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( EffectsVolume ),
+				value: ( settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) : Mathf.Log10( _configurationHud.EffectsVolume.lowValue ) ) * 20F );
 			SettingsController.WriteSave( settings );
 		}
 		private void MusicVolumeToggle( ChangeEvent<bool> toggle )
 		{
 			SettingsController.Load( out Settings settings );
 			settings.MusicVolumeToggle = toggle.newValue;
-			_mixer.SetFloat( nameof( MusicVolume ), settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( MusicVolume ),
+				value: ( settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) : Mathf.Log10( _configurationHud.MusicVolume.lowValue ) ) * 20F );
 			SettingsController.WriteSave( settings );
 		}
 		private void InfinityFPS( ChangeEvent<bool> toggle )
@@ -199,21 +216,27 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			SettingsController.Load( out Settings settings );
 			_configurationHud.GeneralVolumeText.text = $"{Mathf.Round( settings.GeneralVolume = volume.newValue / 1F * 10F ) / 10F}";
-			_mixer.SetFloat( nameof( GeneralVolume ), settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( GeneralVolume ),
+				value: ( settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) : Mathf.Log10( _configurationHud.GeneralVolume.lowValue ) ) * 20F );
 			SettingsController.WriteSave( settings );
 		}
 		private void EffectsVolume( ChangeEvent<float> volume )
 		{
 			SettingsController.Load( out Settings settings );
 			_configurationHud.EffectsVolumeText.text = $"{Mathf.Round( settings.EffectsVolume = volume.newValue / 1F * 10F ) / 10F}";
-			_mixer.SetFloat( nameof( EffectsVolume ), settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( EffectsVolume ),
+				value: ( settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) : Mathf.Log10( _configurationHud.EffectsVolume.lowValue ) ) * 20F );
 			SettingsController.WriteSave( settings );
 		}
 		private void MusicVolume( ChangeEvent<float> volume )
 		{
 			SettingsController.Load( out Settings settings );
 			_configurationHud.MusicVolumeText.text = $"{Mathf.Round( settings.MusicVolume = volume.newValue / 1F * 10F ) / 10F}";
-			_mixer.SetFloat( nameof( MusicVolume ), settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( MusicVolume ),
+				value: ( settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) : Mathf.Log10( _configurationHud.MusicVolume.lowValue ) ) * 20F );
 			SettingsController.WriteSave( settings );
 		}
 		private void FrameRate( ChangeEvent<int> frameRate )
@@ -245,7 +268,11 @@ namespace GwambaPrimeAdventure.Hud
 			else
 				GetComponent<Transitioner>().Transicion( _menuScene );
 		}
-		private void NoBackLevel() => (_configurationHud.Settings.style.display, _configurationHud.Confirmation.style.display) = (DisplayStyle.Flex, DisplayStyle.None);
+		private void NoBackLevel()
+		{
+			_configurationHud.Settings.style.display = DisplayStyle.Flex;
+			_configurationHud.Confirmation.style.display = DisplayStyle.None;
+		}
 		private void OpenCloseConfigurations()
 		{
 			if ( DisplayStyle.Flex == _configurationHud.RootElement.style.display )
@@ -258,7 +285,10 @@ namespace GwambaPrimeAdventure.Hud
 				else if ( SceneManager.GetActiveScene().name == _levelSelectorScene )
 					_configurationHud.SaveGame.style.display = _configurationHud.OutLevel.style.display = DisplayStyle.Flex;
 				else
-					(_configurationHud.OutLevel.style.display, _configurationHud.SaveGame.style.display) = (DisplayStyle.Flex, DisplayStyle.None);
+				{
+					_configurationHud.OutLevel.style.display = DisplayStyle.Flex;
+					_configurationHud.SaveGame.style.display = DisplayStyle.None;
+				}
 				_configurationHud.RootElement.style.display = DisplayStyle.Flex;
 			}
 		}
