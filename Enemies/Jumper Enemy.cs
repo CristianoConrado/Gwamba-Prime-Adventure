@@ -1,9 +1,9 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
+using System.Threading;
+using UnityEngine;
+using UnityEngine.InputSystem;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
@@ -16,8 +16,10 @@ namespace GwambaPrimeAdventure.Enemy
 		private Vector2
 			_targetPosition = Vector2.zero,
 			_direction = Vector2.zero;
-		private readonly RaycastHit2D[] _perceptionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
-		private ushort _sequentialJumpIndex = 0;
+		private readonly RaycastHit2D[]
+			_perceptionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+		private ushort
+			_sequentialJumpIndex = 0;
 		private short[] _jumpCount;
 		private float[] _timedJumpTime;
 		private float
@@ -33,8 +35,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_useTarget = false,
 			_turnFollow = false,
 			_cancelTimerActivated = false;
-		[Header( "Jumper Enemy" )]
-		[SerializeField, Tooltip( "The jumper statitics of this enemy." )] private JumperStatistics _statistics;
+		[SerializeField, Tooltip( "The jumper statitics of this enemy." ), Header( "Jumper Enemy" )] private JumperStatistics
+			_statistics;
 		private new void Awake()
 		{
 			base.Awake();
@@ -83,7 +85,8 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( isActiveAndEnabled && !IsStunned && 0F >= _jumpTime )
 			{
-				(_jumpTime, _targetPosition) = (_statistics.TimeToJump, CharacterExporter.GwambaLocalization());
+				_jumpTime = _statistics.TimeToJump;
+				_targetPosition = CharacterExporter.GwambaLocalization();
 				BasicJump();
 			}
 		}
@@ -127,8 +130,11 @@ namespace GwambaPrimeAdventure.Enemy
 					}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
 					if ( _cancellationSource.IsCancellationRequested )
 						return;
-					(_isJumping, _contunuosFollow, _turnFollow) = (true, _follow = _statistics.TimedJumps[ jumpIndex ].Follow, _statistics.TimedJumps[ jumpIndex ].TurnFollow);
-					(_useTarget, _otherTarget) = (_statistics.TimedJumps[ jumpIndex ].UseTarget, _statistics.TimedJumps[ jumpIndex ].OtherTarget);
+					_isJumping = true;
+					_contunuosFollow = _follow = _statistics.TimedJumps[ jumpIndex ].Follow;
+					_turnFollow = _statistics.TimedJumps[ jumpIndex ].TurnFollow;
+					_useTarget = _statistics.TimedJumps[ jumpIndex ].UseTarget;
+					_otherTarget = _statistics.TimedJumps[ jumpIndex ].OtherTarget;
 					if ( _statistics.SequentialTimmedJumps )
 						_sequentialJumpIndex++;
 					else
@@ -247,9 +253,12 @@ namespace GwambaPrimeAdventure.Enemy
 				}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
 				if ( _cancellationSource.IsCancellationRequested )
 					return;
-				(_isJumping, _contunuosFollow) = (true, _follow = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Follow);
-				(_turnFollow, _useTarget) = (_statistics.JumpPointStructures[ jumpIndex ].JumpStats.TurnFollow, _statistics.JumpPointStructures[ jumpIndex ].JumpStats.UseTarget);
-				(_otherTarget, _jumpCount[ jumpIndex ]) = (_statistics.JumpPointStructures[ jumpIndex ].JumpStats.OtherTarget, (short) _statistics.JumpPointStructures[ jumpIndex ].JumpCount);
+				_isJumping = true;
+				_contunuosFollow = _follow = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Follow;
+				_turnFollow = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.TurnFollow;
+				_useTarget = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.UseTarget;
+				_otherTarget = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.OtherTarget;
+				_jumpCount[ jumpIndex ] = (short) _statistics.JumpPointStructures[ jumpIndex ].JumpCount;
 				_jumpTime = _statistics.TimeToJump;
 				if ( _statistics.JumpPointStructures[ jumpIndex ].JumpStats.StopMove )
 				{
@@ -279,8 +288,11 @@ namespace GwambaPrimeAdventure.Enemy
 							}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
 							if ( _cancellationSource.IsCancellationRequested )
 								return;
-							(_otherTarget, _contunuosFollow, _turnFollow) = (_statistics.OtherTarget, _follow = _statistics.FollowReact, _statistics.TurnFollowReact);
-							(_useTarget, _isJumping) = (_statistics.UseTarget, true);
+							_otherTarget = _statistics.OtherTarget;
+							_contunuosFollow = _follow = _statistics.FollowReact;
+							_turnFollow = _statistics.TurnFollowReact;
+							_useTarget = _statistics.UseTarget;
+							_isJumping = true;
 							if ( _statistics.StopMoveReact )
 							{
 								_sender.SetFormat( MessageFormat.State );
