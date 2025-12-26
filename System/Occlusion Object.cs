@@ -7,11 +7,14 @@ namespace GwambaPrimeAdventure
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( BoxCollider2D ) )]
 	public sealed class OcclusionObject : MonoBehaviour, IConnector
 	{
-		[Header( "Interactions" )]
-		[SerializeField, Tooltip( "If this object will activate the children." )] private bool _initialActive;
-		[SerializeField, Tooltip( "If this object will turn off the collisions." )] private bool _offCollision;
-		[SerializeField, Tooltip( "If this object will occlude any other object that enter the collision." )] private bool _collisionOcclusion = true;
-		public MessagePath Path => MessagePath.System;
+		[SerializeField, Tooltip( "If this object will activate the children." ), Header( "Interactions" )] private bool
+			_initialActive;
+		[SerializeField, Tooltip( "If this object will turn off the collisions." )] private bool
+			_offCollision;
+		[SerializeField, Tooltip( "If this object will occlude any other object that enter the collision." )] private bool
+			_collisionOcclusion = true;
+		public MessagePath Path =>
+			MessagePath.System;
 		private void Awake()
 		{
 			GetComponent<BoxCollider2D>().enabled = !_offCollision;
