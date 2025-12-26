@@ -14,7 +14,9 @@ namespace GwambaPrimeAdventure.Item
 		{
 			Document = GetComponent<UIDocument>();
 			RootElement = Document.rootVisualElement.Q<VisualElement>( nameof( RootElement ) );
-			(Level, Boss, Scenes) = (RootElement.Q<Button>( nameof( Level ) ), RootElement.Q<Button>( nameof( Boss ) ), RootElement.Q<Button>( nameof( Scenes ) ));
+			Level = RootElement.Q<Button>( nameof( Level ) );
+			Boss = RootElement.Q<Button>( nameof( Boss ) );
+			Scenes = RootElement.Q<Button>( nameof( Scenes ) );
 		}
 	};
 };
