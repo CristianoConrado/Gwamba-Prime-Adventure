@@ -8,11 +8,16 @@ namespace GwambaPrimeAdventure.Character
 	internal sealed class PointSetter : StateController, ILoader
 	{
 		private static PointSetter Instance;
-		[SerializeField, Tooltip( "The name of the hubby world scene." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )] private SceneField _hubbyWorldScene;
-		[SerializeField, Tooltip( "If this point is faced to left." )] private bool _turnToLeft;
-		[SerializeField, Tooltip( "Which point setter is setted when scene is the hubby world." )] private ushort _selfIndex;
-		internal static Vector2 CheckedPoint => Instance ? Instance.transform.position : Vector2.zero;
-		internal static bool TurnToLeft => Instance ? Instance._turnToLeft : false;
+		[SerializeField, Tooltip( "The name of the hubby world scene." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )] private SceneField 
+			_hubbyWorldScene;
+		[SerializeField, Tooltip( "If this point is faced to left." )] private bool
+			_turnToLeft;
+		[SerializeField, Tooltip( "Which point setter is setted when scene is the hubby world." )] private ushort
+			_selfIndex;
+		internal static Vector2 CheckedPoint =>
+			Instance ? Instance.transform.position : Vector2.zero;
+		internal static bool TurnToLeft =>
+			Instance ? Instance._turnToLeft : false;
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
