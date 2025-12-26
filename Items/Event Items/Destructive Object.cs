@@ -6,13 +6,18 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( Receptor ) )]
 	internal sealed class DestructiveObject : StateController, ILoader, IReceptorSignal, IDestructible
 	{
-		private readonly Sender _sender = Sender.Create();
-		[Header( "Destructive Object" )]
-		[SerializeField, Tooltip( "If there a object that will be instantiate after the destruction of " )] private OcclusionObject _occlusionObject;
-		[SerializeField, Tooltip( "The vitality of this object before it destruction." )] private short _vitality;
-		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )] private short _biggerDamage;
-		[SerializeField, Tooltip( "If this object will be destructed on collision with another object." )] private bool _destroyOnCollision;
-		public short Health => _vitality;
+		private readonly Sender
+			_sender = Sender.Create();
+		[SerializeField, Tooltip( "If there a object that will be instantiate after the destruction of " ), Header( "Destructive Object" )] private OcclusionObject
+			_occlusionObject;
+		[SerializeField, Tooltip( "The vitality of this object before it destruction." )] private short
+			_vitality;
+		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )] private short
+			_biggerDamage;
+		[SerializeField, Tooltip( "If this object will be destructed on collision with another object." )] private bool
+			_destroyOnCollision;
+		public short Health =>
+			_vitality;
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
