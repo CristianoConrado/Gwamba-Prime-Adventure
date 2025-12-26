@@ -1,7 +1,7 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	public sealed class Sender
@@ -16,15 +16,16 @@ namespace GwambaPrimeAdventure
 				NumberValue = null
 			};
 		}
-		private static readonly ConcurrentDictionary<MessagePath, HashSet<IConnector>> _connectors = new ConcurrentDictionary<MessagePath, HashSet<IConnector>>();
+		private static readonly ConcurrentDictionary<MessagePath, HashSet<IConnector>>
+			_connectors = new ConcurrentDictionary<MessagePath, HashSet<IConnector>>();
 		private MessageData _messageData;
-		public static ValueTask Include( IConnector connector )
+		public static UniTask Include( IConnector connector )
 		{
 			HashSet<IConnector> gettedConnectors = _connectors.GetOrAdd( connector.Path, _ => new HashSet<IConnector>() );
 			gettedConnectors.Add( connector );
-			return new ValueTask( Task.CompletedTask );
+			return UniTask.CompletedTask;
 		}
-		public static ValueTask Exclude( IConnector connector )
+		public static UniTask Exclude( IConnector connector )
 		{
 			if ( _connectors.TryGetValue( connector.Path, out HashSet<IConnector> gettedConnectors ) )
 			{
@@ -32,7 +33,7 @@ namespace GwambaPrimeAdventure
 				if ( 0 >= gettedConnectors.Count )
 					_connectors.TryRemove( connector.Path, out _ );
 			}
-			return new ValueTask( Task.CompletedTask );
+			return UniTask.CompletedTask;
 		}
 		public static Sender Create() => new Sender();
 		public void SetFormat( MessageFormat format ) => _messageData.Format = format;
