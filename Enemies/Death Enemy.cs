@@ -5,10 +5,12 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class DeathEnemy : EnemyProvider, IDestructible
 	{
-		private float _deathTime = 0F;
-		private bool _isDead = false;
-		[Header( "Death Enemy" )]
-		[SerializeField, Tooltip( "The death statitics of this enemy." )] private DeathStatistics _statistics;
+		private float
+			_deathTime = 0F;
+		private bool
+			_isDead = false;
+		[SerializeField, Tooltip( "The death statitics of this enemy." ), Header( "Death Enemy" )] private DeathStatistics
+			_statistics;
 		private void Update()
 		{
 			if ( _isDead )
@@ -29,7 +31,8 @@ namespace GwambaPrimeAdventure.Enemy
 				_sender.SetFormat( MessageFormat.State );
 				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Enemy );
-				(_deathTime, _isDead) = (_statistics.TimeToDie, true);
+				_deathTime = _statistics.TimeToDie;
+				_isDead = true;
 			}
 		}
 		public new bool Hurt( ushort damage )
@@ -41,8 +44,8 @@ namespace GwambaPrimeAdventure.Enemy
 				_sender.SetFormat( MessageFormat.State );
 				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Enemy );
-				(_deathTime, _isDead) = (_statistics.TimeToDie, true);
-				return true;
+				_deathTime = _statistics.TimeToDie;
+				return _isDead = true;
 			}
 			return base.Hurt( damage );
 		}
