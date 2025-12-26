@@ -12,9 +12,11 @@ namespace GwambaPrimeAdventure.Enemy
 			_originCast = Vector2.zero,
 			_directionCast = Vector2.zero,
 			_targetDirection = Vector2.zero;
-		private Quaternion _projectileRotation = Quaternion.identity;
+		private Quaternion
+			_projectileRotation = Quaternion.identity;
 		private InstantiateParameters _projectileParameters;
-		private readonly RaycastHit2D[] _detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+		private readonly RaycastHit2D[]
+			_detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
 		private float
 			_shootInterval = 0F,
 			_timeStop = 0F;
@@ -22,8 +24,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_hasTarget = false,
 			_canShoot = false,
 			_isStopped = false;
-		[Header( "Shooter Enemy" )]
-		[SerializeField, Tooltip( "The shooter statitics of this enemy." )] private ShooterStatistics _statistics;
+		[SerializeField, Tooltip( "The shooter statitics of this enemy." ), Header( "Shooter Enemy" )] private ShooterStatistics
+			_statistics;
 		private new void Awake()
 		{
 			base.Awake();
