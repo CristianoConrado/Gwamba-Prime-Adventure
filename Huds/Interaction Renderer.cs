@@ -8,19 +8,23 @@ namespace GwambaPrimeAdventure.Hud
 	{
 		private Animator _animator;
 		private UIDocument _document;
-		private readonly int IsOn = Animator.StringToHash( nameof( IsOn ) );
+		private readonly int
+			IsOn = Animator.StringToHash( nameof( IsOn ) );
 		private bool
 			_isActive = true,
 			_isOnCollision = false;
-		[Header( "Interaction Components" )]
-		[SerializeField, Tooltip( "The UI document of the interaction." )] private UIDocument _documentObject;
-		[SerializeField, Tooltip( "The offset of the document of interaction." )] private Vector2 _imageOffset;
+		[SerializeField, Tooltip( "The UI document of the interaction." ), Header( "Interaction Components" )] private UIDocument
+			_documentObject;
+		[SerializeField, Tooltip( "The offset of the document of interaction." )] private Vector2
+			_imageOffset;
 		public MessagePath Path => MessagePath.Hud;
 		private new void Awake()
 		{
 			base.Awake();
-			(_animator, _document) = (GetComponent<Animator>(), Instantiate( _documentObject, transform ));
-			(_document.transform.localPosition, _document.enabled) = (_imageOffset, false);
+			_animator = GetComponent<Animator>();
+			_document = Instantiate( _documentObject, transform );
+			_document.transform.localPosition = _imageOffset;
+			_document.enabled = false;
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
