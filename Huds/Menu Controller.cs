@@ -10,9 +10,9 @@ namespace GwambaPrimeAdventure.Hud
 		private static MenuController _instance;
 		private MenuHud _menuHud;
 		private InputController _inputController;
-		private bool _isPlay = false;
-		[Header( "Interaction Object" )]
-		[SerializeField, Tooltip( "The object that handles the hud of the menu." )] private MenuHud _menuHudObject;
+		private bool
+			_isPlay = false;
+		[SerializeField, Tooltip( "The object that handles the hud of the menu." ), Header( "Interaction Object" )] private MenuHud _menuHudObject;
 		private void Awake()
 		{
 			if ( _instance )
@@ -20,7 +20,8 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, _menuHud) = (this, Instantiate( _menuHudObject, transform ));
+			_instance = this;
+			_menuHud = Instantiate( _menuHudObject, transform );
 			_menuHud.SaveName[ 0 ].value = FilesController.Select( 1 );
 			_menuHud.SaveName[ 1 ].value = FilesController.Select( 2 );
 			_menuHud.SaveName[ 2 ].value = FilesController.Select( 3 );
@@ -80,8 +81,9 @@ namespace GwambaPrimeAdventure.Hud
 		private void HideHud( InputAction.CallbackContext hideHud ) => Back();
 		private void Play()
 		{
-			(_menuHud.Buttons.style.display, _menuHud.Saves.style.display, _isPlay) = (DisplayStyle.None, DisplayStyle.Flex, true);
-			ConfigurationController.SetActive( false );
+			_menuHud.Buttons.style.display = DisplayStyle.None;
+			_menuHud.Saves.style.display = DisplayStyle.Flex;
+			ConfigurationController.SetActive( !( _isPlay = true ) );
 		}
 		private void OpenConfigurations() => ConfigurationController.OpenConfigurations();
 		private void Quit() => Application.Quit();
@@ -89,8 +91,9 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			if ( !_isPlay )
 				return;
-			(_menuHud.Saves.style.display, _menuHud.Buttons.style.display, _isPlay) = (DisplayStyle.None, DisplayStyle.Flex, false);
-			ConfigurationController.SetActive( true );
+			_menuHud.Saves.style.display = DisplayStyle.None;
+			_menuHud.Buttons.style.display = DisplayStyle.Flex;
+			ConfigurationController.SetActive( !( _isPlay = false ) );
 		}
 		private void ChangeName1( ChangeEvent<string> write ) => _menuHud.RenameFile[ 0 ].enabledSelf = write.newValue != FilesController.Select( 1 );
 		private void ChangeName2( ChangeEvent<string> write ) => _menuHud.RenameFile[ 1 ].enabledSelf = write.newValue != FilesController.Select( 2 );
