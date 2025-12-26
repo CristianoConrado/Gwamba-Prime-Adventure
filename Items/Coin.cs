@@ -8,13 +8,16 @@ namespace GwambaPrimeAdventure.Item
 		private SpriteRenderer _spriteRenderer;
 		private Animator _animator;
 		private CircleCollider2D _collider;
-		[Header( "Condition" )]
-		[SerializeField, Tooltip( "If this object will be saved as already existent object." )] private bool _saveOnSpecifics;
-		public MessagePath Path => MessagePath.Item;
+		[SerializeField, Tooltip( "If this object will be saved as already existent object." ), Header( "Condition" )] private bool
+			_saveOnSpecifics;
+		public MessagePath Path =>
+			MessagePath.Item;
 		private new void Awake()
 		{
 			base.Awake();
-			(_spriteRenderer, _animator, _collider) = (GetComponent<SpriteRenderer>(), GetComponent<Animator>(), GetComponent<CircleCollider2D>());
+			_spriteRenderer = GetComponent<SpriteRenderer>();
+			_animator = GetComponent<Animator>();
+			_collider = GetComponent<CircleCollider2D>();
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
