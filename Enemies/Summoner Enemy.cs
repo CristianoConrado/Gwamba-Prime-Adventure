@@ -12,10 +12,14 @@ namespace GwambaPrimeAdventure.Enemy
 			_cancellationSource = new CancellationTokenSource(),
 			_cancelTimerSource = new CancellationTokenSource();
 		private IEnumerator _summonEvent;
-		private Vector2 _summonPosition = Vector2.zero;
-		private Vector2Int _summonIndex = Vector2Int.zero;
-		private InstantiateParameters _instantiateParameters = new InstantiateParameters();
-		private ushort _randomSummonIndex = 0;
+		private Vector2
+			_summonPosition = Vector2.zero;
+		private Vector2Int
+			_summonIndex = Vector2Int.zero;
+		private InstantiateParameters
+			_instantiateParameters = new InstantiateParameters();
+		private ushort
+			_randomSummonIndex = 0;
 		private float[]
 			_summonTime,
 			_structureTime;
@@ -30,8 +34,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_stopSummon = false,
 			_waitStop = false,
 			_cancelTimerActivated = false;
-		[Header( "Summoner Enemy" )]
-		[SerializeField, Tooltip( "The summoner statitics of this enemy." )] private SummonerStatistics _statistics;
+		[SerializeField, Tooltip( "The summoner statitics of this enemy." ), Header( "Summoner Enemy" )] private SummonerStatistics
+			_statistics;
 		private new void Awake()
 		{
 			base.Awake();
@@ -57,8 +61,11 @@ namespace GwambaPrimeAdventure.Enemy
 			_cancellationSource.RegisterRaiseCancelOnDestroy(gameObject);
 			_cancelTimerSource.RegisterRaiseCancelOnDestroy(gameObject);
 			_structureTime = new float[ _statistics.SummonPointStructures.Length ];
-			(_summonTime, _isSummonTime, _stopPermanently) = (new float[ _statistics.TimedSummons.Length ], new bool[ _statistics.TimedSummons.Length ], new bool[ _statistics.TimedSummons.Length ]);
-			(_gravityScale, _randomSummonIndex) = (Rigidbody.gravityScale, (ushort) Random.Range( 0, _statistics.TimedSummons.Length + 1 ));
+			_summonTime = new float[ _statistics.TimedSummons.Length ];
+			_isSummonTime = new bool[ _statistics.TimedSummons.Length ];
+			_stopPermanently = new bool[ _statistics.TimedSummons.Length ];
+			_gravityScale = Rigidbody.gravityScale;
+			_randomSummonIndex = (ushort) Random.Range( 0, _statistics.TimedSummons.Length + 1 );
 			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
 				_isSummonTime[ i ] = true;
 			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
