@@ -6,20 +6,29 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		protected EnemyController _controller;
 		protected Collider2D _collider;
-		protected readonly Sender _sender = Sender.Create();
-		protected bool _stopWorking = false;
-		[Header( "Enemy Provider" )]
-		[SerializeField, Tooltip( "The enemies to send messages." )] private EnemyProvider[] _enemiesToSend;
-		[SerializeField, Tooltip( "The level of priority to use the destructible side." )] private ushort _destructilbePriority = 0;
-		protected Rigidbody2D Rigidbody => _controller.Rigidbody;
-		public MessagePath Path => MessagePath.Enemy;
-		protected bool IsStunned => _controller.IsStunned;
-		public short Health => _controller.Health;
-		internal ushort DestructilbePriority => _destructilbePriority;
+		protected readonly Sender
+			_sender = Sender.Create();
+		protected bool
+			_stopWorking = false;
+		[SerializeField, Tooltip( "The enemies to send messages." ), Header( "Enemy Provider" )] private EnemyProvider[]
+			_enemiesToSend;
+		[SerializeField, Tooltip( "The level of priority to use the destructible side." )] private ushort
+			_destructilbePriority = 0;
+		protected Rigidbody2D Rigidbody =>
+			_controller.Rigidbody;
+		public MessagePath Path =>
+			MessagePath.Enemy;
+		protected bool IsStunned =>
+			_controller.IsStunned;
+		public short Health =>
+			_controller.Health;
+		internal ushort DestructilbePriority =>
+			_destructilbePriority;
 		protected new void Awake()
 		{
 			base.Awake();
-			(_controller, _collider) = (GetComponent<EnemyController>(), GetComponent<Collider2D>());
+			_controller = GetComponent<EnemyController>();
+			_collider = GetComponent<Collider2D>();
 			_sender.SetAdditionalData( _enemiesToSend );
 		}
 		public bool Hurt( ushort damage )
@@ -45,7 +54,8 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0 >= ( _controller.ArmorResistance -= (short) stunStength ) )
 			{
 				_controller.OnDisable();
-				(_controller.StunTimer, _controller.ArmorResistance) = (_controller.ProvidenceStatistics.StunnedTime, (short) _controller.ProvidenceStatistics.HitResistance);
+				_controller.StunTimer = _controller.ProvidenceStatistics.StunnedTime;
+				_controller.ArmorResistance = (short) _controller.ProvidenceStatistics.HitResistance;
 			}
 		}
 	};
