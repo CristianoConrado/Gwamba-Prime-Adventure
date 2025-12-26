@@ -1,9 +1,9 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.SceneManagement;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
+using System.Threading;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure.Hud
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Transitioner ) )]
@@ -11,14 +11,19 @@ namespace GwambaPrimeAdventure.Hud
 	{
 		private static DeathScreenController _instance;
 		private DeathScreenHud _deathScreenHud;
-		private readonly Sender _sender = Sender.Create();
+		private readonly Sender
+			_sender = Sender.Create();
 		private CancellationToken _destroyToken;
-		[Header( "Interaction Object" )]
-		[SerializeField, Tooltip( "The object that handles the hud of the death screen." )] private DeathScreenHud _deathScreenHudObject;
-		[SerializeField, Tooltip( "The scene of the level selector." )] private SceneField _levelSelectorScene;
-		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField _menuScene;
-		[SerializeField, Tooltip( "The scene of the boss of actual scene." )] private SceneField _bossScene;
-		public MessagePath Path => MessagePath.Hud;
+		[SerializeField, Tooltip( "The object that handles the hud of the death screen." ), Header( "Interaction Object" )] private DeathScreenHud
+			_deathScreenHudObject;
+		[SerializeField, Tooltip( "The scene of the level selector." )] private SceneField
+			_levelSelectorScene;
+		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField
+			_menuScene;
+		[SerializeField, Tooltip( "The scene of the boss of actual scene." )] private SceneField
+			_bossScene;
+		public MessagePath Path =>
+			MessagePath.Hud;
 		private void Awake()
 		{
 			if ( _instance )
@@ -26,7 +31,9 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, _deathScreenHud, _destroyToken) = (this, Instantiate( _deathScreenHudObject, transform ), this.GetCancellationTokenOnDestroy());
+			_instance = this;
+			_deathScreenHud = Instantiate( _deathScreenHudObject, transform );
+			_destroyToken = this.GetCancellationTokenOnDestroy();
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include( this );
 		}
@@ -70,7 +77,8 @@ namespace GwambaPrimeAdventure.Hud
 				GetComponent<Transitioner>().Transicion( _bossScene );
 				return;
 			}
-			_deathScreenHud.GameOver.style.display = _deathScreenHud.OutLevel.style.display = _deathScreenHud.Continue.style.display = _deathScreenHud.Text.style.display = DisplayStyle.None;
+			_deathScreenHud.Continue.style.display = _deathScreenHud.Text.style.display = DisplayStyle.None;
+			_deathScreenHud.GameOver.style.display = _deathScreenHud.OutLevel.style.display = DisplayStyle.None;
 			_deathScreenHud.Curtain.style.display = DisplayStyle.Flex;
 			for ( float i = 0F; 1F > _deathScreenHud.Curtain.style.opacity.value; i += 5E-2F )
 			{
