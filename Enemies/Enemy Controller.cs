@@ -10,21 +10,44 @@ namespace GwambaPrimeAdventure.Enemy
 	internal sealed class EnemyController : Control, IConnector, IOccludee, IDestructible
 	{
 		private EnemyProvider[] _selfEnemies;
-		[Header( "Enemy Statistics" )]
-		[SerializeField, Tooltip( "The control statitics of this enemy." )] private EnemyStatistics _statistics;
-		internal EnemyStatistics ProvidenceStatistics => _statistics;
-		internal Rigidbody2D Rigidbody => _rigidbody;
-		public MessagePath Path => MessagePath.Enemy;
-		public short Health => _vitality;
-		internal short Vitality { get => _vitality; set => _vitality = value; }
-		internal short ArmorResistance { get => _armorResistance; set => _armorResistance = value; }
-		internal float StunTimer { get => _stunTimer; set => _stunTimer = value; }
-		internal bool IsStunned { get => _stunned; set => _stunned = value; }
-		public bool Occlude => !_statistics.FadeOverTime;
+		[SerializeField, Tooltip( "The control statitics of this enemy." ), Header( "Enemy Statistics" )] private EnemyStatistics
+			_statistics;
+		internal EnemyStatistics ProvidenceStatistics =>
+			_statistics;
+		internal Rigidbody2D Rigidbody =>
+			_rigidbody;
+		public MessagePath Path =>
+			MessagePath.Enemy;
+		public short Health =>
+			_vitality;
+		internal short Vitality
+		{
+			get => _vitality;
+			set => _vitality = value;
+		}
+		internal short ArmorResistance
+		{
+			get => _armorResistance;
+			set => _armorResistance = value;
+		}
+		internal float StunTimer
+		{
+			get => _stunTimer;
+			set => _stunTimer = value;
+		}
+		internal bool IsStunned
+		{
+			get => _stunned;
+			set => _stunned = value;
+		}
+		public bool Occlude =>
+			!_statistics.FadeOverTime;
 		private new void Awake()
 		{
 			base.Awake();
-			(_selfEnemies, _rigidbody, _screenShaker) = (GetComponents<EnemyProvider>(), GetComponent<Rigidbody2D>(), GetComponent<CinemachineImpulseSource>());
+			_selfEnemies = GetComponents<EnemyProvider>();
+			_rigidbody = GetComponent<Rigidbody2D>();
+			_screenShaker = GetComponent<CinemachineImpulseSource>();
 			_destructibleEnemy = _selfEnemies[ 0 ];
 			for ( ushort i = 0; _selfEnemies.Length - 1 > i; i++ )
 				if ( _selfEnemies[ i + 1 ].DestructilbePriority > _selfEnemies[ i ].DestructilbePriority )
@@ -42,8 +65,16 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			Sender.Exclude( this );
 		}
-		internal void OnEnable() => (_rigidbody.linearVelocity, _rigidbody.gravityScale) = (_guardedLinearVelocity, _statistics.GravityScale);
-		internal void OnDisable() => (_guardedLinearVelocity, _rigidbody.linearVelocity, _rigidbody.gravityScale) = (_rigidbody.linearVelocity, Vector2.zero, 0F);
+		internal void OnEnable()
+		{
+			_rigidbody.linearVelocity = _guardedLinearVelocity;
+			_rigidbody.gravityScale = _statistics.GravityScale;
+		}
+		internal void OnDisable()
+		{
+			_rigidbody.gravityScale = 0F;
+			( _guardedLinearVelocity, _rigidbody.linearVelocity) = (_rigidbody.linearVelocity, Vector2.zero);
+		}
 		private async void Start()
 		{
 			SaveController.Load( out SaveFile saveFile );
@@ -58,7 +89,9 @@ namespace GwambaPrimeAdventure.Enemy
 			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
-			(_vitality, _armorResistance, _fadeTime) = ((short) _statistics.Vitality, (short) _statistics.HitResistance, _statistics.TimeToFadeAway);
+			_vitality = (short) _statistics.Vitality;
+			_armorResistance = (short) _statistics.HitResistance;
+			_fadeTime = _statistics.TimeToFadeAway;
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = true;
 		}
