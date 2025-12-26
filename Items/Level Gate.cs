@@ -15,7 +15,8 @@ namespace GwambaPrimeAdventure.Item
 			_levelGateWorld,
 			_levelGateScreen;
 		private CinemachineCamera _gateCamera;
-		private readonly Sender _sender = Sender.Create();
+		private readonly Sender
+			_sender = Sender.Create();
 		private CancellationToken _destroyToken;
 		private Vector2
 			_transitionSize = Vector2.zero,
@@ -25,17 +26,24 @@ namespace GwambaPrimeAdventure.Item
 		private bool
 			_isOnInteraction = false,
 			_isOnTransicion = false;
-		[Header( "Scene Status" )]
-		[SerializeField, Tooltip( "The brain responsable for controlling the camera." )] private CinemachineBrain _brain;
-		[SerializeField, Tooltip( "The handler of the world hud of the level gate." )] private LevelGateHud _levelGateWorldObject;
-		[SerializeField, Tooltip( "The handler of the screen hud of the level gate." )] private LevelGateHud _levelGateScreenObject;
-		[SerializeField, Tooltip( "The scene of the level." )] private SceneField _levelScene;
-		[SerializeField, Tooltip( "The scene of the boss." )] private SceneField _bossScene;
-		[SerializeField, Tooltip( "The offset that the hud will be." )] private Vector2 _offsetPosition;
-		[SerializeField, Tooltip( "Where the this camera have to be in the hierarchy." )] private short _overlayPriority;
+		[SerializeField, Tooltip( "The brain responsable for controlling the camera." ), Header( "Scene Status" )] private CinemachineBrain
+			_brain;
+		[SerializeField, Tooltip( "The handler of the world hud of the level gate." )] private LevelGateHud
+			_levelGateWorldObject;
+		[SerializeField, Tooltip( "The handler of the screen hud of the level gate." )] private LevelGateHud
+			_levelGateScreenObject;
+		[SerializeField, Tooltip( "The scene of the level." )] private SceneField
+			_levelScene;
+		[SerializeField, Tooltip( "The scene of the boss." )] private SceneField
+			_bossScene;
+		[SerializeField, Tooltip( "The offset that the hud will be." )] private Vector2
+			_offsetPosition;
+		[SerializeField, Tooltip( "Where the this camera have to be in the hierarchy." )] private short
+			_overlayPriority;
 		private void Awake()
 		{
-			(_gateCamera, _destroyToken) = (GetComponentInChildren<CinemachineCamera>(), this.GetCancellationTokenOnDestroy());
+			_gateCamera = GetComponentInChildren<CinemachineCamera>();
+			_destroyToken = this.GetCancellationTokenOnDestroy();
 			_sender.SetFormat( MessageFormat.Event );
 			_sender.SetAdditionalData( gameObject );
 		}
@@ -53,11 +61,11 @@ namespace GwambaPrimeAdventure.Item
 		}
 		public async UniTask Load()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
 				return;
-			(_levelGateWorld, _levelGateScreen) = (Instantiate( _levelGateWorldObject, transform ), Instantiate( _levelGateScreenObject, transform ));
+			_levelGateWorld = Instantiate( _levelGateWorldObject, transform );
+			_levelGateScreen = Instantiate( _levelGateScreenObject, transform );
 			_levelGateScreen.RootElement.style.display = DisplayStyle.None;
 			_levelGateScreen.Level.SetEnabled( true );
 			_levelGateScreen.Boss.SetEnabled( true );
