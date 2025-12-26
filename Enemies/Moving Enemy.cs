@@ -8,19 +8,24 @@ namespace GwambaPrimeAdventure.Enemy
 {
 	internal abstract class MovingEnemy : EnemyProvider, IConnector
 	{
-		protected readonly List<ContactPoint2D> _groundContacts = new List<ContactPoint2D>( (int) WorldBuild.PIXELS_PER_UNIT );
+		protected readonly List<ContactPoint2D>
+			_groundContacts = new List<ContactPoint2D>( (int) WorldBuild.PIXELS_PER_UNIT );
 		protected Vector2
 			_originCast = Vector2.zero,
 			_sizeCast = Vector2.zero;
-		protected float _stoppedTime = 0F;
-		protected short _movementSide = 1;
-		private bool _onGround = false;
+		protected float
+			_stoppedTime = 0F;
+		protected short
+			_movementSide = 1;
+		private bool
+			_onGround = false;
 		protected bool
 			_detected = false,
 			_isDashing = false;
-		[Header( "Moving Enemy" )]
-		[SerializeField, Tooltip( "The moving statitics of this enemy." )] private MovingStatistics _moving;
-		protected bool OnGround => _onGround;
+		[SerializeField, Tooltip( "The moving statitics of this enemy." ), Header( "Moving Enemy" )] private MovingStatistics
+			_moving;
+		protected bool OnGround =>
+			_onGround;
 		protected new void Awake()
 		{
 			base.Awake();
