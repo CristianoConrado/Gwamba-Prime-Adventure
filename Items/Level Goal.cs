@@ -7,11 +7,14 @@ namespace GwambaPrimeAdventure.Item
 	internal sealed class LevelGoal : StateController
 	{
 		private static LevelGoal Instance;
-		private bool _blocked = false;
-		[Header( "Scene Interactions" )]
-		[SerializeField, Tooltip( "If this will go direct to the boss." )] private SceneField _goToBoss;
-		[SerializeField, Tooltip( "If theres a dialog after the goal." )] private bool _enterInDialog;
-		[SerializeField, Tooltip( "If this object will be saved as already existent object." )] private bool _saveOnSpecifics;
+		private bool
+			_blocked = false;
+		[SerializeField, Tooltip( "If this will go direct to the boss." ), Header( "Scene Interactions" )] private SceneField
+			_goToBoss;
+		[SerializeField, Tooltip( "If theres a dialog after the goal." )] private bool
+			_enterInDialog;
+		[SerializeField, Tooltip( "If this object will be saved as already existent object." )] private bool
+			_saveOnSpecifics;
 		private new void Awake()
 		{
 			base.Awake();
@@ -41,7 +44,7 @@ namespace GwambaPrimeAdventure.Item
 			SettingsController.Load( out Settings settings );
 			if ( _enterInDialog && settings.DialogToggle )
 				GetComponent<IInteractable>().Interaction();
-			else if ( 0 <= ushort.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 && !saveFile.DeafetedBosses[ ushort.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 ] )
+			else if ( 0 >= ushort.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 && !saveFile.DeafetedBosses[ ushort.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 ] )
 				GetComponent<Transitioner>().Transicion( _goToBoss );
 			else
 				GetComponent<Transitioner>().Transicion();
