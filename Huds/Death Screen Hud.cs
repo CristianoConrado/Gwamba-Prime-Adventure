@@ -19,9 +19,13 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, RootElement) = (this, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) ));
-			(Curtain, Text, Continue) = (RootElement.Q<VisualElement>( nameof( Curtain ) ), RootElement.Q<Label>( nameof( Text ) ), RootElement.Q<Button>( nameof( Continue ) ));
-			(OutLevel, GameOver) = (RootElement.Q<Button>( nameof( OutLevel ) ), RootElement.Q<Button>( nameof( GameOver ) ));
+			_instance = this;
+			RootElement = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) );
+			Curtain = RootElement.Q<VisualElement>( nameof( Curtain ) );
+			Text = RootElement.Q<Label>( nameof( Text ) );
+			Continue = RootElement.Q<Button>( nameof( Continue ) );
+			OutLevel = RootElement.Q<Button>( nameof( OutLevel ) );
+			GameOver = RootElement.Q<Button>( nameof( GameOver ) );
 		}
 	};
 };
