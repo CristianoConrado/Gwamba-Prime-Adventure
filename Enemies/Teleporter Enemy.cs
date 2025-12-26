@@ -7,19 +7,26 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class TeleporterEnemy : EnemyProvider, ILoader, ITeleporter
 	{
-		private float _teleportTime = 0F;
-		private ushort _teleportIndex = 0;
-		private bool _canTeleport = true;
-		[Header( "Teleporter Enemy" )]
-		[SerializeField, Tooltip( "The teleporter statitics of this enemy." )] private TeleporterStatistics _statistics;
+		private float
+			_teleportTime = 0F;
+		private ushort
+			_teleportIndex = 0;
+		private bool
+			_canTeleport = true;
+		[SerializeField, Tooltip( "The teleporter statitics of this enemy." ), Header( "Teleporter Enemy" )] private TeleporterStatistics
+			_statistics;
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
+			TeleportPoint teleportPoint;
 			for ( ushort i = 0; _statistics.TeleportPointStructures.Length > i; i++ )
-				Instantiate( _statistics.TeleportPointStructures[ i ].TeleportPointObject, _statistics.TeleportPointStructures[ i ].InstancePoint, Quaternion.identity ).GetTouch( this, i );
+			{
+				teleportPoint = Instantiate( _statistics.TeleportPointStructures[ i ].TeleportPointObject, _statistics.TeleportPointStructures[ i ].InstancePoint, Quaternion.identity );
+				teleportPoint.GetTouch( this, i );
+			}
 		}
 		private void Update()
 		{
@@ -37,7 +44,8 @@ namespace GwambaPrimeAdventure.Enemy
 				transform.position = _statistics.TeleportPointStructures[ teleportIndex ].TeleportPoints[ _teleportIndex ];
 				if ( !_statistics.TeleportPointStructures[ teleportIndex ].RandomTeleports )
 					_teleportIndex = (ushort) ( _teleportIndex < _statistics.TeleportPointStructures[ teleportIndex ].TeleportPoints.Length - 1 ? _teleportIndex + 1 : 0 );
-				(_canTeleport, _teleportTime) = (false, _statistics.TimeToUse);
+				_canTeleport = false;
+				_teleportTime = _statistics.TimeToUse;
 			}
 		}
 	};
