@@ -10,9 +10,10 @@ namespace GwambaPrimeAdventure
 	{
 		private static CameraOccluder _instance;
 		private CinemachineFollow _cinemachineFollow;
-		private Vector2 _posiontDamping = Vector2.zero;
-		[Header( "Interactions" )]
-		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField _menuScene;
+		private Vector2
+			_posiontDamping = Vector2.zero;
+		[SerializeField, Tooltip( "The scene of the menu." ), Header( "Interactions" )] private SceneField
+			_menuScene;
 		public MessagePath Path => MessagePath.System;
 		private new void Awake()
 		{
@@ -42,7 +43,8 @@ namespace GwambaPrimeAdventure
 		{
 			if ( !_instance || this != _instance )
 				return;
-			(_cinemachineFollow.TrackerSettings.PositionDamping, _cinemachineFollow.enabled) = (_posiontDamping, true);
+			_cinemachineFollow.TrackerSettings.PositionDamping = _posiontDamping;
+			_cinemachineFollow.enabled = true;
 		}
 		private void OnDisable()
 		{
@@ -67,7 +69,8 @@ namespace GwambaPrimeAdventure
 				Destroy( gameObject );
 				return;
 			}
-			(_cinemachineFollow.TrackerSettings.PositionDamping, _cinemachineFollow.enabled) = (Vector2.zero, true);
+			_cinemachineFollow.TrackerSettings.PositionDamping = Vector3.zero;
+			_cinemachineFollow.enabled = true;
 		}
 		private void SetOtherChildren( GameObject gameObject, bool activate )
 		{
