@@ -12,9 +12,10 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_used = false,
 			_usedOne = false,
 			_usable = true;
-		[Header( "Activator" )]
-		[SerializeField, Tooltip( "The activator only can be activeted one time." )] private bool _oneActivation;
-		protected bool Usable => _usable;
+		[SerializeField, Tooltip( "The activator only can be activeted one time." ), Header( "Activator" )] private bool
+			_oneActivation;
+		protected bool Usable =>
+			_usable;
 		private new void Awake()
 		{
 			base.Awake();
