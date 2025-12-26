@@ -9,10 +9,14 @@ namespace GwambaPrimeAdventure.Character
 		private static GwambaCanvas _instance;
 		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar background." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
 		internal Color BackgroundColor { get; private set; }
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar border." )] internal Color BorderColor { get; private set; }
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's stun resistance bar." )] internal Color StunResistanceColor { get; private set; }
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bunny hop bar." )] internal Color BunnyHopColor { get; private set; }
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bar missing piece." )] internal Color MissingColor { get; private set; }
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar border." )]
+		internal Color BorderColor { get; private set; }
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's stun resistance bar." )]
+		internal Color StunResistanceColor { get; private set; }
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bunny hop bar." )]
+		internal Color BunnyHopColor { get; private set; }
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bar missing piece." )]
+		internal Color MissingColor { get; private set; }
 		[SerializeField, Tooltip( "The total of vitality that Gwamba have." )] private ushort _vitality;
 		[SerializeField, Tooltip( "The total of recover vitality that Gwamba have." )] private ushort _recoverVitality;
 		[SerializeField, Tooltip( "The total of stun resistance that Gwamba have." )] private ushort _stunResistance;
@@ -34,14 +38,23 @@ namespace GwambaPrimeAdventure.Character
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, RootElement, Vitality) = (this, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) ), new VisualElement[ _vitality ]);
-			(RecoverVitality, StunResistance, BunnyHop) = (new VisualElement[ _recoverVitality ], new VisualElement[ _stunResistance ], new VisualElement[ _bunnyHop ]);
-			(FallDamageText, LifeText, CoinText) = (RootElement.Q<Label>( nameof( FallDamageText ) ), RootElement.Q<Label>( nameof( LifeText ) ), RootElement.Q<Label>( nameof( CoinText ) ));
+			_instance = this;
+			RootElement = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) );
+			Vitality = new VisualElement[ _vitality ];
+			RecoverVitality = new VisualElement[ _recoverVitality ];
+			StunResistance = new VisualElement[ _stunResistance ];
+			BunnyHop = new VisualElement[ _bunnyHop ];
+			FallDamageText = RootElement.Q<Label>( nameof( FallDamageText ) );
+			LifeText = RootElement.Q<Label>( nameof( LifeText ) );
+			CoinText = RootElement.Q<Label>( nameof( CoinText ) );
 		}
 		internal async UniTask LoadCanvas()
 		{
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
-			VisualElement vitality = RootElement.Q<VisualElement>( nameof( Vitality ) ), VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) ), vitalityPieceClone;
+			VisualElement
+				vitality = RootElement.Q<VisualElement>( nameof( Vitality ) ),
+				VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) ),
+				vitalityPieceClone;
 			vitality.style.width = _totalWidth;
 			for ( ushort i = 0; i < _vitality; i++ )
 			{
@@ -60,8 +73,10 @@ namespace GwambaPrimeAdventure.Character
 			}
 			vitality.Remove( VitalityPiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
-			VisualElement recoverVitality = RootElement.Q<VisualElement>( nameof( RecoverVitality ) ),
-				 RecoverVitalityPiece = RootElement.Q<VisualElement>( nameof( RecoverVitalityPiece ) ), recoverVitalityPieceClone;
+			VisualElement
+				recoverVitality = RootElement.Q<VisualElement>( nameof( RecoverVitality ) ),
+				RecoverVitalityPiece = RootElement.Q<VisualElement>( nameof( RecoverVitalityPiece ) ),
+				recoverVitalityPieceClone;
 			recoverVitality.style.width = _totalWidth;
 			for ( ushort i = 0; i < _recoverVitality; i++ )
 			{
@@ -73,8 +88,10 @@ namespace GwambaPrimeAdventure.Character
 			}
 			recoverVitality.Remove( RecoverVitalityPiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
-			VisualElement stunResistance = RootElement.Q<VisualElement>( nameof( StunResistance ) ),
-				 StunResistancePiece = RootElement.Q<VisualElement>( nameof( StunResistancePiece ) ), stunResistancePieceClone;
+			VisualElement
+				stunResistance = RootElement.Q<VisualElement>( nameof( StunResistance ) ),
+				StunResistancePiece = RootElement.Q<VisualElement>( nameof( StunResistancePiece ) ),
+				stunResistancePieceClone;
 			stunResistance.style.width = _totalWidth;
 			for ( ushort i = 0; i < _stunResistance; i++ )
 			{
@@ -86,7 +103,10 @@ namespace GwambaPrimeAdventure.Character
 			}
 			stunResistance.Remove( StunResistancePiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
-			VisualElement bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ), BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) ), bunnyHopPieceClone;
+			VisualElement
+				bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ),
+				BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) ),
+				bunnyHopPieceClone;
 			bunnyHop.style.width = _totalWidth;
 			for ( ushort i = 0; i < _bunnyHop; i++ )
 			{
