@@ -7,10 +7,12 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class DefenderEnemy : EnemyProvider, ILoader, IConnector, IDestructible
 	{
-		private bool _invencible = false;
-		private float _timeOperation = 0F;
-		[Header( "Defender Enemy" )]
-		[SerializeField, Tooltip( "The defender statitics of this enemy." )] private DefenderStatistics _statistics;
+		private bool
+			_invencible = false;
+		private float
+			_timeOperation = 0F;
+		[SerializeField, Tooltip( "The defender statitics of this enemy." ), Header( "Defender Enemy" )] private DefenderStatistics
+			_statistics;
 		private new void Awake()
 		{
 			base.Awake();
@@ -38,7 +40,8 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( 0F >= ( _timeOperation -= Time.deltaTime ) )
 					if ( _invencible )
 					{
-						(_invencible, _timeOperation) = (false, _statistics.UseAlternatedTime ? _statistics.TimeToInvencible : _statistics.TimeToDestructible);
+						_timeOperation = _statistics.UseAlternatedTime ? _statistics.TimeToInvencible : _statistics.TimeToDestructible;
+						_invencible = false;
 						if ( _statistics.InvencibleStop )
 						{
 							_sender.SetToggle( true );
@@ -47,7 +50,8 @@ namespace GwambaPrimeAdventure.Enemy
 					}
 					else
 					{
-						(_invencible, _timeOperation) = (true, _statistics.TimeToDestructible);
+						_timeOperation = _statistics.TimeToDestructible;
+						_invencible = true;
 						if ( _statistics.InvencibleStop )
 						{
 							_sender.SetToggle( false );
@@ -61,7 +65,8 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( !_invencible && _statistics.BiggerDamage <= damage )
 				if ( ( isHurted = base.Hurt( damage ) ) && _statistics.InvencibleHurted )
 				{
-					(_timeOperation, _invencible) = (_statistics.TimeToDestructible, true);
+					_timeOperation = _statistics.TimeToInvencible;
+					_invencible = true;
 					if ( _statistics.InvencibleStop )
 					{
 						_sender.SetToggle( true );
@@ -78,9 +83,15 @@ namespace GwambaPrimeAdventure.Enemy
 					{
 						if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage && message.ToggleValue.HasValue )
 							if ( _statistics.UseAlternatedTime && message.ToggleValue.Value )
-								(_invencible, _timeOperation) = (true, _statistics.TimeToDestructible);
+							{
+								_invencible = true;
+								_timeOperation = _statistics.TimeToInvencible;
+							}
 							else
-								(_invencible, _timeOperation) = (message.ToggleValue.Value, _statistics.TimeToDestructible);
+							{
+								_invencible = message.ToggleValue.Value;
+								_timeOperation = _statistics.TimeToDestructible;
+							}
 						if ( _statistics.InvencibleStop )
 						{
 							_sender.SetToggle( !_invencible );
