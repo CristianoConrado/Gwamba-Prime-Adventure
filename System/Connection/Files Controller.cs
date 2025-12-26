@@ -12,7 +12,8 @@ namespace GwambaPrimeAdventure.Connection
 	};
 	public static class FilesController
 	{
-		private static readonly string FilesArchivePath = Application.persistentDataPath + "/Save Files.txt";
+		private static readonly string
+			FilesArchivePath = $"{Application.persistentDataPath}/Save Files.txt";
 		private static FilesArchive LoadFiles()
 		{
 			return File.Exists( FilesArchivePath ) 
@@ -25,8 +26,8 @@ namespace GwambaPrimeAdventure.Connection
 					SaveFile4 = "Save File 4"
 				};
 		}
-		public static string Select( ushort actualSaveFile )
-			=> actualSaveFile switch
+		public static string Select( ushort actualSaveFile ) =>
+			actualSaveFile switch
 			{
 				1 => LoadFiles().SaveFile1,
 				2 => LoadFiles().SaveFile2,
