@@ -8,14 +8,18 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		private Tilemap _tilemap;
 		private TilemapCollider2D _tilemapCollider;
+		private WaitUntil _waitActive;
 		private IEnumerator _appearFadeEvent;
-		[Header( "Interactions" )]
-		[SerializeField, Tooltip( "If anything can be hurt." )] private bool _hurtEveryone;
-		[SerializeField, Tooltip( "If this enemy will react to any damage taken." )] private bool _reactToDamage;
+		[SerializeField, Tooltip( "If anything can be hurt." ), Header( "Interactions" )] private bool
+			_hurtEveryone;
+		[SerializeField, Tooltip( "If this enemy will react to any damage taken." )] private bool
+			_reactToDamage;
 		private new void Awake()
 		{
 			base.Awake();
-			(_tilemap, _tilemapCollider) = (GetComponent<Tilemap>(), GetComponent<TilemapCollider2D>());
+			_tilemap = GetComponent<Tilemap>();
+			_tilemapCollider = GetComponent<TilemapCollider2D>();
+			_waitActive = new WaitUntil( () => isActiveAndEnabled && !IsStunned );
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
@@ -42,7 +46,7 @@ namespace GwambaPrimeAdventure.Enemy
 							if ( appear )
 								for ( float i = 0F; 1F > _tilemap.color.a; i += 1E-1F )
 								{
-									yield return new WaitUntil( () => isActiveAndEnabled && !IsStunned );
+									yield return _waitActive;
 									color.a = i;
 									_tilemap.color = color;
 									yield return null;
@@ -50,7 +54,7 @@ namespace GwambaPrimeAdventure.Enemy
 							else
 								for ( float i = 1F; 0F < _tilemap.color.a; i -= 1E-1F )
 								{
-									yield return new WaitUntil( () => isActiveAndEnabled && !IsStunned );
+									yield return _waitActive;
 									color.a = i;
 									_tilemap.color = color;
 									yield return null;
