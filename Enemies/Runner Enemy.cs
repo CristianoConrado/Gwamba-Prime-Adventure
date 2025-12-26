@@ -8,8 +8,10 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class RunnerEnemy : MovingEnemy, ILoader, IConnector, IDestructible
 	{
-		private readonly RaycastHit2D[] _detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
-		private ushort _runnedTimes = 0;
+		private readonly RaycastHit2D[]
+			_detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+		private ushort
+			_runnedTimes = 0;
 		private float
 			_timeRun = 0F,
 			_dashedTime = 0F,
@@ -24,8 +26,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_canRetreat = true,
 			_retreat = false,
 			_runTowards = false;
-		[Header( "Runner Enemy" )]
-		[SerializeField, Tooltip( "The runner statitics of this enemy." )] private RunnerStatistics _statistics;
+		[SerializeField, Tooltip( "The runner statitics of this enemy." ), Header( "Runner Enemy" )] private RunnerStatistics _statistics;
 		private new void Awake()
 		{
 			base.Awake();
@@ -42,7 +43,8 @@ namespace GwambaPrimeAdventure.Enemy
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
-			(_timeRun, _dashTime) = (_statistics.RunOfTime, _statistics.TimeToDash);
+			_timeRun = _statistics.RunOfTime;
+			_dashTime = _statistics.TimeToDash;
 		}
 		private void InvencibleDash()
 		{
@@ -60,7 +62,9 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.DetectionStop && _stopRunning )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
 				{
-					(_retreatTime, _dashedTime, _isDashing) = (_statistics.TimeToRetreat, _statistics.TimeDashing, !( _stopWorking = _stopRunning = false ));
+					_retreatTime = _statistics.TimeToRetreat;
+					_dashedTime = _statistics.TimeDashing;
+					_isDashing = !( _stopWorking = _stopRunning = false );
 					_sender.SetFormat( MessageFormat.State );
 					_sender.SetToggle( _statistics.JumpDash );
 					_sender.Send( MessagePath.Enemy );
@@ -134,7 +138,11 @@ namespace GwambaPrimeAdventure.Enemy
 			{
 				_invencibility = _retreat = false;
 				if ( _statistics.DetectionStop )
-					(_stoppedTime, _stopWorking, Rigidbody.linearVelocityX) = (_statistics.StopTime, _stopRunning = true, 0F);
+				{
+					_stoppedTime = _statistics.StopTime;
+					_stopWorking = _stopRunning = true;
+					Rigidbody.linearVelocityX = 0F;
+				}
 				else if ( _statistics.EventRetreat )
 				{
 					_retreatTime = _statistics.TimeToRetreat;
@@ -147,7 +155,9 @@ namespace GwambaPrimeAdventure.Enemy
 				}
 				else
 				{
-					(_retreatTime, _dashedTime, _isDashing) = (_statistics.TimeToRetreat, _statistics.TimeDashing, !( _stopWorking = _stopRunning = false ));
+					_retreatTime = _statistics.TimeToRetreat;
+					_dashedTime = _statistics.TimeDashing;
+					_isDashing = !( _stopWorking = _stopRunning = false );
 					_sender.SetFormat( MessageFormat.State );
 					_sender.SetToggle( _statistics.JumpDash );
 					_sender.Send( MessagePath.Enemy );
@@ -172,7 +182,8 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			if ( _statistics.DetectionStop && _detected && !_isDashing )
 			{
-				(_stoppedTime, _stopWorking) = (_statistics.StopTime, _stopRunning = true);
+				_stoppedTime = _statistics.StopTime;
+				_stopWorking = _stopRunning = true;
 				_sender.SetFormat( MessageFormat.State );
 				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Enemy );
@@ -180,7 +191,8 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			else if ( _detected && !_isDashing )
 			{
-				(_dashedTime, _isDashing) = (_statistics.TimeDashing, !( _stopWorking = _stopRunning = false ));
+				_dashedTime = _statistics.TimeDashing;
+				_isDashing = !( _stopWorking = _stopRunning = false );
 				_sender.SetFormat( MessageFormat.State );
 				_sender.SetToggle( _statistics.JumpDash );
 				_sender.Send( MessagePath.Enemy );
@@ -207,7 +219,9 @@ namespace GwambaPrimeAdventure.Enemy
 				return false;
 			if ( _statistics.ReactToDamage && _canRetreat )
 			{
-				(_stoppedTime, _stopWorking, _retreatLocation) = (0F, _stopRunning = _canRetreat = !( _invencibility = _retreat = true ), transform.position.x);
+				_stoppedTime = 0F;
+				_stopWorking = _stopRunning = _canRetreat = !( _invencibility = _retreat = true );
+				_retreatLocation = transform.position.x;
 				transform.TurnScaleX( _movementSide = (short) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
 				_sender.SetFormat( MessageFormat.State );
 				_sender.SetToggle( false );
@@ -227,7 +241,9 @@ namespace GwambaPrimeAdventure.Enemy
 							Rigidbody.linearVelocityX = 0F;
 						if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage && _canRetreat )
 						{
-							(_stoppedTime, _stopWorking, _retreatLocation) = (0F, _stopRunning = _canRetreat = !( _invencibility = _retreat = true ), transform.position.x);
+							_stoppedTime = 0F;
+							_stopWorking = _stopRunning = _canRetreat = !( _invencibility = _retreat = true );
+							_retreatLocation = transform.position.x;
 							transform.TurnScaleX( _movementSide = (short) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
 							_sender.SetFormat( MessageFormat.State );
 							_sender.SetToggle( false );
