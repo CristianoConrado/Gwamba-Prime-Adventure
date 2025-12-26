@@ -1,11 +1,11 @@
+using Cysharp.Threading.Tasks;
+using GwambaPrimeAdventure.Character;
+using GwambaPrimeAdventure.Connection;
+using NaughtyAttributes;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
-using System.Threading;
-using Cysharp.Threading.Tasks;
-using NaughtyAttributes;
-using GwambaPrimeAdventure.Character;
-using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Tilemap ), typeof( TilemapRenderer ), typeof( TilemapCollider2D ) )]
@@ -18,28 +18,42 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private Light2DBase
 			_selfLight,
 			_followLight;
-		private readonly Sender _sender = Sender.Create();
+		private readonly Sender
+			_sender = Sender.Create();
 		private CancellationToken _destroyToken;
 		private bool
 			_activation = false,
 			_follow = false;
-		[Header( "Hidden Place" )]
-		[SerializeField, Tooltip( "Other hidden place to activate." )] private HiddenPlace _otherPlace;
-		[SerializeField, Tooltip( "The occlusion object to reveal/hide." )] private OcclusionObject _occlusionObject;
-		[SerializeField, Tooltip( "If this object will receive a signal." )] private bool _isReceptor;
-		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "The amount o time to appear/fade again after the activation." )] private float _timeToFadeAppearAgain;
-		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If the activation of the receive signal will fade the place." )] private bool _fadeActivation;
-		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If this place won't use his own collider." )] private bool _useOtherCollider;
-		[SerializeField, Tooltip( "If the other hidden place will appear first." )] private bool _appearFirst;
-		[SerializeField, Tooltip( "If the other hidden place will fade first." )] private bool _fadeFirst;
-		[SerializeField, Tooltip( "If this object will appear/fade instantly." )] private bool _instantly;
-		[SerializeField, Tooltip( "If the place has any inferior collider." )] private bool _haveColliders;
-		[SerializeField, Tooltip( "If theres a follow light." )] private bool _hasFollowLight;
+		[SerializeField, Tooltip( "Other hidden place to activate." ), Header( "Hidden Place" )] private HiddenPlace
+			_otherPlace;
+		[SerializeField, Tooltip( "The occlusion object to reveal/hide." )] private OcclusionObject
+			_occlusionObject;
+		[SerializeField, Tooltip( "If this object will receive a signal." )] private bool
+			_isReceptor;
+		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "The amount o time to appear/fade again after the activation." )] private float
+			_timeToFadeAppearAgain;
+		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If the activation of the receive signal will fade the place." )] private bool
+			_fadeActivation;
+		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If this place won't use his own collider." )] private bool
+			_useOtherCollider;
+		[SerializeField, Tooltip( "If the other hidden place will appear first." )] private bool
+			_appearFirst;
+		[SerializeField, Tooltip( "If the other hidden place will fade first." )] private bool
+			_fadeFirst;
+		[SerializeField, Tooltip( "If this object will appear/fade instantly." )] private bool
+			_instantly;
+		[SerializeField, Tooltip( "If the place has any inferior collider." )] private bool
+			_haveColliders;
+		[SerializeField, Tooltip( "If theres a follow light." )] private bool
+			_hasFollowLight;
 		private new void Awake()
 		{
 			base.Awake();
-			(_tilemap, _tilemapRenderer, _tilemapCollider) = (GetComponent<Tilemap>(), GetComponent<TilemapRenderer>(), GetComponent<TilemapCollider2D>());
-			(_selfLight, _followLight) = (GetComponent<Light2DBase>(), GetComponentInChildren<Light2DBase>());
+			_tilemap = GetComponent<Tilemap>();
+			_tilemapRenderer = GetComponent<TilemapRenderer>();
+			_tilemapCollider = GetComponent<TilemapCollider2D>();
+			_selfLight = GetComponent<Light2DBase>();
+			_followLight = GetComponentInChildren<Light2DBase>();
 			_sender.SetFormat( MessageFormat.State );
 			_sender.SetAdditionalData( _occlusionObject );
 		}
@@ -50,9 +64,13 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		}
 		private void Start()
 		{
-			(_destroyToken, _activation) = (this.GetCancellationTokenOnDestroy(), !_fadeActivation);
+			_destroyToken = this.GetCancellationTokenOnDestroy();
+			_activation = !_fadeActivation;
 			if ( _isReceptor )
-				(_tilemapRenderer.enabled, _tilemapCollider.enabled) = (_fadeActivation, _fadeActivation && !_useOtherCollider);
+			{
+				_tilemapRenderer.enabled = _fadeActivation;
+				_tilemapCollider.enabled = _fadeActivation && !_useOtherCollider;
+			}
 		}
 		private void FixedUpdate()
 		{
