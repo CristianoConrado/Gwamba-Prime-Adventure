@@ -1,8 +1,8 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
+using System.Threading;
+using UnityEngine;
+using UnityEngine.UIElements;
 namespace GwambaPrimeAdventure.Story
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Collider2D ) )]
@@ -11,20 +11,30 @@ namespace GwambaPrimeAdventure.Story
 		private DialogHud _dialogHud;
 		private StoryTeller _storyTeller;
 		private Animator _animator;
-		private readonly Sender _sender = Sender.Create();
+		private readonly Sender
+			_sender = Sender.Create();
 		private CancellationToken _destroyToken;
-		private readonly int IsOn = Animator.StringToHash( nameof( IsOn ) );
-		private string _text = "";
-		private ushort _speachIndex = 0;
-		private float _dialogTime = 0F;
-		private bool _nextSlide = false;
-		[Header( "Interaction Objects" )]
-		[SerializeField, Tooltip( "The object that handles the hud of the dialog." )] private DialogHud _dialogHudObject;
-		[SerializeField, Tooltip( "The collection of the object that contais the dialog." )] private DialogObject _dialogObject;
-		public MessagePath Path => MessagePath.Story;
+		private readonly int
+			IsOn = Animator.StringToHash( nameof( IsOn ) );
+		private string
+			_text = "";
+		private ushort
+			_speachIndex = 0;
+		private float
+			_dialogTime = 0F;
+		private bool
+			_nextSlide = false;
+		[SerializeField, Tooltip( "The object that handles the hud of the dialog." ), Header( "Interaction Objects" )] private DialogHud
+			_dialogHudObject;
+		[SerializeField, Tooltip( "The collection of the object that contais the dialog." )] private DialogObject
+			_dialogObject;
+		public MessagePath Path =>
+			MessagePath.Story;
 		private void Awake()
 		{
-			(_storyTeller, _animator, _destroyToken) = (GetComponent<StoryTeller>(), GetComponent<Animator>(), this.GetCancellationTokenOnDestroy());
+			_storyTeller = GetComponent<StoryTeller>();
+			_animator = GetComponent<Animator>();
+			_destroyToken = this.GetCancellationTokenOnDestroy();
 			_sender.SetFormat( MessageFormat.State );
 			_sender.SetAdditionalData( gameObject );
 		}
@@ -118,7 +128,8 @@ namespace GwambaPrimeAdventure.Story
 				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Hud );
 				StateController.SetState( false );
-				(_dialogHud, _dialogTime) = (Instantiate( _dialogHudObject, transform ), settings.SpeachDelay);
+				_dialogHud = Instantiate( _dialogHudObject, transform );
+				_dialogTime = settings.SpeachDelay;
 				_dialogHud.AdvanceSpeach.clicked += AdvanceSpeach;
 				TextDigitation().Forget();
 				if ( _storyTeller )
