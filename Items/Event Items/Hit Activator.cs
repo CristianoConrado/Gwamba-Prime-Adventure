@@ -4,8 +4,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ) )]
 	internal sealed class HitActivator : Activator, IDestructible
 	{
-		[Header( "Hit Activator" )]
-		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )] private ushort _biggerDamage;
+		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." ), Header( "Hit Activator" )] private ushort
+			_biggerDamage;
 		public short Health => 0;
 		public bool Hurt( ushort damage )
 		{
