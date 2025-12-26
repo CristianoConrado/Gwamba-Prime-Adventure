@@ -21,8 +21,10 @@ namespace GwambaPrimeAdventure.Connection
 	};
 	public static class SaveController
 	{
-		private static SaveFile _saveFile = LoadFile();
-		private static ushort _actualSaveFile = 0;
+		private static SaveFile
+			_saveFile = LoadFile();
+		private static ushort
+			_actualSaveFile = 0;
 		public static bool FileExists() => File.Exists( $@"{Application.persistentDataPath}\{FilesController.Select( _actualSaveFile )}.txt" );
 		public static void Load( out SaveFile saveFile ) => saveFile = _saveFile;
 		private static SaveFile LoadFile()
@@ -46,7 +48,8 @@ namespace GwambaPrimeAdventure.Connection
 			string actualPath = $@"{Application.persistentDataPath}\{actualSaveFile}.txt";
 			if ( File.Exists( actualPath ) )
 			{
-				if ( FilesController.Select( 1 ) != actualSaveFile && FilesController.Select( 2 ) != actualSaveFile && FilesController.Select( 3 ) != actualSaveFile && FilesController.Select( 4 ) != actualSaveFile )
+				bool filesCondition = FilesController.Select( 1 ) != actualSaveFile && FilesController.Select( 2 ) != actualSaveFile;
+				if ( filesCondition && FilesController.Select( 3 ) != actualSaveFile && FilesController.Select( 4 ) != actualSaveFile )
 				{
 					File.Delete( actualPath );
 					return saveFile;
