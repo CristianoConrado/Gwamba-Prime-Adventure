@@ -9,10 +9,13 @@ namespace GwambaPrimeAdventure
 	public class SceneField
 	{
 #if UNITY_EDITOR
-		[SerializeField, Tooltip( "The scene to be handled." )] private SceneAsset _sceneAsset;
+		[SerializeField, Tooltip( "The scene to be handled." )] private SceneAsset
+			_sceneAsset;
 #endif
-		[SerializeField, Tooltip( "The name of the scene." )] private string _sceneName;
-		public string SceneName => _sceneName;
+		[SerializeField, Tooltip( "The name of the scene." )] private string
+			_sceneName;
+		public string SceneName =>
+			_sceneName;
 		public static implicit operator string( SceneField sceneObject ) => sceneObject.SceneName;
 	};
 #if UNITY_EDITOR
@@ -25,10 +28,10 @@ namespace GwambaPrimeAdventure
 			SerializedProperty sceneAsset = property.FindPropertyRelative( "_sceneAsset" );
 			SerializedProperty sceneName = property.FindPropertyRelative( "_sceneName" );
 			position = EditorGUI.PrefixLabel( position, GUIUtility.GetControlID( FocusType.Passive ), label );
-			if ( sceneAsset != null )
+			if ( sceneAsset is not null )
 			{
 				sceneAsset.objectReferenceValue = EditorGUI.ObjectField( position, sceneAsset.objectReferenceValue, typeof( SceneAsset ), true );
-				if ( sceneAsset.objectReferenceValue != null )
+				if ( sceneAsset.objectReferenceValue )
 					sceneName.stringValue = ( sceneAsset.objectReferenceValue as SceneAsset ).name;
 			}
 			EditorGUI.EndProperty();
