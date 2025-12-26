@@ -8,9 +8,10 @@ namespace GwambaPrimeAdventure.Enemy
 	[RequireComponent( typeof( Rigidbody2D ), typeof( CinemachineImpulseSource ) )]
 	internal sealed class EnemyProjectile : Projectile, IDestructible
 	{
-		[Header( "Projectile" )]
-		[SerializeField, Tooltip( "The statitics of this projectile." )] private ProjectileStatistics _statistics;
-		public short Health => _vitality;
+		[SerializeField, Tooltip( "The statitics of this projectile." ), Header( "Projectile" )] private ProjectileStatistics
+			_statistics;
+		public short Health =>
+			_vitality;
 		private void CommonInstance()
 		{
 			for ( ushort i = 0; _statistics.QuantityToSummon > i; i++ )
@@ -35,7 +36,8 @@ namespace GwambaPrimeAdventure.Enemy
 					{
 						if ( _breakInUse )
 							(_pointToBreak, _pointToReturn) = ((ushort) ( _pointToBreak + 1 ), 0);
-						(_pointToJump, _projectileRotation) = (_statistics.JumpPoints, Quaternion.AngleAxis( _statistics.BaseAngle + _statistics.SpreadAngle * _angleMulti, Vector3.forward ));
+						_pointToJump = _statistics.JumpPoints;
+						_projectileRotation = Quaternion.AngleAxis( _statistics.BaseAngle + _statistics.SpreadAngle * _angleMulti, Vector3.forward );
 						_projectilePosition.Set( _cellPosition.x + 5E-1F, _cellPosition.y + 5E-1F );
 						if ( _statistics.UseQuantity )
 							_projectiles.Add( Instantiate( _statistics.SecondProjectile, _projectilePosition, _projectileRotation ) );
@@ -61,9 +63,14 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Start()
 		{
-			(_rigidbody, _screenShaker) = (GetComponent<Rigidbody2D>(), GetComponent<CinemachineImpulseSource>());
-			(_vitality, _pointToJump, _breakInUse, _internalBreakPoint) = ((short) _statistics.Vitality, _statistics.JumpPoints, _statistics.UseBreak, _statistics.BreakPoint);
-			(_internalReturnPoint, _deathTimer) = (_statistics.ReturnPoint, _statistics.TimeToFade);
+			_rigidbody = GetComponent<Rigidbody2D>();
+			_screenShaker = GetComponent<CinemachineImpulseSource>();
+			_vitality = (short) _statistics.Vitality;
+			_pointToJump = _statistics.JumpPoints;
+			_breakInUse = _statistics.UseBreak;
+			_internalBreakPoint = _statistics.BreakPoint;
+			_internalReturnPoint = _statistics.ReturnPoint;
+			_deathTimer = _statistics.TimeToFade;
 			if ( _statistics.RandomBreak )
 			{
 				_internalBreakPoint = (ushort) Random.Range( _statistics.BreakPoint, _statistics.ReturnPoint - _statistics.MinimumRandomValue );
@@ -124,7 +131,10 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.EndlessPursue )
 			{
 				transform.TurnScaleX( CharacterExporter.GwambaLocalization().x < transform.position.x );
-				transform.up = Vector2.MoveTowards( transform.up, ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized, Time.fixedDeltaTime * _statistics.RotationSpeed );
+				transform.up = Vector2.MoveTowards(
+					current: transform.up,
+					target: ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized,
+					maxDistanceDelta: Time.fixedDeltaTime * _statistics.RotationSpeed );
 				_rigidbody.linearVelocity = transform.up * _statistics.MovementSpeed;
 				return;
 			}
