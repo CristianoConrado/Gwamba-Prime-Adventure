@@ -46,7 +46,8 @@ namespace GwambaPrimeAdventure.Hud
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, RootElement) = (this, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) ));
+			_instance = this;
+			RootElement = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) );
 			Settings = RootElement.Q<GroupBox>( nameof( Settings ) );
 			Confirmation = RootElement.Q<GroupBox>( nameof( Confirmation ) );
 			ScreenResolution = RootElement.Q<DropdownField>( nameof( ScreenResolution ) );
@@ -87,10 +88,9 @@ namespace GwambaPrimeAdventure.Hud
 			MusicVolume.highValue = EffectsVolume.highValue = GeneralVolume.highValue = ScreenBrightness.highValue = 1F;
 			FrameRate.highValue = 120;
 			VSync.highValue = 2;
-			ScreenBrightness.lowValue = SpeachDelay.lowValue = 0;
 			MusicVolume.lowValue = EffectsVolume.lowValue = GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			FrameRate.lowValue = 10;
-			VSync.lowValue = 0;
+			ScreenBrightness.lowValue = VSync.lowValue = SpeachDelay.lowValue = 0;
 			foreach ( Resolution resolution in BuildMathemathics.PixelPerfectResolutions() )
 				ScreenResolution.choices.Add( $@"{resolution.width} x {resolution.height}" );
 			foreach ( FullScreenMode mode in Enum.GetValues( typeof( FullScreenMode ) ) )
