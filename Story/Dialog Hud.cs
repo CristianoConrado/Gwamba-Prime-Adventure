@@ -18,9 +18,12 @@ namespace GwambaPrimeAdventure.Story
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			(_instance, RootElement) = (this, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) ));
-			(CharacterIcon, CharacterName) = (RootElement.Q<VisualElement>( nameof( CharacterIcon ) ), RootElement.Q<Label>( nameof( CharacterName ) ));
-			(CharacterSpeach, AdvanceSpeach) = (RootElement.Q<Label>( nameof( CharacterSpeach ) ), RootElement.Q<Button>( nameof( AdvanceSpeach ) ));
+			_instance = this;
+			RootElement = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>( nameof( RootElement ) );
+			CharacterIcon = RootElement.Q<VisualElement>( nameof( CharacterIcon ) );
+			CharacterName = RootElement.Q<Label>( nameof( CharacterName ) );
+			CharacterSpeach = RootElement.Q<Label>( nameof( CharacterSpeach ) );
+			AdvanceSpeach = RootElement.Q<Button>( nameof( AdvanceSpeach ) );
 		}
 	};
 };
