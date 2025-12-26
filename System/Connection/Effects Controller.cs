@@ -1,18 +1,21 @@
-using UnityEngine;
-using UnityEngine.U2D;
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.U2D;
 namespace GwambaPrimeAdventure.Connection
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Light2DBase ) )]
 	public sealed class EffectsController : StateController
 	{
 		private static EffectsController _instance;
-		private readonly List<Light2DBase> _lightsStack = new List<Light2DBase>();
+		private readonly List<Light2DBase>
+			_lightsStack = new List<Light2DBase>();
 		private CancellationToken _destroyToken;
-		private bool _canHitStop = true;
-		[SerializeField, Tooltip( "The source where the sounds came from." )] private AudioSource _sourceObject;
+		private bool
+			_canHitStop = true;
+		[SerializeField, Tooltip( "The source where the sounds came from." )] private AudioSource
+			_sourceObject;
 		private new void Awake()
 		{
 			base.Awake();
