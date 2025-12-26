@@ -9,22 +9,32 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	[DisallowMultipleComponent, RequireComponent( typeof( IReceptorSignal ) )]
 	internal sealed class Receptor : StateController, ILoader
 	{
-		private static readonly HashSet<Receptor> _selfes = new HashSet<Receptor>();
-		private readonly HashSet<Activator> _activatorsNeeded = new HashSet<Activator>();
+		private static readonly HashSet<Receptor>
+			_selfes = new HashSet<Receptor>();
+		private readonly HashSet<Activator>
+			_activatorsNeeded = new HashSet<Activator>();
 		private IReceptorSignal _receptor;
 		private ushort
 			_signals = 0,
 			_1X1Index = 0;
-		private float _signalTimer = 0F;
-		private bool _onlyOneActivation = false;
-		[Header( "Receptor" )]
-		[SerializeField, Tooltip( "The activators that this will receive a signal." )] private Activator[] _activators;
-		[SerializeField, Tooltip( "If this will receive a signal from specifics or existent objects." )] private string[] _specificsObjects;
-		[SerializeField, Tooltip( "The amount of time to wait for active after receive the signal." )] private float _timeToActivate;
-		[SerializeField, Tooltip( "If this will activate for every activator activated." )] private bool _1X1;
-		[SerializeField, HideIf( nameof( _1X1 ) ), Tooltip( "If is needed only one activator to activate." )] private bool _oneNeeded;
-		[SerializeField, HideIf( nameof( _1X1 ) ), ShowIf( nameof( _oneNeeded ) ), Tooltip( "If it will be inactive after one activation" )] private bool _oneActivation;
-		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), Tooltip( "If are multiples activators needed to activate." )] private bool _multiplesNeeded;
+		private float
+			_signalTimer = 0F;
+		private bool
+			_onlyOneActivation = false;
+		[SerializeField, Tooltip( "The activators that this will receive a signal." ), Header( "Receptor" )] private Activator[]
+			_activators;
+		[SerializeField, Tooltip( "If this will receive a signal from specifics or existent objects." )] private string[]
+			_specificsObjects;
+		[SerializeField, Tooltip( "The amount of time to wait for active after receive the signal." )] private float
+			_timeToActivate;
+		[SerializeField, Tooltip( "If this will activate for every activator activated." )] private bool
+			_1X1;
+		[SerializeField, HideIf( nameof( _1X1 ) ), Tooltip( "If is needed only one activator to activate." )] private bool
+			_oneNeeded;
+		[SerializeField, HideIf( nameof( _1X1 ) ), ShowIf( nameof( _oneNeeded ) ), Tooltip( "If it will be inactive after one activation" )] private bool
+			_oneActivation;
+		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), Tooltip( "If are multiples activators needed to activate." )] private bool
+			_multiplesNeeded;
 		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), ShowIf( nameof( _multiplesNeeded ) ), Tooltip( "The amount activators needed to activate." )]
 		private ushort _quantityNeeded;
 		private new void Awake()
