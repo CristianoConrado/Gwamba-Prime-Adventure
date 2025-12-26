@@ -15,15 +15,17 @@ namespace GwambaPrimeAdventure.Enemy
 			_pointOrigin = Vector2.zero,
 			_sizeDetection = Vector2.one * 2F,
 			_targetPoint = Vector2.zero;
-		private ushort _pointIndex = 0;
+		private ushort
+			_pointIndex = 0;
 		private bool
 			_normal = true,
 			_returnOrigin = false,
 			_afterDash = false,
 			_returnDash = false;
-		[Header( "Flying Enemy" )]
-		[SerializeField, Tooltip( "The flying statitics of this enemy." )] private FlyingStatistics _statistics;
-		[SerializeField, Tooltip( "If this enemy will repeat the same way it makes before." )] private bool _repeatWay;
+		[SerializeField, Tooltip( "The flying statitics of this enemy." ), Header( "Flying Enemy" )] private FlyingStatistics
+			_statistics;
+		[SerializeField, Tooltip( "If this enemy will repeat the same way it makes before." )] private bool
+			_repeatWay;
 		private new void Awake()
 		{
 			base.Awake();
@@ -45,7 +47,9 @@ namespace GwambaPrimeAdventure.Enemy
 			_trail = new Vector2[ trail.points.Length ];
 			for ( ushort i = 0; trail.points.Length > i; i++ )
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
-			(_movementDirection, _pointOrigin, _sizeDetection) = (Vector2.right * _movementSide, Rigidbody.position, _sizeDetection * _statistics.LookDistance);
+			_movementDirection = Vector2.right * _movementSide;
+			_pointOrigin = Rigidbody.position;
+			_sizeDetection = _sizeDetection * _statistics.LookDistance;
 		}
 		private void Chase()
 		{
@@ -73,7 +77,10 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			if ( _isDashing && Vector2.Distance( Rigidbody.position, _targetPoint ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT )
 				if ( _statistics.DetectionStop )
-					(_stopWorking, _stoppedTime) = (_returnDash = _afterDash = true, _statistics.AfterTime);
+				{
+					_stopWorking = _returnDash = _afterDash = true;
+					_stoppedTime = _statistics.AfterTime;
+				}
 				else
 					_isDashing = !( _returnDash = true );
 		}
@@ -111,7 +118,10 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			if ( _statistics.DetectionStop && _stopWorking )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
-					(_isDashing, _afterDash, _stopWorking) = (!_afterDash, false, false);
+				{
+					_stopWorking = false;
+					(_isDashing, _afterDash) = (!_afterDash, false);
+				}
 		}
 		private void FixedUpdate()
 		{
@@ -119,14 +129,20 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			if ( _statistics.Target )
 			{
-				_movementDirection = Vector2.MoveTowards( _movementDirection, ( (Vector2) _statistics.Target.position - Rigidbody.position ).normalized, Time.fixedDeltaTime * _statistics.RotationSpeed );
+				_movementDirection = Vector2.MoveTowards(
+					current: _movementDirection,
+					target: ( (Vector2) _statistics.Target.position - Rigidbody.position ).normalized,
+					maxDistanceDelta: Time.fixedDeltaTime * _statistics.RotationSpeed );
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, Rigidbody.position + _movementDirection, Time.fixedDeltaTime * _statistics.MovementSpeed ) );
 				transform.TurnScaleX( _statistics.Target.position.x < Rigidbody.position.x );
 				return;
 			}
 			if ( _statistics.EndlessPursue )
 			{
-				_movementDirection = Vector2.MoveTowards( _movementDirection, ( CharacterExporter.GwambaLocalization() - Rigidbody.position ).normalized, Time.fixedDeltaTime * _statistics.RotationSpeed );
+				_movementDirection = Vector2.MoveTowards(
+					current: _movementDirection,
+					target: ( CharacterExporter.GwambaLocalization() - Rigidbody.position ).normalized,
+					maxDistanceDelta: Time.fixedDeltaTime * _statistics.RotationSpeed );
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, Rigidbody.position + _movementDirection, Time.fixedDeltaTime * _statistics.MovementSpeed ) );
 				transform.TurnScaleX( CharacterExporter.GwambaLocalization().x < Rigidbody.position.x );
 				return;
