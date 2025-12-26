@@ -4,7 +4,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ) )]
 	internal sealed class InteractiveActivator : Activator, IInteractable
 	{
-		private readonly Sender _sender = Sender.Create();
+		private readonly Sender
+			_sender = Sender.Create();
 		public void Interaction()
 		{
 			if ( Usable )
