@@ -25,8 +25,12 @@ namespace GwambaPrimeAdventure.Hud
 			}
 			_instance = this;
 			VisualElement root = GetComponent<UIDocument>().rootVisualElement;
-			(Buttons, Play, Configurations, Quit) = (root.Q<GroupBox>( nameof( Buttons ) ), root.Q<Button>( nameof( Play ) ), root.Q<Button>( nameof( Configurations ) ), root.Q<Button>( nameof( Quit ) ));
-			(Saves, Back) = (root.Q<GroupBox>( nameof( Saves ) ), root.Q<Button>( nameof( Back ) ));
+			Buttons = root.Q<GroupBox>( nameof( Buttons ) );
+			Saves = root.Q<GroupBox>( nameof( Saves ) );
+			Play = root.Q<Button>( nameof( Play ) );
+			Configurations = root.Q<Button>( nameof( Configurations ) );
+			Quit = root.Q<Button>( nameof( Quit ) );
+			Back = root.Q<Button>( nameof( Back ) );
 			SaveName = new TextField[ 4 ];
 			for ( ushort i = 0; i < SaveName.Length; i++ )
 				SaveName[ i ] = root.Q<TextField>( $"{nameof( SaveName )}{i + 1}" );
