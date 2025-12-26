@@ -7,10 +7,15 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	{
 		private ITeleporter _teleporter;
 		private ushort _teleportIndex;
-		[Header( "Interactions" )]
-		[SerializeField, Tooltip( "If this point will destroy itself after use." )] private bool _destroyAfter;
-		[SerializeField, Tooltip( "If this point will trigger with other object." )] private bool _hasTarget;
-		public void GetTouch( ITeleporter teleporter, ushort teleportIndex ) => (_teleporter, _teleportIndex) = (teleporter, teleportIndex);
+		[SerializeField, Tooltip( "If this point will destroy itself after use." ), Header( "Interactions" )] private bool
+			_destroyAfter;
+		[SerializeField, Tooltip( "If this point will trigger with other object." )] private bool
+			_hasTarget;
+		public void GetTouch( ITeleporter teleporter, ushort teleportIndex )
+		{
+			_teleporter = teleporter;
+			_teleportIndex = teleportIndex;
+		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
 			if ( _hasTarget )
