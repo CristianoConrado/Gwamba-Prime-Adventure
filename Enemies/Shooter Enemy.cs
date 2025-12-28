@@ -8,6 +8,7 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class ShooterEnemy : EnemyProvider, ILoader, IConnector, IDestructible
 	{
+		private Projectile _projectile;
 		private Vector2
 			_originCast = Vector2.zero,
 			_directionCast = Vector2.zero,
@@ -52,7 +53,10 @@ namespace GwambaPrimeAdventure.Enemy
 					: Quaternion.AngleAxis( _statistics.RayAngleDirection * ( _statistics.TurnRay ? transform.localScale.x.CompareTo( 0F ) : 1F ), Vector3.forward );
 			for ( ushort i = 0; _statistics.Projectiles.Length > i; i++ )
 				if ( _statistics.PureInstance )
-					Instantiate( _statistics.Projectiles[ i ], _statistics.SpawnPoint, _statistics.Projectiles[ i ].transform.rotation, _projectileParameters ).transform.SetParent( null );
+				{
+					_projectile = Instantiate( _statistics.Projectiles[ i ], _statistics.SpawnPoint, _statistics.Projectiles[ i ].transform.rotation, _projectileParameters );
+					_projectile.transform.SetParent( null );
+				}
 				else
 					Instantiate( _statistics.Projectiles[ i ], _statistics.SpawnPoint, _projectileRotation, _projectileParameters ).transform.SetParent( null );
 			if ( _statistics.InvencibleShoot )
@@ -106,7 +110,8 @@ namespace GwambaPrimeAdventure.Enemy
 					_directionCast = Quaternion.AngleAxis( _statistics.RayAngleDirection, Vector3.forward ) * Vector2.up;
 					if ( _statistics.TurnRay )
 						_directionCast *= transform.localScale.x.CompareTo( 0F );
-					for ( int i = Physics2D.RaycastNonAlloc( _originCast, _directionCast, _detectionRaycasts, _statistics.PerceptionDistance, WorldBuild.CHARACTER_LAYER_MASK ) - 1; 0 < i; i-- )
+					Physics2D.RaycastNonAlloc( _originCast, _directionCast, _detectionRaycasts, _statistics.PerceptionDistance, WorldBuild.CHARACTER_LAYER_MASK );
+					for ( int i = 0; _detectionRaycasts.Length > i; i++ )
 						if ( _detectionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 						{
 							_hasTarget = true;
