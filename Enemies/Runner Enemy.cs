@@ -9,9 +9,11 @@ namespace GwambaPrimeAdventure.Enemy
 	internal sealed class RunnerEnemy : MovingEnemy, ILoader, IConnector, IDestructible
 	{
 		private readonly RaycastHit2D[]
-			_detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+			_detections = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
 		private ushort
 			_runnedTimes = 0;
+		private int
+			_castSize = 0;
 		private float
 			_timeRun = 0F,
 			_dashedTime = 0F,
@@ -120,9 +122,9 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.LookPerception && !_detected )
 			{
 				_originCast.Set( transform.position.x + _collider.offset.x + _collider.bounds.extents.x * _movementSide, transform.position.y + _collider.offset.y );
-				Physics2D.RaycastNonAlloc( _originCast, transform.right * _movementSide, _detectionRaycasts, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
-				for ( int i = 0; _detectionRaycasts.Length > i; i++ )
-					if ( _detectionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
+				_castSize = Physics2D.RaycastNonAlloc( _originCast, transform.right * _movementSide, _detections, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
+				for ( int i = 0; _castSize > i; i++ )
+					if ( _detections[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 					{
 						_detected = true;
 						break;
