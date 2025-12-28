@@ -98,7 +98,7 @@ namespace GwambaPrimeAdventure.Character
 			_inputController.Commands.AttackUse.Disable();
 			_inputController.Commands.Interaction.Disable();
 			(_localAtLinearVelocity, _rigidbody.linearVelocity) = (_rigidbody.linearVelocity, Vector2.zero);
-			_rigidbody.gravityScale = _walkValue = 0F;
+			_rigidbody.gravityScale = _walkValue = 0;
 		}
 		private async void Start()
 		{
@@ -192,7 +192,7 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !isActiveAndEnabled || _animator.GetBool( Stun ) )
 				return;
-			if ( 0F != ( _walkValue = ( _localAtStart = movement.ReadValue<Vector2>() ).x.RangeNormalize( MovementInputZone ) ) && ( !AttackUsage || ComboAttackBuffer ) )
+			if ( 0 != ( _walkValue = ( _localAtStart = movement.ReadValue<Vector2>() ).x.RangeNormalize( MovementInputZone ) ) && ( !AttackUsage || ComboAttackBuffer ) )
 				if ( _localAtStart.y > AirJumpInputZone && !_isOnGround && _canAirJump && !_animator.GetBool( AirJump ) )
 				{
 					_animator.SetBool( AirJump, !( _canAirJump = false ) );
@@ -255,7 +255,7 @@ namespace GwambaPrimeAdventure.Character
 		private void StartAttackSound() => EffectsController.SoundEffect( AttackSound, transform.position );
 		private void InteractionInput( InputAction.CallbackContext interaction )
 		{
-			if ( !_isOnGround || 0F != _walkValue || !isActiveAndEnabled || _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) || _animator.GetBool( Stun ) )
+			if ( !_isOnGround || 0 != _walkValue || !isActiveAndEnabled || _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) || _animator.GetBool( Stun ) )
 				return;
 			for ( int i = Physics2D.OverlapCollider( _collider, _interactionFilter, _interactions ) - 1; 0 < i; i-- )
 				if ( _interactions[ i ].TryGetComponent<IInteractable>( out _ ) )
@@ -404,8 +404,7 @@ namespace GwambaPrimeAdventure.Character
 					_gwambaCanvas.FallDamageText.style.opacity = 0F;
 					_gwambaCanvas.FallDamageText.text = $"X 0";
 				}
-			_localAtAny.y = Mathf.Abs( _rigidbody.linearVelocityY );
-			if ( !_animator.GetBool( DashSlide ) && !_isOnGround && MINIMUM_VELOCITY >= _localAtAny.y && !_downStairs && ( 0F < _lastGroundedTime || 0F < _lastJumpTime ) )
+			if ( !_animator.GetBool( DashSlide ) && !_isOnGround && !_downStairs && ( 0F < _lastGroundedTime || 0F < _lastJumpTime ) )
 			{
 				_lastGroundedTime -= Time.deltaTime;
 				_lastJumpTime -= Time.deltaTime;
@@ -430,7 +429,7 @@ namespace GwambaPrimeAdventure.Character
 					_rigidbody.linearVelocityX = DashSpeed * _localAtAny.z;
 			else
 			{
-				if ( !_isOnGround && !_downStairs && MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityY ) && !_animator.GetBool( AirJump ) )
+				if ( !_isOnGround && !_downStairs && MINIMUM_VELOCITY < Mathf.Abs( _rigidbody.linearVelocityY ) && !_animator.GetBool( AirJump ) )
 				{
 					if ( _animator.GetBool( Idle ) )
 						_animator.SetBool( Idle, false );
@@ -501,13 +500,13 @@ namespace GwambaPrimeAdventure.Character
 				{
 					_localAtAny.x = _longJumping ? DashSpeed : MovementSpeed + BunnyHop( VelocityBoost );
 					_localAtAny.y = _localAtAny.x * _walkValue - _rigidbody.linearVelocityX;
-					_localAtAny.z = ( 0F < Mathf.Abs( _localAtAny.x * _walkValue ) ? Acceleration : Decceleration ) + BunnyHop( PotencyBoost );
+					_localAtAny.z = 0F < Mathf.Abs( _localAtAny.x * _walkValue ) ? Acceleration : Decceleration;
 					_rigidbody.AddForceX( Mathf.Pow( Mathf.Abs( _localAtAny.y ) * _localAtAny.z, VelocityPower ) * Mathf.Sign( _localAtAny.y ) * _rigidbody.mass );
-					if ( 0F != _walkValue && !AttackUsage )
+					if ( 0 != _walkValue && !AttackUsage )
 					{
-						if ( MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
+						if ( MINIMUM_VELOCITY < Mathf.Abs( _rigidbody.linearVelocityX ) )
 							transform.TurnScaleX( 0F > _rigidbody.linearVelocityX );
-						else if ( MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
+						else
 							transform.TurnScaleX( _walkValue );
 						if ( _isOnGround )
 						{
@@ -520,20 +519,20 @@ namespace GwambaPrimeAdventure.Character
 					_rigidbody.linearVelocityX *= AttackVelocityCut;
 				if ( _isOnGround )
 				{
-					if ( 0F == _walkValue && MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
+					if ( 0 == _walkValue )
 					{
 						_localAtAny.x = Mathf.Min( Mathf.Abs( _rigidbody.linearVelocityX ), Mathf.Abs( FrictionAmount ) ) * Mathf.Sign( _rigidbody.linearVelocityX );
 						_rigidbody.AddForceX( -_localAtAny.x * _rigidbody.mass, ForceMode2D.Impulse );
-						_localAtAny.y = _longJumping ? DashSpeed : MovementSpeed + BunnyHop( VelocityBoost );
-						_animator.SetFloat( WalkSpeed, Mathf.Abs( _rigidbody.linearVelocityX ) / _localAtAny.y );
+						_localAtAny.x = _longJumping ? DashSpeed : MovementSpeed + BunnyHop( VelocityBoost );
+						_animator.SetFloat( WalkSpeed, Mathf.Abs( _rigidbody.linearVelocityX ) / _localAtAny.x );
 					}
-					if ( !_animator.GetBool( Idle ) && ( 0F == _walkValue || MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) || _animator.GetBool( Fall ) ) )
+					if ( !_animator.GetBool( Idle ) && ( 0 == _walkValue || MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) || _animator.GetBool( Fall ) ) )
 						_animator.SetBool( Idle, true );
-					else if ( _animator.GetBool( Idle ) || MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
+					else if ( _animator.GetBool( Idle ) || MINIMUM_VELOCITY < Mathf.Abs( _rigidbody.linearVelocityX ) )
 						_animator.SetBool( Idle, false );
-					if ( !_animator.GetBool( Walk ) && 0F != _walkValue )
+					if ( !_animator.GetBool( Walk ) && 0 != _walkValue )
 						_animator.SetBool( Walk, true );
-					else if ( _animator.GetBool( Walk ) && 0F == _walkValue && MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
+					else if ( _animator.GetBool( Walk ) && 0 == _walkValue && MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
 						_animator.SetBool( Walk, false );
 				}
 			}
@@ -577,7 +576,7 @@ namespace GwambaPrimeAdventure.Character
 					EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 				}
 			}
-			if ( _isOnGround && !_offGround && 0F == _walkValue && MINIMUM_VELOCITY >= Vector2.Distance( _rigidbody.linearVelocity, MINIMUM_VELOCITY * Vector2.one ) )
+			if ( _isOnGround && !_offGround && 0 == _walkValue && MINIMUM_VELOCITY >= Vector2.Distance( _rigidbody.linearVelocity, MINIMUM_VELOCITY * Vector2.one ) )
 				return;
 			_collider.GetContacts( _groundContacts );
 			_localAtStart.Set( Local.x, Local.y - _collider.bounds.extents.y );
@@ -623,7 +622,7 @@ namespace GwambaPrimeAdventure.Character
 						}
 					}
 				}
-				if ( !_animator.GetBool( AirJump ) && !_animator.GetBool( DashSlide ) && 0F != _walkValue )
+				if ( !_animator.GetBool( AirJump ) && !_animator.GetBool( DashSlide ) && 0 != _walkValue )
 					if ( MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
 					{
 						_collider.GetContacts( _groundContacts );
@@ -651,9 +650,7 @@ namespace GwambaPrimeAdventure.Character
 					{
 						_localAtStart.x = Local.x - ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH / 2F * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
 						_localAtEnd.x = WorldBuild.SNAP_LENGTH * DownStairsDistance;
-						_localAtAny.x = _localAtStart.x + _localAtEnd.x / 2F;
-						_localAtAny.y = _localAtStart.x - _localAtEnd.x / 2F;
-						if ( _groundContacts.TrueForAll( contact => contact.point.x <= _localAtAny.x && contact.point.x >= _localAtAny.y ) )
+						if ( _groundContacts.TrueForAll( contact => contact.point.x.InsideRange( _localAtStart.x, _localAtEnd.x ) ) )
 						{
 							_localAtAny.x = ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
 							_localAtStart.Set( Local.x - _localAtAny.x, Local.y - _collider.bounds.extents.y );
