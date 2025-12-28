@@ -43,7 +43,8 @@ namespace GwambaPrimeAdventure.Enemy
 			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
-			transform.TurnScaleX( _movementSide = (short) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) ) );
+			_movementSide = (short) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) );
+			transform.TurnScaleX( _movementSide );
 		}
 		protected void OnCollisionStay2D( Collision2D collision )
 		{
