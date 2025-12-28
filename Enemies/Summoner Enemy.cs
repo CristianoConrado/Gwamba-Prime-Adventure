@@ -8,6 +8,7 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class SummonerEnemy : EnemyProvider, ILoader, ISummoner, IConnector
 	{
+		private GameObject _summonObject;
 		private readonly CancellationTokenSource
 			_cancellationSource = new CancellationTokenSource(),
 			_cancelTimerSource = new CancellationTokenSource();
@@ -65,7 +66,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_isSummonTime = new bool[ _statistics.TimedSummons.Length ];
 			_stopPermanently = new bool[ _statistics.TimedSummons.Length ];
 			_gravityScale = Rigidbody.gravityScale;
-			_randomSummonIndex = (ushort) Random.Range( 0, _statistics.TimedSummons.Length + 1 );
+			_randomSummonIndex = (ushort) Random.Range( 0, _statistics.TimedSummons.Length );
 			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
 				_isSummonTime[ i ] = true;
 			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
@@ -114,9 +115,11 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					_summonPosition = summon.Self
 						? (Vector2) transform.position
-						: ( summon.Random ? summon.SummonPoints[ Random.Range( 0, summon.SummonPoints.Length + 1 ) ] : summon.SummonPoints[ _summonIndex.y ] );
-					Instantiate( summon.Summons[ _summonIndex.x ], _summonPosition, summon.Summons[ _summonIndex.x ].transform.rotation, _instantiateParameters ).transform.SetParent( null );
-					_summonIndex.Set( summon.Summons.Length - 1 > _summonIndex.x ? _summonIndex.x + 1 : 0, summon.SummonPoints.Length - 1 > _summonIndex.y ? _summonIndex.y + 1 : 0 );
+						: ( summon.Random ? summon.SummonPoints[ Random.Range( 0, summon.SummonPoints.Length ) ] : summon.SummonPoints[ _summonIndex.y ] );
+					_summonObject = Instantiate( summon.Summons[ _summonIndex.x ], _summonPosition, summon.Summons[ _summonIndex.x ].transform.rotation, _instantiateParameters );
+					_summonObject.transform.SetParent( null );
+					_summonIndex.x = summon.Summons.Length - 1 > _summonIndex.x ? _summonIndex.x + 1 : 0;
+					_summonIndex.y = summon.SummonPoints.Length - 1 > _summonIndex.y ? _summonIndex.y + 1 : 0;
 				}
 				_summonEvent = null;
 			}
@@ -189,7 +192,7 @@ namespace GwambaPrimeAdventure.Enemy
 							_stopSummon = !message.ToggleValue.Value;
 						else if ( MessageFormat.Event == message.Format && _statistics.HasEventSummon && 0 < _statistics.EventSummons.Length )
 							if ( _statistics.RandomReactSummons )
-								Summon( _statistics.EventSummons[ Random.Range( 0, _statistics.EventSummons.Length + 1 ) ] );
+								Summon( _statistics.EventSummons[ Random.Range( 0, _statistics.EventSummons.Length ) ] );
 							else if ( message.NumberValue.HasValue && message.NumberValue.Value < _statistics.EventSummons.Length && 0 >= message.NumberValue.Value )
 								Summon( _statistics.EventSummons[ message.NumberValue.Value ] );
 						return;
