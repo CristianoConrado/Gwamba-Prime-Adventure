@@ -72,7 +72,8 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			_cancellationSource.RegisterRaiseCancelOnDestroy( gameObject );
 			_cancelTimerSource.RegisterRaiseCancelOnDestroy( gameObject );
-			(_timedJumpTime, _jumpCount) = (new float[ _statistics.TimedJumps.Length ], new short[ _statistics.JumpPointStructures.Length ]);
+			_timedJumpTime = new float[ _statistics.TimedJumps.Length ];
+			_jumpCount = new short[ _statistics.JumpPointStructures.Length ];
 			for ( ushort i = 0; _statistics.TimedJumps.Length > i; i++ )
 				_timedJumpTime[ i ] = _statistics.TimedJumps[ i ].TimeToExecute;
 			for ( ushort i = 0; _statistics.JumpPointStructures.Length > i; i++ )
