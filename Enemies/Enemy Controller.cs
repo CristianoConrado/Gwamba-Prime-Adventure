@@ -67,13 +67,19 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		internal void OnEnable()
 		{
-			_rigidbody.linearVelocity = _guardedLinearVelocity;
-			_rigidbody.gravityScale = _statistics.GravityScale;
+			if ( RigidbodyType2D.Static != _rigidbody.bodyType )
+			{
+				_rigidbody.linearVelocity = _guardedLinearVelocity;
+				_rigidbody.gravityScale = _statistics.GravityScale;
+			}
 		}
 		internal void OnDisable()
 		{
-			_rigidbody.gravityScale = 0F;
-			( _guardedLinearVelocity, _rigidbody.linearVelocity) = (_rigidbody.linearVelocity, Vector2.zero);
+			if ( RigidbodyType2D.Static != _rigidbody.bodyType )
+			{
+				_rigidbody.gravityScale = 0F;
+				(_guardedLinearVelocity, _rigidbody.linearVelocity) = (_rigidbody.linearVelocity, Vector2.zero);
+			}
 		}
 		private async void Start()
 		{
