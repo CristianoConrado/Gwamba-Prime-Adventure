@@ -21,6 +21,8 @@ namespace GwambaPrimeAdventure.Enemy
 		private float
 			_shootInterval = 0F,
 			_timeStop = 0F;
+		private int
+			_castSize = 0;
 		private bool
 			_hasTarget = false,
 			_canShoot = false,
@@ -110,8 +112,8 @@ namespace GwambaPrimeAdventure.Enemy
 					_directionCast = Quaternion.AngleAxis( _statistics.RayAngleDirection, Vector3.forward ) * Vector2.up;
 					if ( _statistics.TurnRay )
 						_directionCast *= transform.localScale.x.CompareTo( 0F );
-					Physics2D.RaycastNonAlloc( _originCast, _directionCast, _detectionRaycasts, _statistics.PerceptionDistance, WorldBuild.CHARACTER_LAYER_MASK );
-					for ( int i = 0; _detectionRaycasts.Length > i; i++ )
+					_castSize = Physics2D.RaycastNonAlloc( _originCast, _directionCast, _detectionRaycasts, _statistics.PerceptionDistance, WorldBuild.CHARACTER_LAYER_MASK );
+					for ( int i = 0; _castSize > i; i++ )
 						if ( _detectionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 						{
 							_hasTarget = true;
