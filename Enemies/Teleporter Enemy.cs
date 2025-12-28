@@ -1,7 +1,9 @@
-using UnityEngine;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
@@ -22,10 +24,11 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			TeleportPoint teleportPoint;
-			for ( ushort i = 0; _statistics.TeleportPointStructures.Length > i; i++ )
+			List<TeleportPointStructure> pointStructures = _statistics.TeleportPointStructures.ToList();
+			foreach ( TeleportPointStructure pointStructure in pointStructures )
 			{
-				teleportPoint = Instantiate( _statistics.TeleportPointStructures[ i ].TeleportPointObject, _statistics.TeleportPointStructures[ i ].InstancePoint, Quaternion.identity );
-				teleportPoint.GetTouch( this, i );
+				teleportPoint = Instantiate( pointStructure.TeleportPointObject, pointStructure.InstancePoint, Quaternion.identity );
+				teleportPoint.GetTouch( this, (ushort) pointStructures.IndexOf( pointStructure ) );
 			}
 		}
 		private void Update()
