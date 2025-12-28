@@ -11,11 +11,13 @@ namespace GwambaPrimeAdventure.Character
 	internal sealed class GwambaDamager : StateController, IDestructible
 	{
 		private SpriteRenderer _spriteRenderer;
-		internal readonly HashSet<IDestructible> damagedes = new HashSet<IDestructible>();
+		internal readonly HashSet<IDestructible>
+			damagedes = new HashSet<IDestructible>();
 		internal event Predicate<ushort> DamagerHurt;
 		internal event UnityAction<ushort, float> DamagerStun;
 		internal event UnityAction<GwambaDamager, IDestructible> DamagerAttack;
-		private Color _alphaChanger = new Color();
+		private Color
+			_alphaChanger = new Color();
 		[SerializeField, Tooltip( "If this Gwamba's part will take damage." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )] private bool
 			_takeDamage;
 		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Tooltip( "The velocity of the screen shake on the attack." )] internal Vector2
@@ -28,9 +30,11 @@ namespace GwambaPrimeAdventure.Character
 			StunTime { get; private set; }
 		internal float Alpha
 		{
-			get => _spriteRenderer.color.a;
+			get => _spriteRenderer ? _spriteRenderer.color.a : 0F;
 			set
 			{
+				if ( !_spriteRenderer )
+					return;
 				_alphaChanger.a = value;
 				_spriteRenderer.color = _alphaChanger;
 			}
