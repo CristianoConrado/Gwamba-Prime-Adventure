@@ -26,7 +26,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_canRetreat = true,
 			_retreat = false,
 			_runTowards = false;
-		[SerializeField, Tooltip( "The runner statitics of this enemy." ), Header( "Runner Enemy" )] private RunnerStatistics _statistics;
+		[SerializeField, Tooltip( "The runner statitics of this enemy." ), Header( "Runner Enemy" )] private RunnerStatistics
+			_statistics;
 		private new void Awake()
 		{
 			base.Awake();
@@ -119,7 +120,8 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.LookPerception && !_detected )
 			{
 				_originCast.Set( transform.position.x + _collider.offset.x + _collider.bounds.extents.x * _movementSide, transform.position.y + _collider.offset.y );
-				for ( int i = Physics2D.RaycastNonAlloc( _originCast, transform.right * _movementSide, _detectionRaycasts, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK ) - 1; 0 < i; i-- )
+				Physics2D.RaycastNonAlloc( _originCast, transform.right * _movementSide, _detectionRaycasts, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
+				for ( int i = 0; _detectionRaycasts.Length > i; i++ )
 					if ( _detectionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 					{
 						_detected = true;
