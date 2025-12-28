@@ -20,13 +20,14 @@ namespace GwambaPrimeAdventure
 		}
 		public static void TurnScaleX( this Transform transform, float changer )
 		{
-			_scaleTurner.Set( Mathf.Abs( transform.localScale.x ) * changer.RangeNormalizeWithoutZero( WorldBuild.SCALE_SNAP, true ), transform.localScale.y, transform.localScale.z );
+			_scaleTurner.x = Mathf.Abs( transform.localScale.x ) * changer.RangeNormalizeWithoutZero( WorldBuild.SCALE_SNAP, true );
+			_scaleTurner.y = transform.localScale.y;
+			_scaleTurner.z = transform.localScale.z;
 			transform.localScale = _scaleTurner;
 		}
 		public static void TurnScaleX( this Transform transform, bool conditionChanger ) => TurnScaleX( transform, conditionChanger ? -1F : 1F );
 		public static bool InsideRectangle( this Vector2 pointInside, Vector2 originPoint, Vector2 sizePoint ) =>
-			originPoint.x + sizePoint.x / 2F >= pointInside.x && originPoint.x - sizePoint.x / 2F <= pointInside.x &&
-			originPoint.y + sizePoint.y / 2F >= pointInside.y && originPoint.y - sizePoint.y / 2F <= pointInside.y;
+			pointInside.x.InsideRange(originPoint.x, sizePoint.x) && pointInside.y.InsideRange(originPoint.y, sizePoint.y);
 		public static bool OutsideRectangle( this Vector2 pointOutside, Vector2 originPoint, Vector2 sizePoint ) => !InsideRectangle( pointOutside, originPoint, sizePoint );
 		public static bool InsideCircle( this Vector2 pointInside, Vector2 originPoint, float radius ) => Vector2.Distance( originPoint, pointInside ) <= radius;
 		public static bool OutsideCircle( this Vector2 pointOutside, Vector2 originPoint, float radius ) => !InsideCircle( pointOutside, originPoint, radius );
@@ -38,5 +39,8 @@ namespace GwambaPrimeAdventure
 			(short) ( ( _outpuNormalized = RangeNormalize( input, maxDelimiter, minDelimiter ) ) + ( 0F == _outpuNormalized ? ( negativePriority ? -1F : 1F ) : 0F ) );
 		public static short RangeNormalizeWithoutZero( this float input, float rangeDelimiter, bool negativePriority = false ) =>
 			RangeNormalizeWithoutZero(input, rangeDelimiter, rangeDelimiter, negativePriority);
+		public static bool InsideRange( this float valueInside, float originValue, float sizeValue ) =>
+			originValue + sizeValue / 2F >= valueInside && originValue - sizeValue / 2F <= valueInside;
+		public static bool OutsideRange( this float valueInside, float originValue, float sizeValue ) => !InsideRange( valueInside, originValue, sizeValue );
 	};
 };
