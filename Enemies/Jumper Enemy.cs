@@ -210,7 +210,8 @@ namespace GwambaPrimeAdventure.Enemy
 					{
 						_originCast.Set( transform.position.x + _collider.offset.x + _collider.bounds.extents.x * _movementSide, transform.position.y + _collider.offset.y );
 						_direction = Quaternion.AngleAxis( _statistics.DetectionAngle, Vector3.forward ) * transform.right * transform.localScale.x.CompareTo( 0F );
-						for ( int i = Physics2D.RaycastNonAlloc( _originCast, _direction, _perceptionRaycasts, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK ); 0 < i; i-- )
+						Physics2D.RaycastNonAlloc( _originCast, _direction, _perceptionRaycasts, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
+						for ( int i = 0; _perceptionRaycasts.Length > i; i++ )
 							if ( _perceptionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 							{
 								_targetPosition = _perceptionRaycasts[ i ].collider.transform.position;
