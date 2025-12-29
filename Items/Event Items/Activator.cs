@@ -3,7 +3,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 {
 	internal abstract class Activator : StateController
 	{
-		private Animator _animator;
+		private
+			Animator _animator;
 		private readonly int
 			IsOn = Animator.StringToHash( nameof( IsOn ) ),
 			Use = Animator.StringToHash( nameof( Use ) ),
@@ -12,7 +13,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_used = false,
 			_usedOne = false,
 			_usable = true;
-		[SerializeField, Tooltip( "The activator only can be activeted one time." ), Header( "Activator" )] private bool
+		[SerializeField, Tooltip( "The activator only can be activeted one time." ), Header( "Activator" )]
+		private bool
 			_oneActivation;
 		protected bool Usable =>
 			_usable;
