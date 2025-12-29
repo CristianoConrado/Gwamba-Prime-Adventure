@@ -5,9 +5,14 @@ namespace GwambaPrimeAdventure.Story
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( UIDocument ) )]
 	internal sealed class StorySceneHud : MonoBehaviour
 	{
-		private static StorySceneHud _instance;
-		internal VisualElement SceneImage { get; private set; }
-		private void Awake()
+		private static
+			StorySceneHud _instance;
+		internal VisualElement SceneImage
+        {
+            get;
+            private set;
+        }
+        private void Awake()
 		{
 			if ( _instance )
 			{
