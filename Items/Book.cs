@@ -7,7 +7,8 @@ namespace GwambaPrimeAdventure.Item
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( BoxCollider2D ) )]
 	internal sealed class Book : StateController, ILoader, ICollectable
 	{
-		[SerializeField, Tooltip( "The sprite to show when the book gor cacthed." ), Header( "Conditions" )] private Sprite
+		[SerializeField, Tooltip( "The sprite to show when the book gor cacthed." ), Header( "Conditions" )]
+		private Sprite
 			_bookCacthed;
 		public async UniTask Load()
 		{
