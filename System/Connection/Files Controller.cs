@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using System;
 namespace GwambaPrimeAdventure.Connection
 {
 	internal struct FilesArchive
@@ -14,18 +15,16 @@ namespace GwambaPrimeAdventure.Connection
 	{
 		private static readonly string
 			FilesArchivePath = $"{Application.persistentDataPath}/Save Files.txt";
-		private static FilesArchive LoadFiles()
-		{
-			return File.Exists( FilesArchivePath ) 
-				? FileEncoder.ReadData<FilesArchive>( FilesArchivePath ) 
-				: new FilesArchive()
-				{
-					SaveFile1 = "Save File 1",
-					SaveFile2 = "Save File 2",
-					SaveFile3 = "Save File 3",
-					SaveFile4 = "Save File 4"
-				};
-		}
+		private static FilesArchive LoadFiles() =>
+			File.Exists( FilesArchivePath )
+			? FileEncoder.ReadData<FilesArchive>( FilesArchivePath )
+			: new FilesArchive()
+			{
+				SaveFile1 = "Save File 1",
+				SaveFile2 = "Save File 2",
+				SaveFile3 = "Save File 3",
+				SaveFile4 = "Save File 4"
+			};
 		public static string Select( ushort actualSaveFile ) =>
 			actualSaveFile switch
 			{
@@ -40,7 +39,7 @@ namespace GwambaPrimeAdventure.Connection
 			if ( File.Exists( Select( set.actualSaveFile ) ) )
 				File.Delete( Select( set.actualSaveFile ) );
 			FilesArchive newFilesArchive = LoadFiles();
-			string newSaveName = set.actualSaveFile switch
+			ReadOnlySpan<char> newSaveName = set.actualSaveFile switch
 			{
 				1 => newFilesArchive.SaveFile1 = set.newSaveName,
 				2 => newFilesArchive.SaveFile2 = set.newSaveName,
@@ -49,7 +48,7 @@ namespace GwambaPrimeAdventure.Connection
 				_ => null
 			};
 			FileEncoder.WriteData( newFilesArchive, FilesArchivePath );
-			return newSaveName;
+			return newSaveName.ToString();
 		}
 	};
 };
