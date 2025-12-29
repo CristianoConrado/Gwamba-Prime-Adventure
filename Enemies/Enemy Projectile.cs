@@ -8,7 +8,8 @@ namespace GwambaPrimeAdventure.Enemy
 	[RequireComponent( typeof( Rigidbody2D ), typeof( CinemachineImpulseSource ) )]
 	internal sealed class EnemyProjectile : Projectile, IDestructible
 	{
-		[SerializeField, Tooltip( "The statitics of this projectile." ), Header( "Projectile" )] private ProjectileStatistics
+		[SerializeField, Tooltip( "The statitics of this projectile." ), Header( "Projectile" )]
+		private ProjectileStatistics
 			_statistics;
 		public short Health =>
 			_vitality;
@@ -31,12 +32,18 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					if ( _pointToBreak >= _internalBreakPoint )
 						if ( _pointToReturn++ >= _internalReturnPoint )
-							(_pointToBreak, _breakInUse) = (0, _statistics.AlwaysBreak);
-					if ( !_breakInUse || _pointToBreak < _internalBreakPoint )
+						{
+							_pointToBreak = 0;
+                            _breakInUse = _statistics.AlwaysBreak;
+                        }
+                    if ( !_breakInUse || _pointToBreak < _internalBreakPoint )
 					{
 						if ( _breakInUse )
-							(_pointToBreak, _pointToReturn) = ((ushort) ( _pointToBreak + 1 ), 0);
-						_pointToJump = _statistics.JumpPoints;
+						{
+							_pointToBreak += 1;
+                            _pointToReturn = 0;
+                        }
+                        _pointToJump = _statistics.JumpPoints;
 						_projectileRotation = Quaternion.AngleAxis( _statistics.BaseAngle + _statistics.SpreadAngle * _angleMulti, Vector3.forward );
 						_projectilePosition.Set( _cellPosition.x + 5E-1F, _cellPosition.y + 5E-1F );
 						if ( _statistics.UseQuantity )
