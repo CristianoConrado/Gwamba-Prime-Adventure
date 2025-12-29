@@ -78,7 +78,8 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.TimedDash && !_isDashing )
 				if ( 0F >= ( _dashTime -= Time.deltaTime ) )
 				{
-					(_dashedTime, _isDashing) = (_statistics.TimeDashing, true);
+					_dashedTime = _statistics.TimeDashing;
+					_isDashing = true;
 					InvencibleDash();
 				}
 			if ( _statistics.RunFromTarget )
@@ -91,7 +92,10 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( 0F >= ( _timeRun -= Time.deltaTime ) && _isDashing )
 				{
 					if ( _statistics.RunTowardsAfter && _runnedTimes >= _statistics.TimesToRun )
-						(_runnedTimes, _runTowards) = (0, true);
+					{
+						_runnedTimes = 0;
+						_runTowards = true;
+					}
 					else if ( _statistics.RunTowardsAfter )
 						_runnedTimes++;
 					_isDashing = false;
@@ -124,11 +128,8 @@ namespace GwambaPrimeAdventure.Enemy
 				_originCast.Set( transform.position.x + _collider.offset.x + _collider.bounds.extents.x * _movementSide, transform.position.y + _collider.offset.y );
 				_castSize = Physics2D.RaycastNonAlloc( _originCast, transform.right * _movementSide, _detections, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
 				for ( int i = 0; _castSize > i; i++ )
-					if ( _detections[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
-					{
-						_detected = true;
+					if ( _detected = _detections[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 						break;
-					}
 			}
 			if ( _statistics.RunFromTarget && 0F >= _timeRun && _detected )
 			{
