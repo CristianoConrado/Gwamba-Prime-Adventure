@@ -15,7 +15,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_teleportIndex = 0;
 		private bool
 			_canTeleport = true;
-		[SerializeField, Tooltip( "The teleporter statitics of this enemy." ), Header( "Teleporter Enemy" )] private TeleporterStatistics
+		[SerializeField, Tooltip( "The teleporter statitics of this enemy." ), Header( "Teleporter Enemy" )]
+		private TeleporterStatistics
 			_statistics;
 		public async UniTask Load()
 		{
