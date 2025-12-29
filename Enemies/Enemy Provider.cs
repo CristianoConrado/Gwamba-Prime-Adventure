@@ -4,17 +4,23 @@ namespace GwambaPrimeAdventure.Enemy
 	[RequireComponent( typeof( EnemyController ), typeof( Collider2D ) )]
 	internal abstract class EnemyProvider : StateController, IDestructible
 	{
-		protected EnemyController _controller;
-		protected Collider2D _collider;
+		protected
+			EnemyController _controller;
+		protected
+			Collider2D _collider;
 		protected readonly Sender
 			_sender = Sender.Create();
 		protected bool
 			_stopWorking = false;
-		[SerializeField, Tooltip( "The enemies to send messages." ), Header( "Enemy Provider" )] private EnemyProvider[]
+		[SerializeField, Tooltip( "The enemies to send messages." ), Header( "Enemy Provider" )]
+		private EnemyProvider[]
 			_enemiesToSend;
-		[SerializeField, Tooltip( "The level of priority to use the destructible side." )] private ushort
-			_destructilbePriority = 0;
-		protected Rigidbody2D Rigidbody =>
+        [field: SerializeField, Tooltip( "The level of priority to use the destructible side." )]
+        internal ushort DestructilbePriority
+		{
+			get;
+		}
+        protected Rigidbody2D Rigidbody =>
 			_controller.Rigidbody;
 		public MessagePath Path =>
 			MessagePath.Enemy;
@@ -22,8 +28,6 @@ namespace GwambaPrimeAdventure.Enemy
 			_controller.IsStunned;
 		public short Health =>
 			_controller.Health;
-		internal ushort DestructilbePriority =>
-			_destructilbePriority;
 		protected new void Awake()
 		{
 			base.Awake();
