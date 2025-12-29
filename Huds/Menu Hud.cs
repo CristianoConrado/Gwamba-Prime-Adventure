@@ -5,18 +5,59 @@ namespace GwambaPrimeAdventure.Hud
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( UIDocument ) )]
 	internal sealed class MenuHud : MonoBehaviour
 	{
-		private static MenuHud _instance;
-		internal GroupBox Buttons { get; private set; }
-		internal GroupBox Saves { get; private set; }
-		internal Button Play { get; private set; }
-		internal Button Configurations { get; private set; }
-		internal Button Quit { get; private set; }
-		internal Button Back { get; private set; }
-		internal TextField[] SaveName { get; private set; }
-		internal Button[] RenameFile { get; private set; }
-		internal Button[] Load { get; private set; }
-		internal Button[] Delete { get; private set; }
-		private void Awake()
+		private static
+            MenuHud _instance;
+		internal GroupBox Buttons
+		{
+			get;
+			private set;
+		}
+		internal GroupBox Saves
+        {
+            get;
+            private set;
+        }
+        internal Button Play
+        {
+            get;
+            private set;
+        }
+        internal Button Configurations
+        {
+            get;
+            private set;
+        }
+        internal Button Quit
+        {
+            get;
+            private set;
+        }
+        internal Button Back
+        {
+            get;
+            private set;
+        }
+        internal TextField[] SaveName
+        {
+            get;
+            private set;
+        }
+        internal Button[] RenameFile
+        {
+            get;
+            private set;
+        }
+        internal Button[] Load
+        {
+            get;
+            private set;
+        }
+        internal Button[] Delete
+        {
+            get;
+            private set;
+        }
+        private void Awake()
 		{
 			if ( _instance )
 			{
