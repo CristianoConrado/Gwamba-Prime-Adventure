@@ -8,13 +8,17 @@ namespace GwambaPrimeAdventure
 	[DisallowMultipleComponent, RequireComponent( typeof( CinemachineCamera ), typeof( CinemachineFollow ), typeof( Rigidbody2D ) ), RequireComponent( typeof( BoxCollider2D ) )]
 	internal sealed class CameraOccluder : StateController, IConnector
 	{
-		private static CameraOccluder _instance;
-		private CinemachineFollow _cinemachineFollow;
+		private static
+			CameraOccluder _instance;
+		private
+			CinemachineFollow _cinemachineFollow;
 		private Vector2
 			_posiontDamping = Vector2.zero;
-		[SerializeField, Tooltip( "The scene of the menu." ), Header( "Interactions" )] private SceneField
+		[SerializeField, Tooltip( "The scene of the menu." ), Header( "Interactions" )]
+		private SceneField
 			_menuScene;
-		public MessagePath Path => MessagePath.System;
+		public MessagePath Path =>
+			MessagePath.System;
 		private new void Awake()
 		{
 			base.Awake();
