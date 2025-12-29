@@ -14,13 +14,13 @@ namespace GwambaPrimeAdventure.Character
 			base.Awake();
 			if ( _instance )
 			{
-				if ( !_instance._isHubbyWorld )
+                if ( !_instance._isHubbyWorld )
 				{
 					_instance._beginingPosition = StartPosition;
 					_instance._turnLeft = TurnToLeft;
-					_instance._reloadTransform = true;
+					_instance._loadState = true;
 				}
-				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
+                Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
 			_instance = this;
@@ -107,9 +107,9 @@ namespace GwambaPrimeAdventure.Character
 			_destroyToken = this.GetCancellationTokenOnDestroy();
 			_beginingPosition = StartPosition;
 			_turnLeft = TurnToLeft;
-			_reloadTransform = true;
+			_loadState = true;
 			await StartLoad().SuppressCancellationThrow();
-			if ( _destroyToken.IsCancellationRequested )
+            if ( _destroyToken.IsCancellationRequested )
 				return;
 			_didStart = true;
 			DontDestroyOnLoad( gameObject );
@@ -117,22 +117,22 @@ namespace GwambaPrimeAdventure.Character
 		private async UniTask StartLoad()
 		{
 			DisableInputs();
-			await UniTask.WaitUntil( () => _reloadTransform, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
+            await UniTask.WaitUntil( () => _loadState, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			transform.TurnScaleX( _turnLeft );
 			transform.position = _beginingPosition;
-			_reloadTransform = false;
 			if ( _animator.GetBool( Death ) )
 				_animator.SetBool( Death, _bunnyHopUsed = _offBunnyHop = !( _deathLoad = true ) );
 			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
-			if ( _deathLoad )
+            if ( _deathLoad )
 				OnEnable();
 			else
 				EnableInputs();
-		}
+            _deathLoad = _loadState = false;
+        }
 		public async UniTask Load()
 		{
 			if ( !_instance || _instance != this )
@@ -163,9 +163,13 @@ namespace GwambaPrimeAdventure.Character
 				Destroy( gameObject );
 				return;
 			}
-			if ( _isHubbyWorld = scene.name == HubbyWorldScene && _didStart )
-				(_beginingPosition, _turnLeft, _reloadTransform) = (PointSetter.CheckedPoint, PointSetter.TurnToLeft, true);
-			if ( _didStart )
+            if ( _isHubbyWorld = scene.name == HubbyWorldScene && !_loadState )
+			{
+                _beginingPosition = PointSetter.CheckedPoint;
+				_turnLeft = PointSetter.TurnToLeft;
+				_loadState = true;
+            }
+            if ( _didStart )
 			{
 				RestartState();
 				StartLoad().Forget();
