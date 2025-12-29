@@ -6,13 +6,19 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent, RequireComponent( typeof( Tilemap ), typeof( TilemapRenderer ), typeof( TilemapCollider2D ) ), RequireComponent( typeof( CompositeCollider2D ) )]
 	internal sealed class PlaceEnemy : EnemyProvider, IConnector
 	{
-		private Tilemap _tilemap;
-		private TilemapCollider2D _tilemapCollider;
-		private WaitUntil _waitActive;
-		private IEnumerator _appearFadeEvent;
-		[SerializeField, Tooltip( "If anything can be hurt." ), Header( "Interactions" )] private bool
+		private
+			Tilemap _tilemap;
+		private
+			TilemapCollider2D _tilemapCollider;
+		private
+			WaitUntil _waitActive;
+		private
+			IEnumerator _appearFadeEvent;
+		[SerializeField, Tooltip( "If anything can be hurt." ), Header( "Interactions" )]
+		private bool
 			_hurtEveryone;
-		[SerializeField, Tooltip( "If this enemy will react to any damage taken." )] private bool
+		[SerializeField, Tooltip( "If this enemy will react to any damage taken." )]
+		private bool
 			_reactToDamage;
 		private new void Awake()
 		{
