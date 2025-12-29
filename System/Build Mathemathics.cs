@@ -13,9 +13,9 @@ namespace GwambaPrimeAdventure
 		public static Resolution[] PixelPerfectResolutions()
 		{
 			List<Resolution> resolutions = new List<Resolution>();
-			for ( ushort i = 0; Screen.resolutions.Length > i; i++ )
-				if ( 0 == Screen.resolutions[ i ].width % WorldBuild.PIXEL_PERFECT_WIDTH && 0 == Screen.resolutions[ i ].height % WorldBuild.PIXEL_PERFECT_HEIGHT )
-					resolutions.Add( Screen.resolutions[ i ] );
+			foreach ( Resolution resolution in Screen.resolutions )
+				if ( 0 == resolution.width % WorldBuild.PIXEL_PERFECT_WIDTH && 0 == resolution.height % WorldBuild.PIXEL_PERFECT_HEIGHT )
+					resolutions.Add( resolution );
 			return resolutions.ToArray();
 		}
 		public static void TurnScaleX( this Transform transform, float changer )
