@@ -4,8 +4,10 @@ namespace GwambaPrimeAdventure.Connection
 {
 	public struct Settings
 	{
-		public Vector2Int ScreenResolution;
-		public FullScreenMode FullScreenMode;
+		public
+			Vector2Int ScreenResolution;
+		public
+			FullScreenMode FullScreenMode;
 		public float
 			SpeachDelay,
 			ScreenBrightness,
@@ -25,7 +27,8 @@ namespace GwambaPrimeAdventure.Connection
 	};
 	public static class SettingsController
 	{
-		private static readonly string SettingsPath = $@"{Application.persistentDataPath}\Settings.txt";
+		private static readonly string
+			SettingsPath = $@"{Application.persistentDataPath}\Settings.txt";
 		public static bool FileExists() => File.Exists( SettingsPath );
 		public static void Load( out Settings settings )
 		{
@@ -40,7 +43,7 @@ namespace GwambaPrimeAdventure.Connection
 					EffectsVolume = 1F,
 					MusicVolume = 1F,
 					FrameRate = 60,
-					SimulationHertz = WorldBuild.DEFAULT_HERTZ,
+					SimulationHertz = WorldBuild.DEFAULT_HERTZ_PER_SECOND,
 					VSync = 1,
 					SpeachDelay = 5E-2F,
 					GeneralVolumeToggle = true,
