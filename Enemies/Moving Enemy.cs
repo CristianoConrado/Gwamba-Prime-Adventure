@@ -58,9 +58,8 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		protected void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( WorldBuild.SCENE_LAYER != collision.gameObject.layer )
-				return;
-			_onGround = false;
+			if ( WorldBuild.SCENE_LAYER == collision.gameObject.layer )
+				_onGround = false;
 		}
 		public void Receive( MessageData message )
 		{
