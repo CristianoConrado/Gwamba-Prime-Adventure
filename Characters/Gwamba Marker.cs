@@ -12,18 +12,18 @@ namespace GwambaPrimeAdventure.Character
 		private new void Awake()
 		{
 			base.Awake();
-			if ( Instance )
+			if ( _instance )
 			{
-				if ( !Instance._isHubbyWorld )
+				if ( !_instance._isHubbyWorld )
 				{
-					Instance._beginingPosition = StartPosition;
-					Instance._turnLeft = TurnToLeft;
-					Instance._reloadTransform = true;
+					_instance._beginingPosition = StartPosition;
+					_instance._turnLeft = TurnToLeft;
+					_instance._reloadTransform = true;
 				}
 				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
-			Instance = this;
+			_instance = this;
 			_gwambaCanvas = GetComponentInChildren<GwambaCanvas>();
 			_gwambaDamagers = GetComponentsInChildren<GwambaDamager>();
 			_animator = GetComponent<Animator>();
@@ -45,7 +45,7 @@ namespace GwambaPrimeAdventure.Character
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
-			if ( !Instance || this != Instance )
+			if ( !_instance || this != _instance )
 				return;
 			for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
 			{
@@ -68,7 +68,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnEnable()
 		{
-			if ( !Instance || this != Instance )
+			if ( !_instance || this != _instance )
 				return;
 			_animator.SetFloat( IsOn, 1F );
 			_animator.SetFloat( WalkSpeed, 1F );
@@ -76,7 +76,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnDisable()
 		{
-			if ( !Instance || this != Instance )
+			if ( !_instance || this != _instance )
 				return;
 			_animator.SetFloat( IsOn, 0F );
 			_animator.SetFloat( WalkSpeed, 0F );
@@ -102,7 +102,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private async void Start()
 		{
-			if ( !Instance || this != Instance )
+			if ( !_instance || this != _instance )
 				return;
 			_destroyToken = this.GetCancellationTokenOnDestroy();
 			_beginingPosition = StartPosition;
@@ -135,7 +135,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		public async UniTask Load()
 		{
-			if ( !Instance || Instance != this )
+			if ( !_instance || _instance != this )
 				return;
 			await _gwambaCanvas.LoadCanvas().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
@@ -376,7 +376,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void Update()
 		{
-			if ( !Instance || Instance != this || _animator.GetBool( Death ) )
+			if ( !_instance || _instance != this || _animator.GetBool( Death ) )
 				return;
 			if ( _invencibility )
 			{
@@ -416,7 +416,7 @@ namespace GwambaPrimeAdventure.Character
 		private float BunnyHop( float callBackValue ) => 0 < _bunnyHopBoost ? _bunnyHopBoost * callBackValue : 0F;
 		private void FixedUpdate()
 		{
-			if ( !Instance || Instance != this || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
+			if ( !_instance || _instance != this || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
 				return;
 			if ( _animator.GetBool( DashSlide ) )
 				if ( Mathf.Abs( transform.position.x - _localAtAny.x ) > DashDistance || !_isOnGround || _isJumping )
@@ -556,7 +556,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionStay2D( Collision2D collision )
 		{
-			if ( !Instance || this != Instance || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
+			if ( !_instance || this != _instance || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
 			if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) )
 			{
@@ -663,7 +663,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( Instance && this == Instance && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
+			if ( _instance && this == _instance && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
 				_isOnGround = false;
 		}
 		private void OnTriggerEnter2D( Collider2D other )
