@@ -7,17 +7,26 @@ namespace GwambaPrimeAdventure
 	};
 	public interface IConnector
 	{
-		public MessagePath Path { get; }
+		public MessagePath Path
+		{
+			get;
+		}
 		public void Receive( MessageData message );
 	};
 	public interface IOccludee
 	{
-		public bool Occlude { get; }
-	};
+		public bool Occlude
+        {
+            get;
+        }
+    };
 	public interface IDestructible
 	{
-		public short Health { get; }
-		public bool Hurt( ushort damage );
+		public short Health
+        {
+            get;
+        }
+        public bool Hurt( ushort damage );
 		public void Stun( ushort stunStength, float stunTime );
 	};
 	public interface IInteractable
