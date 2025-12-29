@@ -232,8 +232,7 @@ namespace GwambaPrimeAdventure.Character
 				if ( !_isOnGround && !_bunnyHopUsed && !_animator.GetBool( AirJump ) )
 				{
 					_bunnyHopUsed = true;
-					if ( _gwambaCanvas.BunnyHop.Length <= ( _bunnyHopBoost += 1 ) )
-						_bunnyHopBoost = (ushort) _gwambaCanvas.BunnyHop.Length;
+					_bunnyHopBoost = (ushort) ( _gwambaCanvas.BunnyHop.Length > _bunnyHopBoost + 1 ? _bunnyHopBoost + 1 : _gwambaCanvas.BunnyHop.Length );
 				}
 			}
 			else if ( jump.canceled && _isJumping && 0F < _rigidbody.linearVelocityY )
@@ -268,7 +267,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		public bool DamagerHurt( ushort damage )
 		{
-			if ( _invencibility || 0 >= damage )
+			if ( _invencibility || 0 >= damage || _animator.GetBool( Death ) )
 				return false;
 			EffectsController.SoundEffect( HurtSound, transform.position );
 			_vitality = (short) ( _vitality - damage );
@@ -420,7 +419,7 @@ namespace GwambaPrimeAdventure.Character
 			if ( !Instance || Instance != this || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
 				return;
 			if ( _animator.GetBool( DashSlide ) )
-				if ( Mathf.Abs( transform.position.x - _localAtAny.x ) > DashDistance || !_isOnGround || _isJumping || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
+				if ( Mathf.Abs( transform.position.x - _localAtAny.x ) > DashDistance || !_isOnGround || _isJumping )
 				{
 					_animator.SetBool( DashSlide, false );
 					_animator.SetBool( AttackSlide, false );
@@ -429,67 +428,8 @@ namespace GwambaPrimeAdventure.Character
 					_rigidbody.linearVelocityX = DashSpeed * _localAtAny.z;
 			else
 			{
-				if ( !_isOnGround && !_downStairs && MINIMUM_VELOCITY < Mathf.Abs( _rigidbody.linearVelocityY ) && !_animator.GetBool( AirJump ) )
-				{
-					if ( _animator.GetBool( Idle ) )
-						_animator.SetBool( Idle, false );
-					if ( _animator.GetBool( Walk ) )
-						_animator.SetBool( Walk, false );
-					if ( !_animator.GetBool( Jump ) && 0F < _rigidbody.linearVelocityY )
-						_animator.SetBool( Jump, true );
-					else if ( _animator.GetBool( Jump ) && 0F > _rigidbody.linearVelocityY )
-						_animator.SetBool( Jump, false );
-					if ( !_animator.GetBool( Fall ) && 0F > _rigidbody.linearVelocityY )
-						_animator.SetBool( Fall, true );
-					else if ( _animator.GetBool( Fall ) && 0F < _rigidbody.linearVelocityY )
-						_animator.SetBool( Fall, false );
-					if ( _animator.GetBool( AttackJump ) && 0F > _rigidbody.linearVelocityY )
-						_animator.SetBool( AttackJump, false );
-					if ( _animator.GetBool( Fall ) )
-					{
-						if ( _rigidbody.gravityScale < FallGravityMultiply * GravityScale )
-							_rigidbody.gravityScale = FallGravityMultiply * GravityScale;
-						if ( _fallStarted && !_isHubbyWorld )
-						{
-							_fallDamage = Mathf.Abs( _startOfFall - transform.position.y );
-							if ( _fallDamage >= FallDamageDistance * FallDamageShowMultiply )
-							{
-								_gwambaCanvas.FallDamageText.style.opacity = 1F;
-								_gwambaCanvas.FallDamageText.text = $"X {_fallDamage / FallDamageDistance:F1}";
-							}
-							else if ( !_invencibility )
-							{
-								_gwambaCanvas.FallDamageText.style.opacity = 0F;
-								_gwambaCanvas.FallDamageText.text = $"X 0";
-							}
-						}
-						else if ( !_isHubbyWorld )
-						{
-							_startOfFall = transform.position.y;
-							_fallDamage = 0F;
-							_fallStarted = true;
-						}
-					}
-					else
-					{
-						if ( !_invencibility )
-						{
-							_gwambaCanvas.FallDamageText.style.opacity = 0F;
-							_gwambaCanvas.FallDamageText.text = $"X 0";
-						}
-						if ( _rigidbody.gravityScale > GravityScale )
-							_rigidbody.gravityScale = GravityScale;
-						if ( _fallStarted )
-						{
-							_fallStarted = false;
-							_fallDamage = 0F;
-						}
-					}
-					if ( AttackUsage && !_animator.GetBool( AttackJump ) )
-						_rigidbody.linearVelocityY *= AttackVelocityCut;
-				}
 				if ( _animator.GetBool( AirJump ) )
-					if ( _isJumping || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
+					if ( _isJumping )
 					{
 						_animator.SetBool( AirJump, false );
 						_animator.SetBool( AttackAirJump, false );
@@ -498,7 +438,66 @@ namespace GwambaPrimeAdventure.Character
 						_lastGroundedTime = JumpCoyoteTime;
 				else
 				{
-					_localAtAny.x = _longJumping ? DashSpeed : MovementSpeed + BunnyHop( VelocityBoost );
+					if ( !_isOnGround && !_downStairs && MINIMUM_VELOCITY < Mathf.Abs( _rigidbody.linearVelocityY ) )
+					{
+						if ( _animator.GetBool( Idle ) )
+							_animator.SetBool( Idle, false );
+						if ( _animator.GetBool( Walk ) )
+							_animator.SetBool( Walk, false );
+						if ( !_animator.GetBool( Jump ) && 0F < _rigidbody.linearVelocityY )
+							_animator.SetBool( Jump, true );
+						else if ( _animator.GetBool( Jump ) && 0F > _rigidbody.linearVelocityY )
+							_animator.SetBool( Jump, false );
+						if ( !_animator.GetBool( Fall ) && 0F > _rigidbody.linearVelocityY )
+							_animator.SetBool( Fall, true );
+						else if ( _animator.GetBool( Fall ) && 0F < _rigidbody.linearVelocityY )
+							_animator.SetBool( Fall, false );
+						if ( _animator.GetBool( AttackJump ) && 0F > _rigidbody.linearVelocityY )
+							_animator.SetBool( AttackJump, false );
+						if ( _animator.GetBool( Fall ) )
+						{
+							if ( _rigidbody.gravityScale < FallGravityMultiply * GravityScale )
+								_rigidbody.gravityScale = FallGravityMultiply * GravityScale;
+							if ( _fallStarted && !_isHubbyWorld )
+							{
+								_fallDamage = Mathf.Abs( _startOfFall - transform.position.y );
+								if ( _fallDamage >= FallDamageDistance * FallDamageShowMultiply )
+								{
+									_gwambaCanvas.FallDamageText.style.opacity = 1F;
+									_gwambaCanvas.FallDamageText.text = $"X {_fallDamage / FallDamageDistance:F1}";
+								}
+								else if ( !_invencibility )
+								{
+									_gwambaCanvas.FallDamageText.style.opacity = 0F;
+									_gwambaCanvas.FallDamageText.text = $"X 0";
+								}
+							}
+							else if ( !_isHubbyWorld )
+							{
+								_startOfFall = transform.position.y;
+								_fallDamage = 0F;
+								_fallStarted = true;
+							}
+						}
+						else
+						{
+							if ( !_invencibility )
+							{
+								_gwambaCanvas.FallDamageText.style.opacity = 0F;
+								_gwambaCanvas.FallDamageText.text = $"X 0";
+							}
+							if ( _rigidbody.gravityScale > GravityScale )
+								_rigidbody.gravityScale = GravityScale;
+							if ( _fallStarted )
+							{
+								_fallStarted = false;
+								_fallDamage = 0F;
+							}
+						}
+						if ( AttackUsage )
+							_rigidbody.linearVelocityY *= AttackVelocityCut;
+					}
+					_localAtAny.x = ( _longJumping ? DashSpeed : MovementSpeed + BunnyHop( VelocityBoost ) ) * ( AttackUsage ? AttackVelocityCut : 1F );
 					_localAtAny.y = _localAtAny.x * _walkValue - _rigidbody.linearVelocityX;
 					_localAtAny.z = 0F < Mathf.Abs( _localAtAny.x * _walkValue ) ? Acceleration : Decceleration;
 					_rigidbody.AddForceX( Mathf.Pow( Mathf.Abs( _localAtAny.y ) * _localAtAny.z, VelocityPower ) * Mathf.Sign( _localAtAny.y ) * _rigidbody.mass );
@@ -515,8 +514,6 @@ namespace GwambaPrimeAdventure.Character
 						}
 					}
 				}
-				if ( AttackUsage && !_animator.GetBool( AttackAirJump ) )
-					_rigidbody.linearVelocityX *= AttackVelocityCut;
 				if ( _isOnGround )
 				{
 					if ( 0 == _walkValue )
@@ -666,7 +663,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( !Instance || this != Instance || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
+			if ( !Instance || this != Instance || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
 			_isOnGround = false;
 		}
