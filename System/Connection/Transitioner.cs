@@ -7,11 +7,14 @@ namespace GwambaPrimeAdventure.Connection
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
 	public sealed class Transitioner : MonoBehaviour
 	{
-		[SerializeField, Tooltip( "The object that handles the hud of the trancision." ), Header( "Scene Interaction" )] private TransicionHud
+		[SerializeField, Tooltip( "The object that handles the hud of the trancision." ), Header( "Scene Interaction" )]
+		private TransicionHud
 			_transicionHud;
-		[SerializeField, Tooltip( "The scene that will be trancisionate to." )] private SceneField
+		[SerializeField, Tooltip( "The scene that will be trancisionate to." )]
+		private SceneField
 			_sceneTransicion;
-		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField
+		[SerializeField, Tooltip( "The scene of the menu." )]
+		private SceneField
 			_menuScene;
 		public async void Transicion( SceneField scene = null )
 		{
