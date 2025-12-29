@@ -1,19 +1,23 @@
-using UnityEngine;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Connection;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Item
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( CircleCollider2D ), typeof( Transitioner ) ), RequireComponent( typeof( IInteractable ) )]
 	internal sealed class LevelGoal : StateController
 	{
-		private static LevelGoal Instance;
+		private static
+			LevelGoal Instance;
 		private bool
 			_blocked = false;
-		[SerializeField, Tooltip( "If this will go direct to the boss." ), Header( "Scene Interactions" )] private SceneField
+		[SerializeField, Tooltip( "If this will go direct to the boss." ), Header( "Scene Interactions" )]
+		private SceneField
 			_goToBoss;
-		[SerializeField, Tooltip( "If theres a dialog after the goal." )] private bool
+		[SerializeField, Tooltip( "If theres a dialog after the goal." )]
+		private bool
 			_enterInDialog;
-		[SerializeField, Tooltip( "If this object will be saved as already existent object." )] private bool
+		[SerializeField, Tooltip( "If this object will be saved as already existent object." )]
+		private bool
 			_saveOnSpecifics;
 		private new void Awake()
 		{
