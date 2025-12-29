@@ -7,7 +7,8 @@ namespace GwambaPrimeAdventure.Item
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( BoxCollider2D ) )]
 	internal sealed class ExtraLife : StateController, ILoader, ICollectable
 	{
-		[SerializeField, Tooltip( "If this object will be saved as already existent object." ), Header( "Condition" )] private bool
+		[SerializeField, Tooltip( "If this object will be saved as already existent object." ), Header( "Condition" )]
+		private bool
 			_saveOnSpecifics;
 		public async UniTask Load()
 		{
