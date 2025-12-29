@@ -9,25 +9,34 @@ namespace GwambaPrimeAdventure
 	[DisallowMultipleComponent, RequireComponent( typeof( Camera ), typeof( CinemachineBrain ) )]
 	internal sealed class BackgroundController : StateController, ILoader
 	{
-		private static BackgroundController _instance;
-		private Transform[] _childrenTransforms;
-		private SpriteRenderer[] _childrenRederers;
-		private Vector2[] _startPosition;
+		private static
+			BackgroundController _instance;
+		private
+			Transform[] _childrenTransforms;
+		private
+			SpriteRenderer[] _childrenRederers;
+		private
+			Vector2[] _startPosition;
 		private Vector2
 			_speed = Vector2.zero,
 			_movement = Vector2.zero;
-		[Header( "Background Interaction" )]
-		[SerializeField, Tooltip( "The object that handles the backgrounds." )] private Transform
+		[SerializeField, Tooltip( "The object that handles the backgrounds." ), Header( "Background Interaction" )]
+		private Transform
 			_backgroundObject;
-		[SerializeField, Tooltip( "The handler of the background." )] private SpriteAtlas
+		[SerializeField, Tooltip( "The handler of the background." )]
+		private SpriteAtlas
 			_backgroundHandler;
-		[SerializeField, Tooltip( "The amount of speed that the background will move." )] private Vector2
+		[SerializeField, Tooltip( "The amount of speed that the background will move." )]
+		private Vector2
 			_backgroundSpeed;
-		[SerializeField, Tooltip( "The amount to slow for each layer that is after the first." )] private Vector2
+		[SerializeField, Tooltip( "The amount to slow for each layer that is after the first." )]
+		private Vector2
 			_slowSpeed;
-		[SerializeField, Tooltip( "The offset of the camera relative to center of the screen." )] private Vector2
+		[SerializeField, Tooltip( "The offset of the camera relative to center of the screen." )]
+		private Vector2
 			_positionOffset;
-		[SerializeField, Tooltip( "The name of the images that are placed in each background." )] private string[]
+		[SerializeField, Tooltip( "The name of the images that are placed in each background." )]
+		private string[]
 			_backgroundImages;
 		private new void Awake()
 		{
@@ -50,7 +59,7 @@ namespace GwambaPrimeAdventure
 			_startPosition = new Vector2[ _backgroundImages.Length ];
 			Transform child;
 			SpriteRenderer childRenderer;
-			Vector3 childOffset = Vector2.zero;
+			Vector3 childOffset = Vector3.zero;
 			ushort childIndex;
 			for ( ushort i = 0; i < _backgroundImages.Length; i++ )
 			{
