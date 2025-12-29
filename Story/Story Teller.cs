@@ -7,13 +7,17 @@ namespace GwambaPrimeAdventure.Story
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
 	internal sealed class StoryTeller : MonoBehaviour
 	{
-		private StorySceneHud _storySceneHud;
-		private CancellationToken _destroyToken;
+		private
+			StorySceneHud _storySceneHud;
+		private
+			CancellationToken _destroyToken;
 		private ushort
 			_imageIndex = 0;
-		[SerializeField, Tooltip( "The object that handles the hud of the story scene." ), Header( "Scene Objects" )] private StorySceneHud
+		[SerializeField, Tooltip( "The object that handles the hud of the story scene." ), Header( "Scene Objects" )]
+		private StorySceneHud
 			_storySceneHudObject;
-		[SerializeField, Tooltip( "The object that carry the scene settings." )] private StorySceneObject
+		[SerializeField, Tooltip( "The object that carry the scene settings." )]
+		private StorySceneObject
 			_storySceneObject;
 		private async UniTask FadeImage( bool appear )
 		{
