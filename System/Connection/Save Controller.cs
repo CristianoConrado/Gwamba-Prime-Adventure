@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System;
 namespace GwambaPrimeAdventure.Connection
 {
 	public struct SaveFile
@@ -8,13 +9,16 @@ namespace GwambaPrimeAdventure.Connection
 		public ushort
 			Lifes,
 			Coins;
-		public Dictionary<string, bool> Books;
+		public
+			Dictionary<string, bool> Books;
 		public List<string>
 			LifesAcquired,
 			GeneralObjects,
 			BooksName;
-		public List<bool> BooksValue;
-		public string LastLevelEntered;
+		public
+			List<bool> BooksValue;
+		public
+			string LastLevelEntered;
 		public bool[]
 			LevelsCompleted,
 			DeafetedBosses;
@@ -42,19 +46,19 @@ namespace GwambaPrimeAdventure.Connection
 				LevelsCompleted = new bool[ WorldBuild.LEVELS_COUNT ],
 				DeafetedBosses = new bool[ WorldBuild.LEVELS_COUNT ]
 			};
-			string actualSaveFile = FilesController.Select( _actualSaveFile );
-			if ( string.IsNullOrEmpty( actualSaveFile ) )
+			ReadOnlySpan<char> actualSaveFile = FilesController.Select( _actualSaveFile );
+			if ( string.IsNullOrEmpty( actualSaveFile.ToString() ) )
 				return saveFile;
-			string actualPath = $@"{Application.persistentDataPath}\{actualSaveFile}.txt";
-			if ( File.Exists( actualPath ) )
+            ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{actualSaveFile.ToString()}.txt";
+			if ( File.Exists( actualPath.ToString() ) )
 			{
-				bool filesCondition = FilesController.Select( 1 ) != actualSaveFile && FilesController.Select( 2 ) != actualSaveFile;
-				if ( filesCondition && FilesController.Select( 3 ) != actualSaveFile && FilesController.Select( 4 ) != actualSaveFile )
+				bool filesCondition = FilesController.Select( 1 ) != actualSaveFile.ToString() && FilesController.Select( 2 ) != actualSaveFile.ToString();
+				if ( filesCondition && FilesController.Select( 3 ) != actualSaveFile.ToString() && FilesController.Select( 4 ) != actualSaveFile.ToString() )
 				{
-					File.Delete( actualPath );
+					File.Delete( actualPath.ToString() );
 					return saveFile;
 				}
-				saveFile = FileEncoder.ReadData<SaveFile>( actualPath );
+				saveFile = FileEncoder.ReadData<SaveFile>( actualPath.ToString() );
 				saveFile.Books = new Dictionary<string, bool>();
 				for ( ushort i = 0; saveFile.BooksName.Count > i; i++ )
 					saveFile.Books.Add( saveFile.BooksName[ i ], saveFile.BooksValue[ i ] );
@@ -73,27 +77,32 @@ namespace GwambaPrimeAdventure.Connection
 			if ( string.IsNullOrEmpty( newName ) )
 				return;
 			FilesController.SaveData( (actualSave, newName) );
-			string actualPath = $@"{Application.persistentDataPath}\{FilesController.Select( actualSave )}.txt";
-			if ( File.Exists( actualPath ) )
-				FileEncoder.WriteData( FileEncoder.ReadData<SaveFile>( actualPath ), $@"{Application.persistentDataPath}\{newName}.txt" );
+            ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{FilesController.Select( actualSave )}.txt";
+			if ( File.Exists( actualPath.ToString() ) )
+				FileEncoder.WriteData( FileEncoder.ReadData<SaveFile>( actualPath.ToString() ), $@"{Application.persistentDataPath}\{newName}.txt" );
 		}
 		public static string DeleteData( ushort actualSave )
 		{
-			string actualPath = $@"{Application.persistentDataPath}\{FilesController.Select( actualSave )}.txt";
-			if ( File.Exists( actualPath ) )
-				File.Delete( actualPath );
+            ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{FilesController.Select( actualSave )}.txt";
+			if ( File.Exists( actualPath.ToString() ) )
+				File.Delete( actualPath.ToString() );
 			return FilesController.SaveData( (actualSave, $"Data File {actualSave}") );
 		}
 		public static void SaveData()
 		{
 			FilesController.SaveData();
-			string actualSaveFile = FilesController.Select( _actualSaveFile );
-			if ( string.IsNullOrEmpty( actualSaveFile ) )
+            ReadOnlySpan<char> actualSaveFile = FilesController.Select( _actualSaveFile );
+			if ( string.IsNullOrEmpty( actualSaveFile.ToString() ) )
 				return;
 			SaveFile newSaveFile = _saveFile;
-			newSaveFile.BooksName = new List<string>( _saveFile.Books?.Count > 0f ? _saveFile.Books.Keys : new List<string>() );
-			newSaveFile.BooksValue = new List<bool>( _saveFile.Books?.Count > 0f ? _saveFile.Books.Values : new List<bool>() );
-			FileEncoder.WriteData( newSaveFile, $@"{Application.persistentDataPath}\{actualSaveFile}.txt" );
+			newSaveFile.BooksName.Clear();
+            newSaveFile.BooksValue.Clear();
+            if ( 0F < _saveFile.Books?.Count )
+			{
+                newSaveFile.BooksName.AddRange( _saveFile.Books.Keys );
+                newSaveFile.BooksValue.AddRange( _saveFile.Books.Values );
+            }
+			FileEncoder.WriteData( newSaveFile, $@"{Application.persistentDataPath}\{actualSaveFile.ToString()}.txt" );
 		}
 	};
 };
