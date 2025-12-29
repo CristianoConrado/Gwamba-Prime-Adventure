@@ -6,8 +6,16 @@ namespace GwambaPrimeAdventure
 	public sealed class TransicionHud : MonoBehaviour
 	{
 		private static TransicionHud _instance;
-		public VisualElement RootElement { get; private set; }
-		public ProgressBar LoadingBar { get; private set; }
+		public VisualElement RootElement
+		{
+			get;
+			private set;
+		}
+		public ProgressBar LoadingBar
+		{
+			get;
+			private set;
+		}
 		private void Awake()
 		{
 			if ( _instance )
