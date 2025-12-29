@@ -9,7 +9,8 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class JumperEnemy : MovingEnemy, ILoader, IJumper, IConnector
 	{
-		private InputController _inputController;
+		private
+			InputController _inputController;
 		private readonly CancellationTokenSource
 			_cancellationSource = new CancellationTokenSource(),
 			_cancelTimerSource = new CancellationTokenSource();
@@ -20,8 +21,10 @@ namespace GwambaPrimeAdventure.Enemy
 			_perceptionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
 		private ushort
 			_sequentialJumpIndex = 0;
-		private short[] _jumpCount;
-		private float[] _timedJumpTime;
+		private
+			short[] _jumpCount;
+		private
+			float[] _timedJumpTime;
 		private float
 			_jumpTime = 0F,
 			_stopTime = 0F,
@@ -37,7 +40,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_useTarget = false,
 			_turnFollow = false,
 			_cancelTimerActivated = false;
-		[SerializeField, Tooltip( "The jumper statitics of this enemy." ), Header( "Jumper Enemy" )] private JumperStatistics
+		[SerializeField, Tooltip( "The jumper statitics of this enemy." ), Header( "Jumper Enemy" )]
+		private JumperStatistics
 			_statistics;
 		private new void Awake()
 		{
