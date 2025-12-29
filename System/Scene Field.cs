@@ -9,10 +9,12 @@ namespace GwambaPrimeAdventure
 	public class SceneField
 	{
 #if UNITY_EDITOR
-		[SerializeField, Tooltip( "The scene to be handled." )] private SceneAsset
+		[SerializeField, Tooltip( "The scene to be handled." )]
+		private SceneAsset
 			_sceneAsset;
 #endif
-		[SerializeField, Tooltip( "The name of the scene." )] private string
+		[SerializeField, Tooltip( "The name of the scene." )]
+		private string
 			_sceneName;
 		public string SceneName =>
 			_sceneName;
