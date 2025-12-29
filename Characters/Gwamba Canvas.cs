@@ -6,38 +6,97 @@ namespace GwambaPrimeAdventure.Character
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( UIDocument ) )]
 	internal sealed class GwambaCanvas : MonoBehaviour
 	{
-		private static GwambaCanvas _instance;
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar background." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )] internal Color
-			BackgroundColor { get; private set; }
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar border." )] internal Color
-			BorderColor { get; private set; }
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's stun resistance bar." )] internal Color
-			StunResistanceColor { get; private set; }
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bunny hop bar." )] internal Color
-			BunnyHopColor { get; private set; }
-		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bar missing piece." )] internal Color
-			MissingColor { get; private set; }
-		[SerializeField, Tooltip( "The total of vitality that Gwamba have." )] private ushort
-			_vitality;
-		[SerializeField, Tooltip( "The total of recover vitality that Gwamba have." )] private ushort
-			_recoverVitality;
-		[SerializeField, Tooltip( "The total of stun resistance that Gwamba have." )] private ushort
-			_stunResistance;
-		[SerializeField, Tooltip( "The total of bunny hop that Gwamba have." )] private ushort
-			_bunnyHop;
-		[SerializeField, Min( 0F ), Tooltip( "The total width of Gwamba's vitality bar." )] private float
-			_totalWidth;
-		[SerializeField, Min( 0F ), Tooltip( "The norder width of Gwamba's vitality bar." )] private float
-			_borderWidth;
-		internal VisualElement RootElement { get; private set; }
-		internal VisualElement[] Vitality { get; private set; }
-		internal VisualElement[] RecoverVitality { get; private set; }
-		internal VisualElement[] StunResistance { get; private set; }
-		internal VisualElement[] BunnyHop { get; private set; }
-		internal Label FallDamageText { get; private set; }
-		internal Label LifeText { get; private set; }
-		internal Label CoinText { get; private set; }
-		private void Awake()
+		private static
+			GwambaCanvas _instance;
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar background." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
+		internal Color BackgroundColor
+        {
+            get;
+            private set;
+        }
+        [field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar border." )]
+		internal Color BorderColor
+        {
+            get;
+            private set;
+        }
+        [field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's stun resistance bar." )]
+		internal Color StunResistanceColor
+        {
+            get;
+            private set;
+        }
+        [field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bunny hop bar." )]
+		internal Color BunnyHopColor
+        {
+            get;
+            private set;
+        }
+        [field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bar missing piece." )]
+		internal Color MissingColor
+        {
+            get;
+            private set;
+        }
+        [SerializeField, Tooltip( "The total of vitality that Gwamba have." )]
+		private
+			ushort _vitality;
+		[SerializeField, Tooltip( "The total of recover vitality that Gwamba have." )]
+		private
+			ushort _recoverVitality;
+		[SerializeField, Tooltip( "The total of stun resistance that Gwamba have." )]
+		private
+			ushort _stunResistance;
+		[SerializeField, Tooltip( "The total of bunny hop that Gwamba have." )]
+		private
+			ushort _bunnyHop;
+		[SerializeField, Min( 0F ), Tooltip( "The total width of Gwamba's vitality bar." )]
+		private
+			float _totalWidth;
+		[SerializeField, Min( 0F ), Tooltip( "The norder width of Gwamba's vitality bar." )]
+		private
+			float _borderWidth;
+		internal VisualElement RootElement
+        {
+            get;
+            private set;
+        }
+        internal VisualElement[] Vitality
+        {
+            get;
+            private set;
+        }
+        internal VisualElement[] RecoverVitality
+        {
+            get;
+            private set;
+        }
+        internal VisualElement[] StunResistance
+        {
+            get;
+            private set;
+        }
+        internal VisualElement[] BunnyHop
+        {
+            get;
+            private set;
+        }
+        internal Label FallDamageText
+        {
+            get;
+            private set;
+        }
+        internal Label LifeText
+        {
+            get;
+            private set;
+        }
+        internal Label CoinText
+        {
+            get;
+            private set;
+        }
+        private void Awake()
 		{
 			if ( _instance )
 			{
@@ -64,7 +123,10 @@ namespace GwambaPrimeAdventure.Character
 			vitality.style.width = _totalWidth;
 			for ( ushort i = 0; i < _vitality; i++ )
 			{
-				vitalityPieceClone = new VisualElement() { name = VitalityPiece.name };
+				vitalityPieceClone = new VisualElement()
+				{
+					name = VitalityPiece.name
+				};
 				vitalityPieceClone.style.backgroundColor = BackgroundColor;
 				vitalityPieceClone.style.borderBottomColor = BorderColor;
 				vitalityPieceClone.style.borderLeftColor = BorderColor;
@@ -86,7 +148,10 @@ namespace GwambaPrimeAdventure.Character
 			recoverVitality.style.width = _totalWidth;
 			for ( ushort i = 0; i < _recoverVitality; i++ )
 			{
-				recoverVitalityPieceClone = new VisualElement() { name = RecoverVitalityPiece.name };
+				recoverVitalityPieceClone = new VisualElement()
+				{
+					name = RecoverVitalityPiece.name
+				};
 				recoverVitalityPieceClone.style.backgroundColor = MissingColor;
 				recoverVitalityPieceClone.style.width = _totalWidth / _recoverVitality - _borderWidth * 2F;
 				recoverVitality.Add( recoverVitalityPieceClone );
@@ -101,7 +166,10 @@ namespace GwambaPrimeAdventure.Character
 			stunResistance.style.width = _totalWidth;
 			for ( ushort i = 0; i < _stunResistance; i++ )
 			{
-				stunResistancePieceClone = new VisualElement() { name = StunResistancePiece.name };
+				stunResistancePieceClone = new VisualElement()
+				{
+					name = StunResistancePiece.name
+				};
 				stunResistancePieceClone.style.backgroundColor = StunResistanceColor;
 				stunResistancePieceClone.style.width = _totalWidth / _stunResistance - _borderWidth * 2F;
 				stunResistance.Add( stunResistancePieceClone );
@@ -116,7 +184,10 @@ namespace GwambaPrimeAdventure.Character
 			bunnyHop.style.width = _totalWidth;
 			for ( ushort i = 0; i < _bunnyHop; i++ )
 			{
-				bunnyHopPieceClone = new VisualElement() { name = BunnyHopPiece.name };
+				bunnyHopPieceClone = new VisualElement()
+				{
+					name = BunnyHopPiece.name
+				};
 				bunnyHopPieceClone.style.backgroundColor = MissingColor;
 				bunnyHopPieceClone.style.width = _totalWidth / _bunnyHop - _borderWidth * 2F;
 				bunnyHop.Add( bunnyHopPieceClone );
