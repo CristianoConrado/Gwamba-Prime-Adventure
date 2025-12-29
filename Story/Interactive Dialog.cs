@@ -8,12 +8,16 @@ namespace GwambaPrimeAdventure.Story
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Collider2D ) )]
 	internal sealed class InteractiveDialog : MonoBehaviour, IInteractable, IConnector
 	{
-		private DialogHud _dialogHud;
-		private StoryTeller _storyTeller;
-		private Animator _animator;
+		private
+			DialogHud _dialogHud;
+		private
+			StoryTeller _storyTeller;
+		private
+			Animator _animator;
 		private readonly Sender
 			_sender = Sender.Create();
-		private CancellationToken _destroyToken;
+		private
+			CancellationToken _destroyToken;
 		private readonly int
 			IsOn = Animator.StringToHash( nameof( IsOn ) );
 		private string
@@ -24,9 +28,11 @@ namespace GwambaPrimeAdventure.Story
 			_dialogTime = 0F;
 		private bool
 			_nextSlide = false;
-		[SerializeField, Tooltip( "The object that handles the hud of the dialog." ), Header( "Interaction Objects" )] private DialogHud
+		[SerializeField, Tooltip( "The object that handles the hud of the dialog." ), Header( "Interaction Objects" )]
+		private DialogHud
 			_dialogHudObject;
-		[SerializeField, Tooltip( "The collection of the object that contais the dialog." )] private DialogObject
+		[SerializeField, Tooltip( "The collection of the object that contais the dialog." )]
+		private DialogObject
 			_dialogObject;
 		public MessagePath Path =>
 			MessagePath.Story;
