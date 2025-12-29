@@ -7,10 +7,13 @@ namespace GwambaPrimeAdventure
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ) )]
 	public sealed class SceneInitiator : MonoBehaviour
 	{
-		private static SceneInitiator _instance;
-		[SerializeField, Tooltip( "The object that handles the hud of the trancision." )] private TransicionHud
+		private static
+			SceneInitiator _instance;
+		[SerializeField, Tooltip( "The object that handles the hud of the trancision." )]
+		private TransicionHud
 			_transicionHud;
-		[SerializeField, Tooltip( "The objects to be lodaed." )] private ObjectLoader[]
+		[SerializeField, Tooltip( "The objects to be lodaed." )]
+		private ObjectLoader[]
 			_objectLoaders;
 		internal static ushort
 			ProgressIndex = 0;
@@ -33,7 +36,8 @@ namespace GwambaPrimeAdventure
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			foreach ( ObjectLoader loader in _objectLoaders )
 			{
-				yield return ( requestedLoader = Instantiate( loader ) ).Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow().ToCoroutine();
+				requestedLoader = Instantiate( loader );
+                yield return requestedLoader.Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow().ToCoroutine();
 				if ( destroyToken.IsCancellationRequested )
 				{
 					Destroy( requestedLoader.gameObject );
