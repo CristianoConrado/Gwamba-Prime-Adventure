@@ -5,10 +5,14 @@ namespace GwambaPrimeAdventure.Item
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( Animator ), typeof( CircleCollider2D ) )]
 	internal sealed class Coin : StateController, ICollectable, IConnector
 	{
-		private SpriteRenderer _spriteRenderer;
-		private Animator _animator;
-		private CircleCollider2D _collider;
-		[SerializeField, Tooltip( "If this object will be saved as already existent object." ), Header( "Condition" )] private bool
+		private
+			SpriteRenderer _spriteRenderer;
+		private
+			Animator _animator;
+		private
+			CircleCollider2D _collider;
+		[SerializeField, Tooltip( "If this object will be saved as already existent object." ), Header( "Condition" )]
+		private bool
 			_saveOnSpecifics;
 		public MessagePath Path =>
 			MessagePath.Item;
