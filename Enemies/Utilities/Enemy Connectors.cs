@@ -6,9 +6,12 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	[DisallowMultipleComponent, SelectionBase]
 	public abstract class Control : StateController
 	{
-		protected Rigidbody2D _rigidbody;
-		protected CinemachineImpulseSource _screenShaker;
-		protected IDestructible _destructibleEnemy;
+		protected
+			Rigidbody2D _rigidbody;
+		protected
+			CinemachineImpulseSource _screenShaker;
+		protected
+			IDestructible _destructibleEnemy;
 		protected Vector2
 			_guardedLinearVelocity = Vector2.zero;
 		protected short
@@ -17,13 +20,16 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		protected float
 			_fadeTime = 0F,
 			_stunTimer = 0F;
-		protected bool _stunned = false;
+		protected bool
+			_stunned = false;
 	};
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( Collider2D ) )]
 	public abstract class Projectile : StateController
 	{
-		protected Rigidbody2D _rigidbody;
-		protected CinemachineImpulseSource _screenShaker;
+		protected
+			Rigidbody2D _rigidbody;
+		protected
+			CinemachineImpulseSource _screenShaker;
 		protected readonly List<Projectile>
 			_projectiles = new List<Projectile>();
 		protected Vector2
