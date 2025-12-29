@@ -9,11 +9,14 @@ namespace GwambaPrimeAdventure.Enemy
 	[RequireComponent( typeof( Rigidbody2D ), typeof( Collider2D ), typeof( CinemachineImpulseSource ) )]
 	internal sealed class EnemyController : Control, IConnector, IOccludee, IDestructible
 	{
-		private EnemyProvider[] _selfEnemies;
-		[SerializeField, Tooltip( "The control statitics of this enemy." ), Header( "Enemy Statistics" )] private EnemyStatistics
-			_statistics;
-		internal EnemyStatistics ProvidenceStatistics =>
-			_statistics;
+		private
+			EnemyProvider[] _selfEnemies;
+
+		[field: SerializeField, Tooltip( "The control statitics of this enemy." ), Header( "Enemy Statistics" )]
+		internal EnemyStatistics ProvidenceStatistics
+		{
+			get;
+		}
 		internal Rigidbody2D Rigidbody =>
 			_rigidbody;
 		public MessagePath Path =>
@@ -41,7 +44,7 @@ namespace GwambaPrimeAdventure.Enemy
 			set => _stunned = value;
 		}
 		public bool Occlude =>
-			!_statistics.FadeOverTime;
+			!ProvidenceStatistics.FadeOverTime;
 		private new void Awake()
 		{
 			base.Awake();
@@ -58,7 +61,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			base.OnDestroy();
 			SaveController.Load( out SaveFile saveFile );
-			if ( _statistics.SaveOnSpecifics && !saveFile.GeneralObjects.Contains( name ) )
+			if ( ProvidenceStatistics.SaveOnSpecifics && !saveFile.GeneralObjects.Contains( name ) )
 			{
 				saveFile.GeneralObjects.Add( name );
 				SaveController.WriteSave( saveFile );
@@ -70,7 +73,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( RigidbodyType2D.Static != _rigidbody.bodyType )
 			{
 				_rigidbody.linearVelocity = _guardedLinearVelocity;
-				_rigidbody.gravityScale = _statistics.GravityScale;
+				_rigidbody.gravityScale = ProvidenceStatistics.GravityScale;
 			}
 		}
 		internal void OnDisable()
@@ -84,7 +87,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private async void Start()
 		{
 			SaveController.Load( out SaveFile saveFile );
-			if ( _statistics.SaveOnSpecifics && saveFile.GeneralObjects.Contains( name ) )
+			if ( ProvidenceStatistics.SaveOnSpecifics && saveFile.GeneralObjects.Contains( name ) )
 			{
 				Destroy( gameObject );
 				return;
@@ -95,9 +98,9 @@ namespace GwambaPrimeAdventure.Enemy
 			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
-			_vitality = (short) _statistics.Vitality;
-			_armorResistance = (short) _statistics.HitResistance;
-			_fadeTime = _statistics.TimeToFadeAway;
+			_vitality = (short) ProvidenceStatistics.Vitality;
+			_armorResistance = (short) ProvidenceStatistics.HitResistance;
+			_fadeTime = ProvidenceStatistics.TimeToFadeAway;
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = true;
 		}
@@ -105,7 +108,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( SceneInitiator.IsInTrancision() )
 				return;
-			if ( _statistics.FadeOverTime )
+			if ( ProvidenceStatistics.FadeOverTime )
 				if ( 0F >= ( _fadeTime -= Time.deltaTime ) )
 					Destroy( gameObject );
 			if ( _stunned )
@@ -117,17 +120,17 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
-			if ( !_statistics.NoHit && other.TryGetComponent<IDestructible>( out var destructible ) && destructible.Hurt( _statistics.Damage ) )
+			if ( !ProvidenceStatistics.NoHit && other.TryGetComponent<IDestructible>( out var destructible ) && destructible.Hurt( ProvidenceStatistics.Damage ) )
 			{
-				destructible.Stun( _statistics.Damage, _statistics.StunTime );
-				_screenShaker.GenerateImpulse( _statistics.HurtShake );
-				EffectsController.HitStop( _statistics.HitStopTime, _statistics.HitSlowTime );
+				destructible.Stun( ProvidenceStatistics.Damage, ProvidenceStatistics.StunTime );
+				_screenShaker.GenerateImpulse( ProvidenceStatistics.HurtShake );
+				EffectsController.HitStop( ProvidenceStatistics.HitStopTime, ProvidenceStatistics.HitSlowTime );
 			}
 		}
-		public bool Hurt( ushort damage ) => !_statistics.NoDamage && 0 < damage && _destructibleEnemy.Hurt( damage );
+		public bool Hurt( ushort damage ) => !ProvidenceStatistics.NoDamage && 0 < damage && _destructibleEnemy.Hurt( damage );
 		public void Stun( ushort stunStength, float stunTime )
 		{
-			if ( _statistics.NoStun || _stunned )
+			if ( ProvidenceStatistics.NoStun || _stunned )
 				return;
 			_destructibleEnemy.Stun( stunStength, stunTime );
 		}
