@@ -7,11 +7,14 @@ namespace GwambaPrimeAdventure.Item
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ) )]
 	internal sealed class ProgressObstacle : StateController, ILoader
 	{
-		[SerializeField, Tooltip( "The index that this object will check if theres anything completed." ), Header( "Progress Interactions" )] private ushort
+		[SerializeField, Tooltip( "The index that this object will check if theres anything completed." ), Header( "Progress Interactions" )]
+		private ushort
 			_progressIndex;
-		[SerializeField, Tooltip( "If the index is about the boss." )] private bool
+		[SerializeField, Tooltip( "If the index is about the boss." )]
+		private bool
 			_isBossProgress;
-		[SerializeField, Tooltip( "If this object will be saved as already existent object." )] private bool
+		[SerializeField, Tooltip( "If this object will be saved as already existent object." )]
+		private bool
 			_saveOnSpecifics;
 		public async UniTask Load()
 		{
