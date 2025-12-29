@@ -8,8 +8,10 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent, RequireComponent( typeof( PolygonCollider2D ) )]
 	internal sealed class FlyingEnemy : MovingEnemy, ILoader, IConnector
 	{
-		private CircleCollider2D _selfCollider;
-		private Vector2[] _trail;
+		private
+			CircleCollider2D _selfCollider;
+		private
+			Vector2[] _trail;
 		private Vector2
 			_movementDirection = Vector2.zero,
 			_pointOrigin = Vector2.zero,
@@ -22,9 +24,11 @@ namespace GwambaPrimeAdventure.Enemy
 			_returnOrigin = false,
 			_afterDash = false,
 			_returnDash = false;
-		[SerializeField, Tooltip( "The flying statitics of this enemy." ), Header( "Flying Enemy" )] private FlyingStatistics
+		[SerializeField, Tooltip( "The flying statitics of this enemy." ), Header( "Flying Enemy" )]
+		private FlyingStatistics
 			_statistics;
-		[SerializeField, Tooltip( "If this enemy will repeat the same way it makes before." )] private bool
+		[SerializeField, Tooltip( "If this enemy will repeat the same way it makes before." )]
+		private bool
 			_repeatWay;
 		private new void Awake()
 		{
@@ -152,8 +156,11 @@ namespace GwambaPrimeAdventure.Enemy
 				_originCast = Rigidbody.position + _selfCollider.offset + ( _targetPoint - _originCast ).normalized;
 				if ( Physics2D.CircleCast( _originCast, _selfCollider.radius, ( _targetPoint - _originCast ).normalized, _selfCollider.radius / 2f, WorldBuild.SCENE_LAYER_MASK ) )
 					if ( _statistics.DetectionStop )
-						(_stopWorking, _stoppedTime) = (_returnDash = _afterDash = true, _statistics.AfterTime);
-					else
+					{
+						_stopWorking = _returnDash = _afterDash = true;
+                        _stoppedTime = _statistics.AfterTime;
+                    }
+                    else
 						_isDashing = !( _returnDash = true );
 			}
 			else
