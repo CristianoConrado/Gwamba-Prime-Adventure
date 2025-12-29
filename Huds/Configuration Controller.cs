@@ -12,17 +12,25 @@ namespace GwambaPrimeAdventure.Hud
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Transitioner ) )]
 	internal sealed class ConfigurationController : MonoBehaviour, IConnector
 	{
-		private static ConfigurationController _instance;
-		private ConfigurationHud _configurationHud;
-		private InputController _inputController;
-		private CancellationToken _destroyToken;
-		[SerializeField, Tooltip( "The object that handles the hud of the configurations." ), Header( "Interaction Objects" )] private ConfigurationHud
+		private static
+			ConfigurationController _instance;
+		private
+			ConfigurationHud _configurationHud;
+		private
+			InputController _inputController;
+		private
+			CancellationToken _destroyToken;
+		[SerializeField, Tooltip( "The object that handles the hud of the configurations." ), Header( "Interaction Objects" )]
+		private ConfigurationHud
 			_configurationHudObject;
-		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField
+		[SerializeField, Tooltip( "The scene of the menu." )]
+		private SceneField
 			_menuScene;
-		[SerializeField, Tooltip( "The scene of the level selector." )] private SceneField
+		[SerializeField, Tooltip( "The scene of the level selector." )]
+		private SceneField
 			_levelSelectorScene;
-		[SerializeField, Tooltip( "The mixer of the sounds." )] private AudioMixer
+		[SerializeField, Tooltip( "The mixer of the sounds." )]
+		private AudioMixer
 			_mixer;
 		public MessagePath Path =>
 			MessagePath.Hud;
@@ -95,9 +103,15 @@ namespace GwambaPrimeAdventure.Hud
 			Application.targetFrameRate = settings.InfinityFPS ? -1 : settings.FrameRate;
 			Time.fixedDeltaTime = 1F / settings.SimulationHertz;
 			QualitySettings.vSyncCount = settings.VSync;
-			_mixer.SetFloat( nameof( GeneralVolume ), settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
-			_mixer.SetFloat( nameof( EffectsVolume ), settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
-			_mixer.SetFloat( nameof( MusicVolume ), settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) * 20F : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( GeneralVolume ),
+				value: ( settings.GeneralVolumeToggle ? Mathf.Log10( settings.GeneralVolume ) : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( EffectsVolume ),
+				value: ( settings.EffectsVolumeToggle ? Mathf.Log10( settings.EffectsVolume ) : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) ) * 20F );
+			_mixer.SetFloat(
+				name: nameof( MusicVolume ),
+				value: ( settings.MusicVolumeToggle ? Mathf.Log10( settings.MusicVolume ) : Mathf.Log10( WorldBuild.MINIMUM_TIME_SPACE_LIMIT ) ) * 20F );
 			await StartLoad().SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
