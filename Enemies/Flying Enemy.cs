@@ -170,11 +170,8 @@ namespace GwambaPrimeAdventure.Enemy
 							_targetPoint = CharacterExporter.GwambaLocalization();
 							_originCast.Set( _originCast.x + x * _selfCollider.radius, _originCast.y + y * _selfCollider.radius );
 							_targetPoint.Set( _targetPoint.x + x * _selfCollider.radius, _targetPoint.y + y * _selfCollider.radius );
-							if ( Physics2D.Linecast( _originCast, _targetPoint, WorldBuild.SCENE_LAYER_MASK ) )
-							{
-								_detected = false;
+							if ( !( _detected = !Physics2D.Linecast( _originCast, _targetPoint, WorldBuild.SCENE_LAYER_MASK ) ) )
 								break;
-							}
 						}
 					if ( !_detected )
 						break;
