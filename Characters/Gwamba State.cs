@@ -156,8 +156,6 @@ namespace GwambaPrimeAdventure.Character
 			DashDistance { get; private set; }
 		[field: SerializeField, BoxGroup( "Movement" ), Min( 0F ), Tooltip( "The amount of max speed to increase on the bunny hop." )] protected float
 			VelocityBoost { get; private set; }
-		[field: SerializeField, BoxGroup( "Movement" ), Min( 0F ), Tooltip( "The amount of acceleration/decceleration to increase on the bunny hop." )] protected float
-			PotencyBoost { get; private set; }
 		[field: SerializeField, BoxGroup( "Jump" ), Tooltip( "The sound to play when Gwamba execute a jump." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )] protected AudioClip
 			JumpSound { get; private set; }
 		[field: SerializeField, BoxGroup( "Jump" ), Min( 0F ), Tooltip( "The amount of strenght that Gwamba can Jump." )] protected float
