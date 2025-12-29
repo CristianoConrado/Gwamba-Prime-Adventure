@@ -8,14 +8,16 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class ShooterEnemy : EnemyProvider, ILoader, IConnector, IDestructible
 	{
-		private Projectile _projectile;
+		private
+			Projectile _projectile;
 		private Vector2
 			_originCast = Vector2.zero,
 			_directionCast = Vector2.zero,
 			_targetDirection = Vector2.zero;
 		private Quaternion
 			_projectileRotation = Quaternion.identity;
-		private InstantiateParameters _projectileParameters;
+		private
+			InstantiateParameters _projectileParameters;
 		private readonly RaycastHit2D[]
 			_detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
 		private float
@@ -27,7 +29,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_hasTarget = false,
 			_canShoot = false,
 			_isStopped = false;
-		[SerializeField, Tooltip( "The shooter statitics of this enemy." ), Header( "Shooter Enemy" )] private ShooterStatistics
+		[SerializeField, Tooltip( "The shooter statitics of this enemy." ), Header( "Shooter Enemy" )]
+		private ShooterStatistics
 			_statistics;
 		private new void Awake()
 		{
@@ -45,7 +48,11 @@ namespace GwambaPrimeAdventure.Enemy
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
-			_projectileParameters = new InstantiateParameters() { parent = transform, worldSpace = false };
+			_projectileParameters = new InstantiateParameters()
+			{
+				parent = transform,
+				worldSpace = false
+			};
 		}
 		private void Shoot()
 		{
