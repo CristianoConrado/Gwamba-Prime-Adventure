@@ -85,7 +85,7 @@ namespace GwambaPrimeAdventure.Character
 			_offBunnyHop = false,
 			_fallStarted = false,
 			_invencibility = false,
-			_reloadTransform = false,
+			_loadState = false,
 			_deathLoad = false;
 		protected readonly int
 			IsOn = Animator.StringToHash( nameof( IsOn ) ),
