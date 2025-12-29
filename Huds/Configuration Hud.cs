@@ -8,37 +8,158 @@ namespace GwambaPrimeAdventure.Hud
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( UIDocument ) )]
 	internal sealed class ConfigurationHud : MonoBehaviour
 	{
-		private static ConfigurationHud _instance;
-		internal VisualElement RootElement { get; private set; }
-		internal GroupBox Settings { get; private set; }
-		internal GroupBox Confirmation { get; private set; }
-		internal DropdownField ScreenResolution { get; private set; }
-		internal DropdownField FullScreenModes { get; private set; }
-		internal DropdownField SimulationHertz { get; private set; }
-		internal Toggle GeneralVolumeToggle { get; private set; }
-		internal Toggle EffectsVolumeToggle { get; private set; }
-		internal Toggle MusicVolumeToggle { get; private set; }
-		internal Toggle InfinityFPS { get; private set; }
-		internal Toggle DialogToggle { get; private set; }
-		internal Slider ScreenBrightness { get; private set; }
-		internal Slider GeneralVolume { get; private set; }
-		internal Slider EffectsVolume { get; private set; }
-		internal Slider MusicVolume { get; private set; }
-		internal SliderInt FrameRate { get; private set; }
-		internal SliderInt VSync { get; private set; }
-		internal SliderInt SpeachDelay { get; private set; }
-		internal Button Close { get; private set; }
-		internal Button OutLevel { get; private set; }
-		internal Button SaveGame { get; private set; }
-		internal Button Yes { get; private set; }
-		internal Button No { get; private set; }
-		internal Label ScreenBrightnessText { get; private set; }
-		internal Label GeneralVolumeText { get; private set; }
-		internal Label EffectsVolumeText { get; private set; }
-		internal Label MusicVolumeText { get; private set; }
-		internal Label SpeachDelayText { get; private set; }
-		internal Label FrameRateText { get; private set; }
-		internal Label VSyncText { get; private set; }
+		private static
+			ConfigurationHud _instance;
+		internal VisualElement RootElement
+        {
+            get;
+            private set;
+        }
+        internal GroupBox Settings
+        {
+            get;
+            private set;
+        }
+        internal GroupBox Confirmation
+        {
+            get;
+            private set;
+        }
+        internal DropdownField ScreenResolution
+        {
+            get;
+            private set;
+        }
+        internal DropdownField FullScreenModes
+        {
+            get;
+            private set;
+        }
+        internal DropdownField SimulationHertz
+        {
+            get;
+            private set;
+        }
+        internal Toggle GeneralVolumeToggle
+        {
+            get;
+            private set;
+        }
+        internal Toggle EffectsVolumeToggle
+        {
+            get;
+            private set;
+        }
+        internal Toggle MusicVolumeToggle
+        {
+            get;
+            private set;
+        }
+        internal Toggle InfinityFPS
+        {
+            get;
+            private set;
+        }
+        internal Toggle DialogToggle
+        {
+            get;
+            private set;
+        }
+        internal Slider ScreenBrightness
+        {
+            get;
+            private set;
+        }
+        internal Slider GeneralVolume
+        {
+            get;
+            private set;
+        }
+        internal Slider EffectsVolume
+        {
+            get;
+            private set;
+        }
+        internal Slider MusicVolume
+        {
+            get;
+            private set;
+        }
+        internal SliderInt FrameRate
+        {
+            get;
+            private set;
+        }
+        internal SliderInt VSync
+        {
+            get;
+            private set;
+        }
+        internal SliderInt SpeachDelay
+        {
+            get;
+            private set;
+        }
+		internal Button Close
+		{
+			get;
+			private set;
+		}
+		internal Button OutLevel
+		{
+			get;
+			private set;
+		}
+		internal Button SaveGame
+		{
+			get;
+			private set;
+		}
+		internal Button Yes
+		{
+			get;
+			private set;
+		}
+		internal Button No
+		{
+			get;
+			private set;
+		}
+		internal Label ScreenBrightnessText
+		{
+			get;
+			private set;
+		}
+		internal Label GeneralVolumeText
+		{
+			get;
+			private set;
+		}
+		internal Label EffectsVolumeText
+		{
+			get;
+			private set;
+		}
+		internal Label MusicVolumeText
+		{
+			get;
+			private set;
+		}
+		internal Label SpeachDelayText
+		{
+			get;
+			private set;
+		}
+		internal Label FrameRateText
+		{
+			get;
+			private set;
+		}
+		internal Label VSyncText
+		{
+			get;
+			private set;
+		}
 		private void Awake()
 		{
 			if ( _instance )
@@ -95,9 +216,9 @@ namespace GwambaPrimeAdventure.Hud
 				ScreenResolution.choices.Add( $@"{resolution.width} x {resolution.height}" );
 			foreach ( FullScreenMode mode in Enum.GetValues( typeof( FullScreenMode ) ) )
 				FullScreenModes.choices.Add( $"{mode}" );
-			SimulationHertz.choices.Add( $"{WorldBuild.DEFAULT_HERTZ} hertz" );
-			SimulationHertz.choices.Add( $"{WorldBuild.MEDIUM_HERTZ} hertz" );
-			SimulationHertz.choices.Add( $"{WorldBuild.MAXIMUM_HERTZ} hertz" );
+			SimulationHertz.choices.Add( $"{WorldBuild.DEFAULT_HERTZ_PER_SECOND} hertz" );
+			SimulationHertz.choices.Add( $"{WorldBuild.MEDIUM_HERTZ_PER_SECOND} hertz" );
+			SimulationHertz.choices.Add( $"{WorldBuild.MAXIMUM_HERTZ_PER_SECOND} hertz" );
 			ScreenResolution.value = $@"{settings.ScreenResolution.x} x {settings.ScreenResolution.y}";
 			FullScreenModes.value = settings.FullScreenMode.ToString();
 			SimulationHertz.value = $"{settings.SimulationHertz} hertz";
