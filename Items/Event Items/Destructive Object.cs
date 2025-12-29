@@ -8,13 +8,17 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	{
 		private readonly Sender
 			_sender = Sender.Create();
-		[SerializeField, Tooltip( "If there a object that will be instantiate after the destruction of " ), Header( "Destructive Object" )] private OcclusionObject
+		[SerializeField, Tooltip( "If there a object that will be instantiate after the destruction of " ), Header( "Destructive Object" )]
+		private OcclusionObject
 			_occlusionObject;
-		[SerializeField, Tooltip( "The vitality of this object before it destruction." )] private short
+		[SerializeField, Tooltip( "The vitality of this object before it destruction." )]
+		private short
 			_vitality;
-		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )] private short
+		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )]
+		private short
 			_biggerDamage;
-		[SerializeField, Tooltip( "If this object will be destructed on collision with another object." )] private bool
+		[SerializeField, Tooltip( "If this object will be destructed on collision with another object." )]
+		private bool
 			_destroyOnCollision;
 		public short Health =>
 			_vitality;
@@ -49,6 +53,6 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				Execute();
 			return true;
 		}
-		public void Stun( ushort stunStength, float stunTime ) { }
+		public void Stun( ushort stunStrength, float stunTime ) { }
 	};
 };
