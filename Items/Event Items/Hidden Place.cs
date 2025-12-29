@@ -12,39 +12,54 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	[RequireComponent( typeof( CompositeCollider2D ), typeof( Light2DBase ), typeof( Receptor ) )]
 	internal sealed class HiddenPlace : StateController, IReceptorSignal
 	{
-		private Tilemap _tilemap;
-		private TilemapRenderer _tilemapRenderer;
-		private TilemapCollider2D _tilemapCollider;
+		private
+			Tilemap _tilemap;
+		private
+			TilemapRenderer _tilemapRenderer;
+		private
+			TilemapCollider2D _tilemapCollider;
 		private Light2DBase
 			_selfLight,
 			_followLight;
 		private readonly Sender
 			_sender = Sender.Create();
-		private CancellationToken _destroyToken;
+		private
+			CancellationToken _destroyToken;
 		private bool
 			_activation = false,
 			_follow = false;
-		[SerializeField, Tooltip( "Other hidden place to activate." ), Header( "Hidden Place" )] private HiddenPlace
+		[SerializeField, Tooltip( "Other hidden place to activate." ), Header( "Hidden Place" )]
+		private HiddenPlace
 			_otherPlace;
-		[SerializeField, Tooltip( "The occlusion object to reveal/hide." )] private OcclusionObject
+		[SerializeField, Tooltip( "The occlusion object to reveal/hide." )]
+		private OcclusionObject
 			_occlusionObject;
-		[SerializeField, Tooltip( "If this object will receive a signal." )] private bool
+		[SerializeField, Tooltip( "If this object will receive a signal." )]
+		private bool
 			_isReceptor;
-		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "The amount o time to appear/fade again after the activation." )] private float
+		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "The amount o time to appear/fade again after the activation." )]
+		private float
 			_timeToFadeAppearAgain;
-		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If the activation of the receive signal will fade the place." )] private bool
+		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If the activation of the receive signal will fade the place." )]
+		private bool
 			_fadeActivation;
-		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If this place won't use his own collider." )] private bool
+		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If this place won't use his own collider." )]
+		private bool
 			_useOtherCollider;
-		[SerializeField, Tooltip( "If the other hidden place will appear first." )] private bool
+		[SerializeField, Tooltip( "If the other hidden place will appear first." )]
+		private bool
 			_appearFirst;
-		[SerializeField, Tooltip( "If the other hidden place will fade first." )] private bool
+		[SerializeField, Tooltip( "If the other hidden place will fade first." )]
+		private bool
 			_fadeFirst;
-		[SerializeField, Tooltip( "If this object will appear/fade instantly." )] private bool
+		[SerializeField, Tooltip( "If this object will appear/fade instantly." )]
+		private bool
 			_instantly;
-		[SerializeField, Tooltip( "If the place has any inferior collider." )] private bool
+		[SerializeField, Tooltip( "If the place has any inferior collider." )]
+		private bool
 			_haveColliders;
-		[SerializeField, Tooltip( "If theres a follow light." )] private bool
+		[SerializeField, Tooltip( "If theres a follow light." )]
+		private bool
 			_hasFollowLight;
 		private new void Awake()
 		{
