@@ -11,7 +11,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_invencible = false;
 		private float
 			_timeOperation = 0F;
-		[SerializeField, Tooltip( "The defender statitics of this enemy." ), Header( "Defender Enemy" )] private DefenderStatistics
+		[SerializeField, Tooltip( "The defender statitics of this enemy." ), Header( "Defender Enemy" )]
+		private DefenderStatistics
 			_statistics;
 		private new void Awake()
 		{
