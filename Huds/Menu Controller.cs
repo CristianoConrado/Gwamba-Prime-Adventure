@@ -1,18 +1,23 @@
+using GwambaPrimeAdventure.Connection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
-using GwambaPrimeAdventure.Connection;
 namespace GwambaPrimeAdventure.Hud
 {
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Transitioner ) )]
 	internal sealed class MenuController : MonoBehaviour
 	{
-		private static MenuController _instance;
-		private MenuHud _menuHud;
-		private InputController _inputController;
+		private static
+			MenuController _instance;
+		private
+			MenuHud _menuHud;
+		private
+			InputController _inputController;
 		private bool
 			_isPlay = false;
-		[SerializeField, Tooltip( "The object that handles the hud of the menu." ), Header( "Interaction Object" )] private MenuHud _menuHudObject;
+		[SerializeField, Tooltip( "The object that handles the hud of the menu." ), Header( "Interaction Object" )]
+		private
+			MenuHud _menuHudObject;
 		private void Awake()
 		{
 			if ( _instance )
