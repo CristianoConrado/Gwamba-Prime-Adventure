@@ -13,7 +13,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_selfes = new HashSet<Receptor>();
 		private readonly HashSet<Activator>
 			_activatorsNeeded = new HashSet<Activator>();
-		private IReceptorSignal _receptor;
+		private
+			IReceptorSignal _receptor;
 		private ushort
 			_signals = 0,
 			_1X1Index = 0;
@@ -21,22 +22,31 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_signalTimer = 0F;
 		private bool
 			_onlyOneActivation = false;
-		[SerializeField, Tooltip( "The activators that this will receive a signal." ), Header( "Receptor" )] private Activator[]
+		[SerializeField, Tooltip( "The activators that this will receive a signal." ), Header( "Receptor" )]
+		private Activator[]
 			_activators;
-		[SerializeField, Tooltip( "If this will receive a signal from specifics or existent objects." )] private string[]
+		[SerializeField, Tooltip( "If this will receive a signal from specifics or existent objects." )]
+		private string[]
 			_specificsObjects;
-		[SerializeField, Tooltip( "The amount of time to wait for active after receive the signal." )] private float
+		[SerializeField, Tooltip( "The amount of time to wait for active after receive the signal." )]
+		private float
 			_timeToActivate;
-		[SerializeField, Tooltip( "If this will activate for every activator activated." )] private bool
+		[SerializeField, Tooltip( "If this will activate for every activator activated." )]
+		private bool
 			_1X1;
-		[SerializeField, HideIf( nameof( _1X1 ) ), Tooltip( "If is needed only one activator to activate." )] private bool
+		[SerializeField, HideIf( nameof( _1X1 ) ), Tooltip( "If is needed only one activator to activate." )]
+		private bool
 			_oneNeeded;
-		[SerializeField, HideIf( nameof( _1X1 ) ), ShowIf( nameof( _oneNeeded ) ), Tooltip( "If it will be inactive after one activation" )] private bool
+		[SerializeField, HideIf( nameof( _1X1 ) ), ShowIf( nameof( _oneNeeded ) ), Tooltip( "If it will be inactive after one activation" )]
+		private bool
 			_oneActivation;
-		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), Tooltip( "If are multiples activators needed to activate." )] private bool
+		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), Tooltip( "If are multiples activators needed to activate." )]
+		private bool
 			_multiplesNeeded;
-		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), ShowIf( nameof( _multiplesNeeded ) ), Tooltip( "The amount activators needed to activate." )]
-		private ushort _quantityNeeded;
+		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), ShowIf( nameof( _multiplesNeeded ) )]
+		[Tooltip( "The amount activators needed to activate." )]
+		private ushort
+			_quantityNeeded;
 		private new void Awake()
 		{
 			base.Awake();
