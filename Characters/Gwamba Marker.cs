@@ -663,9 +663,8 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( !Instance || this != Instance || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
-				return;
-			_isOnGround = false;
+			if ( Instance && this == Instance && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
+				_isOnGround = false;
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
