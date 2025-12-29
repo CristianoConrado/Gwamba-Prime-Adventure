@@ -11,7 +11,8 @@ namespace GwambaPrimeAdventure
 	};
 	public sealed class InfoLogger : IInfoLogger
 	{
-		public static IInfoLogger Informer = new InfoLogger();
+		public static IInfoLogger
+			Informer = new InfoLogger();
 		private InfoLogger() { }
 	};
 };
