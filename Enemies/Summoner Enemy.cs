@@ -8,11 +8,13 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class SummonerEnemy : EnemyProvider, ILoader, ISummoner, IConnector
 	{
-		private GameObject _summonObject;
+		private
+			GameObject _summonObject;
 		private readonly CancellationTokenSource
 			_cancellationSource = new CancellationTokenSource(),
 			_cancelTimerSource = new CancellationTokenSource();
-		private IEnumerator _summonEvent;
+		private
+			IEnumerator _summonEvent;
 		private Vector2
 			_summonPosition = Vector2.zero;
 		private Vector2Int
@@ -35,7 +37,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_stopSummon = false,
 			_waitStop = false,
 			_cancelTimerActivated = false;
-		[SerializeField, Tooltip( "The summoner statitics of this enemy." ), Header( "Summoner Enemy" )] private SummonerStatistics
+		[SerializeField, Tooltip( "The summoner statitics of this enemy." ), Header( "Summoner Enemy" )]
+		private SummonerStatistics
 			_statistics;
 		private new void Awake()
 		{
