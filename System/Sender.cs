@@ -18,7 +18,8 @@ namespace GwambaPrimeAdventure
 		}
 		private static readonly ConcurrentDictionary<MessagePath, HashSet<IConnector>>
 			_connectors = new ConcurrentDictionary<MessagePath, HashSet<IConnector>>();
-		private MessageData _messageData;
+		private
+			MessageData _messageData;
 		public static UniTask Include( IConnector connector )
 		{
 			HashSet<IConnector> gettedConnectors = _connectors.GetOrAdd( connector.Path, _ => new HashSet<IConnector>() );
