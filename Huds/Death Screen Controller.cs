@@ -9,18 +9,24 @@ namespace GwambaPrimeAdventure.Hud
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Transitioner ) )]
 	internal sealed class DeathScreenController : MonoBehaviour, IConnector
 	{
-		private static DeathScreenController _instance;
-		private DeathScreenHud _deathScreenHud;
+		private static
+			DeathScreenController _instance;
+		private
+			DeathScreenHud _deathScreenHud;
 		private readonly Sender
 			_sender = Sender.Create();
 		private CancellationToken _destroyToken;
-		[SerializeField, Tooltip( "The object that handles the hud of the death screen." ), Header( "Interaction Object" )] private DeathScreenHud
+		[SerializeField, Tooltip( "The object that handles the hud of the death screen." ), Header( "Interaction Object" )]
+		private DeathScreenHud
 			_deathScreenHudObject;
-		[SerializeField, Tooltip( "The scene of the level selector." )] private SceneField
+		[SerializeField, Tooltip( "The scene of the level selector." )]
+		private SceneField
 			_levelSelectorScene;
-		[SerializeField, Tooltip( "The scene of the menu." )] private SceneField
+		[SerializeField, Tooltip( "The scene of the menu." )]
+		private SceneField
 			_menuScene;
-		[SerializeField, Tooltip( "The scene of the boss of actual scene." )] private SceneField
+		[SerializeField, Tooltip( "The scene of the boss of actual scene." )]
+		private SceneField
 			_bossScene;
 		public MessagePath Path =>
 			MessagePath.Hud;
