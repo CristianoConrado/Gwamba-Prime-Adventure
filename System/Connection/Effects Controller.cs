@@ -8,13 +8,16 @@ namespace GwambaPrimeAdventure.Connection
 	[DisallowMultipleComponent, RequireComponent( typeof( Light2DBase ) )]
 	public sealed class EffectsController : StateController
 	{
-		private static EffectsController _instance;
+		private static
+			EffectsController _instance;
 		private readonly List<Light2DBase>
 			_lightsStack = new List<Light2DBase>();
-		private CancellationToken _destroyToken;
+		private
+			CancellationToken _destroyToken;
 		private bool
 			_canHitStop = true;
-		[SerializeField, Tooltip( "The source where the sounds came from." )] private AudioSource
+		[SerializeField, Tooltip( "The source where the sounds came from." )]
+		private AudioSource
 			_sourceObject;
 		private new void Awake()
 		{
