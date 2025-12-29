@@ -98,11 +98,10 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0F >= _shootInterval )
 				if ( _statistics.CircularDetection )
 				{
-					if ( CharacterExporter.GwambaLocalization().InsideCircle( (Vector2) transform.position + _collider.offset, _statistics.PerceptionDistance ) )
+					if ( _hasTarget = CharacterExporter.GwambaLocalization().InsideCircle( (Vector2) transform.position + _collider.offset, _statistics.PerceptionDistance ) )
 					{
 						_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
 						transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
-						_hasTarget = true;
 					}
 				}
 				else
@@ -114,11 +113,8 @@ namespace GwambaPrimeAdventure.Enemy
 						_directionCast *= transform.localScale.x.CompareTo( 0F );
 					_castSize = Physics2D.RaycastNonAlloc( _originCast, _directionCast, _detectionRaycasts, _statistics.PerceptionDistance, WorldBuild.CHARACTER_LAYER_MASK );
 					for ( int i = 0; _castSize > i; i++ )
-						if ( _detectionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
-						{
-							_hasTarget = true;
+						if ( _hasTarget = _detectionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 							break;
-						}
 				}
 			if ( ( _hasTarget || _statistics.ShootInfinity ) && 0F >= _shootInterval )
 			{
