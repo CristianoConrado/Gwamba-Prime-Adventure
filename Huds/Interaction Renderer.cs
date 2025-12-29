@@ -1,23 +1,28 @@
+using GwambaPrimeAdventure.Character;
 using UnityEngine;
 using UnityEngine.UIElements;
-using GwambaPrimeAdventure.Character;
 namespace GwambaPrimeAdventure.Hud
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( IInteractable ) )]
 	internal sealed class InteractionRenderer : StateController, IConnector
 	{
-		private Animator _animator;
-		private UIDocument _document;
+		private
+			Animator _animator;
+		private
+			UIDocument _document;
 		private readonly int
 			IsOn = Animator.StringToHash( nameof( IsOn ) );
 		private bool
 			_isActive = true,
 			_isOnCollision = false;
-		[SerializeField, Tooltip( "The UI document of the interaction." ), Header( "Interaction Components" )] private UIDocument
+		[SerializeField, Tooltip( "The UI document of the interaction." ), Header( "Interaction Components" )]
+		private UIDocument
 			_documentObject;
-		[SerializeField, Tooltip( "The offset of the document of interaction." )] private Vector2
+		[SerializeField, Tooltip( "The offset of the document of interaction." )]
+		private Vector2
 			_imageOffset;
-		public MessagePath Path => MessagePath.Hud;
+		public MessagePath Path =>
+			MessagePath.Hud;
 		private new void Awake()
 		{
 			base.Awake();
@@ -55,14 +60,7 @@ namespace GwambaPrimeAdventure.Hud
 		public void Receive( MessageData message )
 		{
 			if ( gameObject == message.AdditionalData as GameObject && MessageFormat.State == message.Format && message.ToggleValue.HasValue )
-				if ( message.ToggleValue.Value )
-				{
-					_isActive = true;
-					if ( _isOnCollision )
-						_document.enabled = true;
-				}
-				else
-					_isActive = _document.enabled = false;
+                _document.enabled = ( _isActive = message.ToggleValue.Value ) && _isOnCollision;
 		}
 	};
 };
