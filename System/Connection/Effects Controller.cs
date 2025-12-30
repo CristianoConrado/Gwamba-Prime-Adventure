@@ -17,8 +17,8 @@ namespace GwambaPrimeAdventure.Connection
 		private bool
 			_canHitStop = true;
 		[SerializeField, Tooltip( "The source where the sounds came from." )]
-		private AudioSource
-			_sourceObject;
+		private
+			AudioSource _sourceObject;
 		private new void Awake()
 		{
 			base.Awake();
