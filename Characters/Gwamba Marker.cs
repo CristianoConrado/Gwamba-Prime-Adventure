@@ -64,8 +64,8 @@ namespace GwambaPrimeAdventure.Character
 			_inputController.Commands.Interaction.started -= InteractionInput;
 			_inputController.Dispose();
 			SceneManager.sceneLoaded -= SceneLoaded;
-			Sender.Exclude( this );
-		}
+            Sender.Exclude( this );
+        }
 		private void OnEnable()
 		{
 			if ( !_instance || this != _instance )
@@ -80,7 +80,7 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			_animator.SetFloat( IsOn, 0F );
 			_animator.SetFloat( WalkSpeed, 0F );
-			DisableInputs();
+            DisableInputs();
 		}
 		private void EnableInputs()
 		{
@@ -111,8 +111,7 @@ namespace GwambaPrimeAdventure.Character
 			await StartLoad().SuppressCancellationThrow();
             if ( _destroyToken.IsCancellationRequested )
 				return;
-			_didStart = true;
-			DontDestroyOnLoad( gameObject );
+            _didStart = true;
 		}
 		private async UniTask StartLoad()
 		{
@@ -175,7 +174,7 @@ namespace GwambaPrimeAdventure.Character
 				StartLoad().Forget();
 			}
 		}
-		private void RestartState()
+        private void RestartState()
 		{
 			for ( ushort i = 0; ( _vitality = (short) _gwambaCanvas.Vitality.Length ) > i; i++ )
 			{
@@ -380,7 +379,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void Update()
 		{
-			if ( !_instance || _instance != this || _animator.GetBool( Death ) )
+			if ( !_instance || _instance != this || !_didStart || _animator.GetBool( Death ) )
 				return;
 			if ( _invencibility )
 			{
@@ -420,7 +419,7 @@ namespace GwambaPrimeAdventure.Character
 		private float BunnyHop( float callBackValue ) => 0 < _bunnyHopBoost ? _bunnyHopBoost * callBackValue : 0F;
 		private void FixedUpdate()
 		{
-			if ( !_instance || _instance != this || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
+			if ( !_instance || _instance != this || !_didStart || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
 				return;
 			if ( _animator.GetBool( DashSlide ) )
 				if ( Mathf.Abs( transform.position.x - _localAtAny.x ) > DashDistance || !_isOnGround || _isJumping )
@@ -555,14 +554,13 @@ namespace GwambaPrimeAdventure.Character
 				if ( ComboAttackBuffer )
 					StartAttackSound();
 			}
-			_offGround = !_isOnGround;
 			_downStairs = false;
 		}
 		private void OnCollisionStay2D( Collision2D collision )
 		{
-			if ( !_instance || this != _instance || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
+            if ( !_instance || this != _instance || !isActiveAndEnabled || !_didStart || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
-			if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) )
+			if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
 			{
 				_collider.GetContacts( _groundContacts );
 				_localAtStart.Set( Local.x + _collider.bounds.extents.x * _localAtAny.z, Local.y );
@@ -577,7 +575,7 @@ namespace GwambaPrimeAdventure.Character
 					EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 				}
 			}
-			if ( _isOnGround && !_offGround && 0 == _walkValue && MINIMUM_VELOCITY >= Vector2.Distance( _rigidbody.linearVelocity, MINIMUM_VELOCITY * Vector2.one ) )
+            if ( _isOnGround && !_offGround && 0 == _walkValue && MINIMUM_VELOCITY >= _rigidbody.linearVelocityX && MINIMUM_VELOCITY >= _rigidbody.linearVelocityY )
 				return;
 			_collider.GetContacts( _groundContacts );
 			_localAtStart.Set( Local.x, Local.y - _collider.bounds.extents.y );
@@ -585,7 +583,8 @@ namespace GwambaPrimeAdventure.Character
 			_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
 			if ( _isOnGround = 0 < _groundContacts.Count )
 			{
-				if ( _animator.GetBool( AirJump ) )
+				transform.SetParent( collision.transform );
+                if ( _animator.GetBool( AirJump ) )
 				{
 					_animator.SetBool( AirJump, false );
 					_animator.SetBool( AttackAirJump, false );
@@ -623,7 +622,7 @@ namespace GwambaPrimeAdventure.Character
 						}
 					}
 				}
-				if ( !_animator.GetBool( AirJump ) && !_animator.GetBool( DashSlide ) && 0 != _walkValue )
+				if ( !_animator.GetBool( AirJump ) && !_animator.GetBool( DashSlide ) && 0 != _walkValue && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
 					if ( MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
 					{
 						_collider.GetContacts( _groundContacts );
@@ -664,15 +663,21 @@ namespace GwambaPrimeAdventure.Character
 						}
 					}
 			}
-		}
+			else
+				transform.SetParent( null );
+            _offGround = !_isOnGround;
+        }
 		private void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( _instance && this == _instance && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
-				_isOnGround = false;
+			if ( _instance && this == _instance && _didStart && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
+			{
+                transform.SetParent( null );
+                _offGround = !( _isOnGround = false );
+            }
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
-			if ( other.TryGetComponent<ICollectable>( out var collectable ) )
+			if ( _didStart && other.TryGetComponent<ICollectable>( out var collectable ) )
 			{
 				collectable.Collect();
 				SaveController.Load( out SaveFile saveFile );
@@ -682,7 +687,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		internal bool EqualObject( params GameObject[] others )
 		{
-			if ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) )
+			if ( _didStart && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
 				for ( ushort i = 0; others.Length > i; i++ )
 					if ( gameObject == others[ i ] )
 						return true;
@@ -690,7 +695,13 @@ namespace GwambaPrimeAdventure.Character
 		}
 		public override void Receive( MessageData message )
 		{
-			if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
+			if ( MessageFormat.Transition == message.Format )
+			{
+				transform.SetParent( null );
+				_isOnGround = false;
+                DontDestroyOnLoad( gameObject );
+			}
+			else if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
 				if ( !message.ToggleValue.Value )
 				{
 					RestartState();
