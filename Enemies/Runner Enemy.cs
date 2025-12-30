@@ -29,8 +29,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_retreat = false,
 			_runTowards = false;
 		[SerializeField, Tooltip( "The runner statitics of this enemy." ), Header( "Runner Enemy" )]
-		private RunnerStatistics
-			_statistics;
+		private
+			RunnerStatistics _statistics;
 		private new void Awake()
 		{
 			base.Awake();
