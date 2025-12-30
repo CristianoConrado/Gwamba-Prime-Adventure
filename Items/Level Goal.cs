@@ -11,14 +11,14 @@ namespace GwambaPrimeAdventure.Item
 		private bool
 			_blocked = false;
 		[SerializeField, Tooltip( "If this will go direct to the boss." ), Header( "Scene Interactions" )]
-		private SceneField
-			_goToBoss;
+		private
+			SceneField _goToBoss;
 		[SerializeField, Tooltip( "If theres a dialog after the goal." )]
-		private bool
-			_enterInDialog;
+		private
+			bool _enterInDialog;
 		[SerializeField, Tooltip( "If this object will be saved as already existent object." )]
-		private bool
-			_saveOnSpecifics;
+		private
+			bool _saveOnSpecifics;
 		private new void Awake()
 		{
 			base.Awake();
