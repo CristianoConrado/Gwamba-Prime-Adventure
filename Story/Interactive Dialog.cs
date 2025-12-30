@@ -29,11 +29,11 @@ namespace GwambaPrimeAdventure.Story
 		private bool
 			_nextSlide = false;
 		[SerializeField, Tooltip( "The object that handles the hud of the dialog." ), Header( "Interaction Objects" )]
-		private DialogHud
-			_dialogHudObject;
+		private
+			DialogHud _dialogHudObject;
 		[SerializeField, Tooltip( "The collection of the object that contais the dialog." )]
-		private DialogObject
-			_dialogObject;
+		private
+			DialogObject _dialogObject;
 		public MessagePath Path =>
 			MessagePath.Story;
 		private void Awake()
