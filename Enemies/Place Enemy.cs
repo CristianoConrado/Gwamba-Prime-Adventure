@@ -15,11 +15,11 @@ namespace GwambaPrimeAdventure.Enemy
 		private
 			IEnumerator _appearFadeEvent;
 		[SerializeField, Tooltip( "If anything can be hurt." ), Header( "Interactions" )]
-		private bool
-			_hurtEveryone;
+		private
+			bool _hurtEveryone;
 		[SerializeField, Tooltip( "If this enemy will react to any damage taken." )]
-		private bool
-			_reactToDamage;
+		private
+			bool _reactToDamage;
 		private new void Awake()
 		{
 			base.Awake();
