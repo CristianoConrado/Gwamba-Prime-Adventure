@@ -73,6 +73,7 @@ namespace GwambaPrimeAdventure.Character
 			_attackDelay = 0F;
 		protected bool
 			_isHubbyWorld = false,
+            _sameCollisionCheck = false,
 			_turnLeft = false,
 			_didStart = false,
 			_isOnGround = false,
