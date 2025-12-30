@@ -12,8 +12,8 @@ namespace GwambaPrimeAdventure.Enemy
 		private float
 			_timeOperation = 0F;
 		[SerializeField, Tooltip( "The defender statitics of this enemy." ), Header( "Defender Enemy" )]
-		private DefenderStatistics
-			_statistics;
+		private
+			DefenderStatistics _statistics;
 		private new void Awake()
 		{
 			base.Awake();
