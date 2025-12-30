@@ -37,4 +37,8 @@ namespace GwambaPrimeAdventure
 	{
 		public void Collect();
 	};
+	public interface IPlataform
+	{
+
+	};
 };
