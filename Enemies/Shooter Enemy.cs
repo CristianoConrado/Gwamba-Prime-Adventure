@@ -30,8 +30,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_canShoot = false,
 			_isStopped = false;
 		[SerializeField, Tooltip( "The shooter statitics of this enemy." ), Header( "Shooter Enemy" )]
-		private ShooterStatistics
-			_statistics;
+		private
+			ShooterStatistics _statistics;
 		private new void Awake()
 		{
 			base.Awake();
