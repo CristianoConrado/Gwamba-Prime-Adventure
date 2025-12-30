@@ -23,30 +23,30 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private bool
 			_onlyOneActivation = false;
 		[SerializeField, Tooltip( "The activators that this will receive a signal." ), Header( "Receptor" )]
-		private Activator[]
-			_activators;
+		private
+			Activator[] _activators;
 		[SerializeField, Tooltip( "If this will receive a signal from specifics or existent objects." )]
-		private string[]
-			_specificsObjects;
+		private
+			string[] _specificsObjects;
 		[SerializeField, Tooltip( "The amount of time to wait for active after receive the signal." )]
-		private float
-			_timeToActivate;
+		private
+			float _timeToActivate;
 		[SerializeField, Tooltip( "If this will activate for every activator activated." )]
-		private bool
-			_1X1;
+		private
+			bool _1X1;
 		[SerializeField, HideIf( nameof( _1X1 ) ), Tooltip( "If is needed only one activator to activate." )]
-		private bool
-			_oneNeeded;
+		private
+			bool _oneNeeded;
 		[SerializeField, HideIf( nameof( _1X1 ) ), ShowIf( nameof( _oneNeeded ) ), Tooltip( "If it will be inactive after one activation" )]
-		private bool
-			_oneActivation;
+		private
+			bool _oneActivation;
 		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), Tooltip( "If are multiples activators needed to activate." )]
-		private bool
-			_multiplesNeeded;
+		private
+			bool _multiplesNeeded;
 		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), ShowIf( nameof( _multiplesNeeded ) )]
 		[Tooltip( "The amount activators needed to activate." )]
-		private ushort
-			_quantityNeeded;
+		private
+			ushort _quantityNeeded;
 		private new void Awake()
 		{
 			base.Awake();
