@@ -11,13 +11,15 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			UseAgain = Animator.StringToHash( nameof( UseAgain ) );
 		private bool
 			_used = false,
-			_usedOne = false,
-			_usable = true;
+			_usedOne = false;
 		[SerializeField, Tooltip( "The activator only can be activeted one time." ), Header( "Activator" )]
-		private bool
-			_oneActivation;
-		protected bool Usable =>
-			_usable;
+		private
+			bool _oneActivation;
+		protected bool Usable
+		{
+			get;
+			private set;
+		} = true;
 		private new void Awake()
 		{
 			base.Awake();
@@ -39,7 +41,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				return;
 			_used = !_used;
 			if ( _oneActivation )
-				_usable = false;
+				Usable = false;
 			if ( _animator )
 				if ( _used )
 					_animator.SetTrigger( Use );
