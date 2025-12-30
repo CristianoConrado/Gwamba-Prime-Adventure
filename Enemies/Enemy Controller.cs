@@ -16,6 +16,7 @@ namespace GwambaPrimeAdventure.Enemy
 		internal EnemyStatistics ProvidenceStatistics
 		{
 			get;
+			private set;
 		}
 		internal Rigidbody2D Rigidbody =>
 			_rigidbody;
