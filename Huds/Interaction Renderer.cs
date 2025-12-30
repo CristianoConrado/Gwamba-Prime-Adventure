@@ -16,11 +16,11 @@ namespace GwambaPrimeAdventure.Hud
 			_isActive = true,
 			_isOnCollision = false;
 		[SerializeField, Tooltip( "The UI document of the interaction." ), Header( "Interaction Components" )]
-		private UIDocument
-			_documentObject;
+		private
+			UIDocument _documentObject;
 		[SerializeField, Tooltip( "The offset of the document of interaction." )]
-		private Vector2
-			_imageOffset;
+		private
+			Vector2 _imageOffset;
 		public MessagePath Path =>
 			MessagePath.Hud;
 		private new void Awake()
