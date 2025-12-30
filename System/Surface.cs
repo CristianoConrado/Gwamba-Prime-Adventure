@@ -6,9 +6,8 @@ using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( Tilemap ), typeof( TilemapRenderer ) )]
-	[RequireComponent( typeof( TilemapCollider2D ) )]
-	public sealed class Surface : MonoBehaviour, ILoader
+	[DisallowMultipleComponent, RequireComponent( typeof( Tilemap ), typeof( TilemapRenderer ), typeof( TilemapCollider2D ) )]
+	public sealed class Surface : StateController, ILoader
 	{
 		private
 			Tilemap _tilemap;
@@ -23,8 +22,8 @@ namespace GwambaPrimeAdventure
 		private static
 			UnityAction<Vector2> _getSurface;
 		[SerializeField, Tooltip( "The sounds of the surfaces that will be played." )]
-		private SurfaceSound[]
-			_surfaceSounds;
+		private
+			SurfaceSound[] _surfaceSounds;
 		private void OnEnable() => _getSurface += CheckPoint;
 		private void OnDisable() => _getSurface -= CheckPoint;
 		public async UniTask Load()
@@ -34,7 +33,7 @@ namespace GwambaPrimeAdventure
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			_tilemap = GetComponent<Tilemap>();
-            _collider = GetComponent<TilemapCollider2D>();
+			_collider = GetComponent<TilemapCollider2D>();
 			foreach ( SurfaceSound surfaceSound in _surfaceSounds )
 				foreach ( Tile tile in surfaceSound.Tiles )
 					if ( !_tiles.ContainsKey( tile ) )
@@ -48,7 +47,8 @@ namespace GwambaPrimeAdventure
 		}
 		public static AudioClip CheckSurface( Vector2 originPosition )
 		{
-			_getSurface.Invoke( originPosition );
+			_surfaceSoundClip = null;
+			_getSurface?.Invoke( originPosition );
 			return _surfaceSoundClip;
 		}
 	};
