@@ -118,79 +118,83 @@ namespace GwambaPrimeAdventure.Character
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
 			VisualElement
 				vitality = RootElement.Q<VisualElement>( nameof( Vitality ) ),
-				VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) ),
-				vitalityPieceClone;
+				VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) );
 			vitality.style.width = _totalWidth;
 			for ( ushort i = 0; i < _vitality; i++ )
 			{
-				vitalityPieceClone = new VisualElement()
-				{
-					name = VitalityPiece.name
-				};
-				vitalityPieceClone.style.backgroundColor = BackgroundColor;
-				vitalityPieceClone.style.borderBottomColor = BorderColor;
-				vitalityPieceClone.style.borderLeftColor = BorderColor;
-				vitalityPieceClone.style.borderRightColor = BorderColor;
-				vitalityPieceClone.style.borderTopColor = BorderColor;
-				vitalityPieceClone.style.borderBottomWidth = _borderWidth;
-				vitalityPieceClone.style.borderLeftWidth = _borderWidth;
-				vitalityPieceClone.style.borderRightWidth = _borderWidth;
-				vitalityPieceClone.style.borderTopWidth = _borderWidth;
-				vitality.Add( vitalityPieceClone );
+                vitality.Add( new VisualElement()
+                {
+                    name = VitalityPiece.name,
+                    style =
+                    {
+                        backgroundColor = BackgroundColor,
+                        borderBottomColor = BorderColor,
+                        borderLeftColor = BorderColor,
+                        borderRightColor = BorderColor,
+                        borderTopColor = BorderColor,
+                        borderBottomWidth = _borderWidth,
+                        borderLeftWidth = _borderWidth,
+                        borderRightWidth = _borderWidth,
+                        borderTopWidth = _borderWidth
+                    }
+                } );
 				Vitality[ i ] = vitality[ i + 1 ];
 			}
 			vitality.Remove( VitalityPiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
 			VisualElement
 				recoverVitality = RootElement.Q<VisualElement>( nameof( RecoverVitality ) ),
-				RecoverVitalityPiece = RootElement.Q<VisualElement>( nameof( RecoverVitalityPiece ) ),
-				recoverVitalityPieceClone;
+				RecoverVitalityPiece = RootElement.Q<VisualElement>( nameof( RecoverVitalityPiece ) );
 			recoverVitality.style.width = _totalWidth;
 			for ( ushort i = 0; i < _recoverVitality; i++ )
 			{
-				recoverVitalityPieceClone = new VisualElement()
-				{
-					name = RecoverVitalityPiece.name
-				};
-				recoverVitalityPieceClone.style.backgroundColor = MissingColor;
-				recoverVitalityPieceClone.style.width = _totalWidth / _recoverVitality - _borderWidth * 2F;
-				recoverVitality.Add( recoverVitalityPieceClone );
+				recoverVitality.Add( new VisualElement()
+                {
+                    name = RecoverVitalityPiece.name,
+                    style =
+                    {
+                        backgroundColor = MissingColor,
+                        width = _totalWidth / _recoverVitality - _borderWidth * 2F
+                    }
+                } );
 				RecoverVitality[ i ] = recoverVitality[ i + 1 ];
 			}
 			recoverVitality.Remove( RecoverVitalityPiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
 			VisualElement
 				stunResistance = RootElement.Q<VisualElement>( nameof( StunResistance ) ),
-				StunResistancePiece = RootElement.Q<VisualElement>( nameof( StunResistancePiece ) ),
-				stunResistancePieceClone;
+				StunResistancePiece = RootElement.Q<VisualElement>( nameof( StunResistancePiece ) );
 			stunResistance.style.width = _totalWidth;
 			for ( ushort i = 0; i < _stunResistance; i++ )
 			{
-				stunResistancePieceClone = new VisualElement()
-				{
-					name = StunResistancePiece.name
-				};
-				stunResistancePieceClone.style.backgroundColor = StunResistanceColor;
-				stunResistancePieceClone.style.width = _totalWidth / _stunResistance - _borderWidth * 2F;
-				stunResistance.Add( stunResistancePieceClone );
+				stunResistance.Add( new VisualElement()
+                {
+                    name = StunResistancePiece.name,
+                    style =
+                    {
+                        backgroundColor = StunResistanceColor,
+                        width = _totalWidth / _stunResistance - _borderWidth * 2F
+                    }
+                } );
 				StunResistance[ i ] = stunResistance[ i + 1 ];
 			}
 			stunResistance.Remove( StunResistancePiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
-			VisualElement
-				bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ),
-				BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) ),
-				bunnyHopPieceClone;
+            VisualElement
+                bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ),
+                BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) );
 			bunnyHop.style.width = _totalWidth;
 			for ( ushort i = 0; i < _bunnyHop; i++ )
 			{
-				bunnyHopPieceClone = new VisualElement()
-				{
-					name = BunnyHopPiece.name
-				};
-				bunnyHopPieceClone.style.backgroundColor = MissingColor;
-				bunnyHopPieceClone.style.width = _totalWidth / _bunnyHop - _borderWidth * 2F;
-				bunnyHop.Add( bunnyHopPieceClone );
+				bunnyHop.Add( new VisualElement()
+                {
+                    name = BunnyHopPiece.name,
+                    style =
+                    {
+                        backgroundColor = MissingColor,
+                        width = _totalWidth / _bunnyHop - _borderWidth * 2F
+                    }
+                } );
 				BunnyHop[ i ] = bunnyHop[ i + 1 ];
 			}
 			bunnyHop.Remove( BunnyHopPiece );
