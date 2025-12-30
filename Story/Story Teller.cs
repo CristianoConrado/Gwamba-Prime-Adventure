@@ -14,11 +14,11 @@ namespace GwambaPrimeAdventure.Story
 		private ushort
 			_imageIndex = 0;
 		[SerializeField, Tooltip( "The object that handles the hud of the story scene." ), Header( "Scene Objects" )]
-		private StorySceneHud
-			_storySceneHudObject;
+		private
+			StorySceneHud _storySceneHudObject;
 		[SerializeField, Tooltip( "The object that carry the scene settings." )]
-		private StorySceneObject
-			_storySceneObject;
+		private
+			StorySceneObject _storySceneObject;
 		private async UniTask FadeImage( bool appear )
 		{
 			if ( appear )
