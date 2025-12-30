@@ -10,8 +10,8 @@ namespace GwambaPrimeAdventure.Enemy
 		private bool
 			_isDead = false;
 		[SerializeField, Tooltip( "The death statitics of this enemy." ), Header( "Death Enemy" )]
-		private DeathStatistics
-			_statistics;
+		private
+			DeathStatistics _statistics;
 		private void Update()
 		{
 			if ( _isDead )
