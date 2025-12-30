@@ -8,14 +8,14 @@ namespace GwambaPrimeAdventure
 	public sealed class OcclusionObject : MonoBehaviour, IConnector
 	{
 		[SerializeField, Tooltip( "If this object will activate the children." ), Header( "Interactions" )]
-		private bool
-			_initialActive;
+		private
+			bool _initialActive;
 		[SerializeField, Tooltip( "If this object will turn off the collisions." )]
-		private bool
-			_offCollision;
+		private
+			bool _offCollision;
 		[SerializeField, Tooltip( "If this object will occlude any other object that enter the collision." )]
-		private bool
-			_collisionOcclusion = true;
+		private
+			bool _collisionOcclusion = true;
 		public MessagePath Path =>
 			MessagePath.System;
 		private void Awake()
