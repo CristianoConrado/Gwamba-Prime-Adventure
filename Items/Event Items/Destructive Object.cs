@@ -9,19 +9,20 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private readonly Sender
 			_sender = Sender.Create();
 		[SerializeField, Tooltip( "If there a object that will be instantiate after the destruction of " ), Header( "Destructive Object" )]
-		private OcclusionObject
-			_occlusionObject;
-		[SerializeField, Tooltip( "The vitality of this object before it destruction." )]
-		private short
-			_vitality;
+		private
+			OcclusionObject _occlusionObject;
 		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )]
-		private short
-			_biggerDamage;
+		private
+			short _biggerDamage;
 		[SerializeField, Tooltip( "If this object will be destructed on collision with another object." )]
-		private bool
-			_destroyOnCollision;
-		public short Health =>
-			_vitality;
+		private
+			bool _destroyOnCollision;
+		[field: SerializeField, Tooltip( "The vitality of this object before it destruction." )]
+		public short Health
+		{
+			get;
+			private set;
+		}
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
@@ -47,9 +48,9 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private void OnTriggerEnter2D( Collider2D collision ) => DestroyOnCollision();
 		public bool Hurt( ushort damage )
 		{
-			if ( damage < _biggerDamage || 0 >= _vitality )
+			if ( damage < _biggerDamage || 0 >= Health )
 				return false;
-			if ( 0 >= ( _vitality -= (short) damage ) )
+			if ( 0 >= ( Health -= (short) damage ) )
 				Execute();
 			return true;
 		}
