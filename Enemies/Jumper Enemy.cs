@@ -41,8 +41,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_turnFollow = false,
 			_cancelTimerActivated = false;
 		[SerializeField, Tooltip( "The jumper statitics of this enemy." ), Header( "Jumper Enemy" )]
-		private JumperStatistics
-			_statistics;
+		private
+			JumperStatistics _statistics;
 		private new void Awake()
 		{
 			base.Awake();
