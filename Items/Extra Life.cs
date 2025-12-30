@@ -8,8 +8,8 @@ namespace GwambaPrimeAdventure.Item
 	internal sealed class ExtraLife : StateController, ILoader, ICollectable
 	{
 		[SerializeField, Tooltip( "If this object will be saved as already existent object." ), Header( "Condition" )]
-		private bool
-			_saveOnSpecifics;
+		private
+			bool _saveOnSpecifics;
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
