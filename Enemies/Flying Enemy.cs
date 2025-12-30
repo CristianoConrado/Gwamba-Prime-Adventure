@@ -25,11 +25,11 @@ namespace GwambaPrimeAdventure.Enemy
 			_afterDash = false,
 			_returnDash = false;
 		[SerializeField, Tooltip( "The flying statitics of this enemy." ), Header( "Flying Enemy" )]
-		private FlyingStatistics
-			_statistics;
+		private
+			FlyingStatistics _statistics;
 		[SerializeField, Tooltip( "If this enemy will repeat the same way it makes before." )]
-		private bool
-			_repeatWay;
+		private
+			bool _repeatWay;
 		private new void Awake()
 		{
 			base.Awake();
