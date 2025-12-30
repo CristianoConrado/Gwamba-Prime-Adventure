@@ -4,8 +4,8 @@ using UnityEngine;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( Receptor ) )]
-	internal sealed class Teleporter : StateController, IReceptorSignal, IInteractable
-	{
+	internal sealed class Teleporter : StateController/*, ISignalReceptor, IInteractable*/
+    {
 		//private readonly Sender _sender = Sender.Create();
 		//private ushort _index = 0;
 		//private float _timer = 0F;
@@ -65,21 +65,21 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		//		else if ( CharacterExporter.EqualGwamba( other.gameObject ) )
 		//			Teleport();
 		//}
-		public void Execute()
-		{
-			//_active = !_active;
-			//if ( _useTimer )
-			//	(_timer, _returnActive) = (_timeToUse, !_active);
-			//else
-			//	Teleport();
-		}
-		public void Interaction()
-		{
-			//if ( _active && _isInteractive )
-			//	if ( _useTimer )
-			//		Timer();
-			//	else
-			//		Teleport();
-		}
+		//public void Execute()
+		//{
+		//	_active = !_active;
+		//	if ( _useTimer )
+		//		(_timer, _returnActive) = (_timeToUse, !_active);
+		//	else
+		//		Teleport();
+		//}
+		//public void Interaction()
+		//{
+		//	if ( _active && _isInteractive )
+		//		if ( _useTimer )
+		//			Timer();
+		//		else
+		//			Teleport();
+		//}
 	};
 };
