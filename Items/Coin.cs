@@ -12,8 +12,8 @@ namespace GwambaPrimeAdventure.Item
 		private
 			CircleCollider2D _collider;
 		[SerializeField, Tooltip( "If this object will be saved as already existent object." ), Header( "Condition" )]
-		private bool
-			_saveOnSpecifics;
+		private
+			bool _saveOnSpecifics;
 		public MessagePath Path =>
 			MessagePath.Item;
 		private new void Awake()
