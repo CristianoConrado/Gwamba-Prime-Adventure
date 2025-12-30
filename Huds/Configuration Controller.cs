@@ -21,17 +21,17 @@ namespace GwambaPrimeAdventure.Hud
 		private
 			CancellationToken _destroyToken;
 		[SerializeField, Tooltip( "The object that handles the hud of the configurations." ), Header( "Interaction Objects" )]
-		private ConfigurationHud
-			_configurationHudObject;
+		private
+			ConfigurationHud _configurationHudObject;
 		[SerializeField, Tooltip( "The scene of the menu." )]
-		private SceneField
-			_menuScene;
+		private
+			SceneField _menuScene;
 		[SerializeField, Tooltip( "The scene of the level selector." )]
-		private SceneField
-			_levelSelectorScene;
+		private
+			SceneField _levelSelectorScene;
 		[SerializeField, Tooltip( "The mixer of the sounds." )]
-		private AudioMixer
-			_mixer;
+		private
+			AudioMixer _mixer;
 		public MessagePath Path =>
 			MessagePath.Hud;
 		private void Awake()
