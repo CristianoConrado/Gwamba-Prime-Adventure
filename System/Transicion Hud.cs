@@ -5,7 +5,8 @@ namespace GwambaPrimeAdventure
 	[DisallowMultipleComponent, Icon( WorldBuild.PROJECT_ICON ), RequireComponent( typeof( Transform ), typeof( UIDocument ) )]
 	public sealed class TransicionHud : MonoBehaviour
 	{
-		private static TransicionHud _instance;
+		private static
+			TransicionHud _instance;
 		public VisualElement RootElement
 		{
 			get;
