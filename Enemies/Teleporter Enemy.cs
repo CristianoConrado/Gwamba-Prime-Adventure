@@ -16,8 +16,8 @@ namespace GwambaPrimeAdventure.Enemy
 		private bool
 			_canTeleport = true;
 		[SerializeField, Tooltip( "The teleporter statitics of this enemy." ), Header( "Teleporter Enemy" )]
-		private TeleporterStatistics
-			_statistics;
+		private
+			TeleporterStatistics _statistics;
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
