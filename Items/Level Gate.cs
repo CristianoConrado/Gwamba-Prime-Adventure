@@ -30,26 +30,26 @@ namespace GwambaPrimeAdventure.Item
 			_isOnInteraction = false,
 			_isOnTransicion = false;
 		[SerializeField, Tooltip( "The brain responsable for controlling the camera." ), Header( "Scene Status" )]
-		private CinemachineBrain
-			_brain;
+		private
+			CinemachineBrain _brain;
 		[SerializeField, Tooltip( "The handler of the world hud of the level gate." )]
-		private LevelGateHud
-			_levelGateWorldObject;
+		private
+			LevelGateHud _levelGateWorldObject;
 		[SerializeField, Tooltip( "The handler of the screen hud of the level gate." )]
-		private LevelGateHud
-			_levelGateScreenObject;
+		private
+			LevelGateHud _levelGateScreenObject;
 		[SerializeField, Tooltip( "The scene of the level." )]
-		private SceneField
-			_levelScene;
+		private
+			SceneField _levelScene;
 		[SerializeField, Tooltip( "The scene of the boss." )]
-		private SceneField
-			_bossScene;
+		private
+			SceneField _bossScene;
 		[SerializeField, Tooltip( "The offset that the hud will be." )]
-		private Vector2
-			_offsetPosition;
+		private
+			Vector2 _offsetPosition;
 		[SerializeField, Tooltip( "Where the this camera have to be in the hierarchy." )]
-		private short
-			_overlayPriority;
+		private
+			short _overlayPriority;
 		private void Awake()
 		{
 			_gateCamera = GetComponentInChildren<CinemachineCamera>();
