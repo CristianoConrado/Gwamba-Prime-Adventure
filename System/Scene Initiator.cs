@@ -10,11 +10,11 @@ namespace GwambaPrimeAdventure
 		private static
 			SceneInitiator _instance;
 		[SerializeField, Tooltip( "The object that handles the hud of the trancision." )]
-		private TransicionHud
-			_transicionHud;
-		[SerializeField, Tooltip( "The objects to be lodaed." )]
-		private ObjectLoader[]
-			_objectLoaders;
+		private
+			TransicionHud _transicionHud;
+		[SerializeField, Tooltip( "The objects to be loaded." )]
+		private
+			ObjectLoader[] _objectLoaders;
 		internal static ushort
 			ProgressIndex = 0;
 		private void Awake()
@@ -31,7 +31,9 @@ namespace GwambaPrimeAdventure
 			if ( !_instance || this != _instance )
 				yield break;
 			TransicionHud transicionHud = Instantiate( _transicionHud, transform );
-			(transicionHud.RootElement.style.opacity, transicionHud.LoadingBar.highValue, ProgressIndex) = (1F, _objectLoaders.Length, 0);
+			transicionHud.RootElement.style.opacity = 1F;
+            transicionHud.LoadingBar.highValue = _objectLoaders.Length;
+            ProgressIndex = 0;
 			ObjectLoader requestedLoader;
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			foreach ( ObjectLoader loader in _objectLoaders )
