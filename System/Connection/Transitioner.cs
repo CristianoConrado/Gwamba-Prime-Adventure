@@ -8,21 +8,24 @@ namespace GwambaPrimeAdventure.Connection
 	public sealed class Transitioner : MonoBehaviour
 	{
 		[SerializeField, Tooltip( "The object that handles the hud of the trancision." ), Header( "Scene Interaction" )]
-		private TransicionHud
-			_transicionHud;
+		private
+			TransicionHud _transicionHud;
 		[SerializeField, Tooltip( "The scene that will be trancisionate to." )]
-		private SceneField
-			_sceneTransicion;
+		private
+			SceneField _sceneTransicion;
 		[SerializeField, Tooltip( "The scene of the menu." )]
-		private SceneField
-			_menuScene;
+		private
+			SceneField _menuScene;
 		public async void Transicion( SceneField scene = null )
 		{
 			if ( TransicionHud.Exists() )
 				return;
 			StateController.SetState( false );
 			TransicionHud transicionHud = Instantiate( _transicionHud );
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			Sender sender = Sender.Create();
+			sender.SetFormat( MessageFormat.Transition );
+			sender.Send( MessagePath.Character );
+            CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			for ( float i = 0F; 1F > transicionHud.RootElement.style.opacity.value; i += 1E-1F )
 			{
 				transicionHud.RootElement.style.opacity = i;
