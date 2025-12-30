@@ -53,7 +53,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
 			_movementDirection = Vector2.right * _movementSide;
 			_pointOrigin = Rigidbody.position;
-			_sizeDetection = _sizeDetection * _statistics.LookDistance;
+			_sizeDetection *= _statistics.LookDistance;
 		}
 		private void Chase()
 		{
