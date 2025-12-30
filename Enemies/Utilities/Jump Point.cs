@@ -10,11 +10,11 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		private
 			ushort _touchIndex;
 		[SerializeField, Tooltip( "If this point will destroy itself after use." ), Header( "Interactions" )]
-		private bool
-			_destroyAfter;
+		private
+			bool _destroyAfter;
 		[SerializeField, Tooltip( "If this point will trigger with other object." )]
-		private bool
-			_hasTarget;
+		private
+			bool _hasTarget;
 		public void GetTouch( IJumper jumperEnemy, ushort touchIndex )
 		{
 			_jumper = jumperEnemy;
