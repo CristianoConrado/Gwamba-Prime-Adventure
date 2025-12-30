@@ -6,7 +6,7 @@ using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( IReceptorSignal ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( ISignalReceptor ) )]
 	internal sealed class Receptor : StateController, ILoader
 	{
 		private static readonly HashSet<Receptor>
@@ -14,7 +14,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private readonly HashSet<Activator>
 			_activatorsNeeded = new HashSet<Activator>();
 		private
-			IReceptorSignal _receptor;
+            ISignalReceptor _receptor;
 		private ushort
 			_signals = 0,
 			_1X1Index = 0;
@@ -50,7 +50,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private new void Awake()
 		{
 			base.Awake();
-			_receptor = GetComponent<IReceptorSignal>();
+			_receptor = GetComponent<ISignalReceptor>();
 			_selfes.Add( this );
 		}
 		private new void OnDestroy()
@@ -129,8 +129,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 					receptor.Signal();
 		}
 	};
-	internal interface IReceptorSignal
-	{
-		public void Execute();
-	};
+    internal interface ISignalReceptor
+    {
+        public void Execute();
+    };
 };
