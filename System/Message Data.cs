@@ -39,7 +39,6 @@ namespace GwambaPrimeAdventure
 		None,
 		State,
 		Event,
-        Transition,
-		Interaction
+        Transition
     };
 };
