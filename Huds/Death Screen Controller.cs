@@ -17,17 +17,17 @@ namespace GwambaPrimeAdventure.Hud
 			_sender = Sender.Create();
 		private CancellationToken _destroyToken;
 		[SerializeField, Tooltip( "The object that handles the hud of the death screen." ), Header( "Interaction Object" )]
-		private DeathScreenHud
-			_deathScreenHudObject;
+		private
+			DeathScreenHud _deathScreenHudObject;
 		[SerializeField, Tooltip( "The scene of the level selector." )]
-		private SceneField
-			_levelSelectorScene;
+		private
+			SceneField _levelSelectorScene;
 		[SerializeField, Tooltip( "The scene of the menu." )]
-		private SceneField
-			_menuScene;
+		private
+			SceneField _menuScene;
 		[SerializeField, Tooltip( "The scene of the boss of actual scene." )]
-		private SceneField
-			_bossScene;
+		private
+			SceneField _bossScene;
 		public MessagePath Path =>
 			MessagePath.Hud;
 		private void Awake()
