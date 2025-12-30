@@ -5,8 +5,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	internal sealed class HitActivator : Activator, IDestructible
 	{
 		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." ), Header( "Hit Activator" )]
-		private ushort
-			_biggerDamage;
+		private
+			ushort _biggerDamage;
 		public short Health => 0;
 		public bool Hurt( ushort damage )
 		{
