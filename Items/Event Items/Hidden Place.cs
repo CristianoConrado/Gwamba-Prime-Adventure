@@ -29,38 +29,38 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_activation = false,
 			_follow = false;
 		[SerializeField, Tooltip( "Other hidden place to activate." ), Header( "Hidden Place" )]
-		private HiddenPlace
-			_otherPlace;
+		private
+			HiddenPlace _otherPlace;
 		[SerializeField, Tooltip( "The occlusion object to reveal/hide." )]
-		private OcclusionObject
-			_occlusionObject;
+		private
+			OcclusionObject _occlusionObject;
 		[SerializeField, Tooltip( "If this object will receive a signal." )]
-		private bool
-			_isReceptor;
+		private
+			bool _isReceptor;
 		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "The amount o time to appear/fade again after the activation." )]
-		private float
-			_timeToFadeAppearAgain;
+		private
+			float _timeToFadeAppearAgain;
 		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If the activation of the receive signal will fade the place." )]
-		private bool
-			_fadeActivation;
+		private
+			bool _fadeActivation;
 		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If this place won't use his own collider." )]
-		private bool
-			_useOtherCollider;
+		private
+			bool _useOtherCollider;
 		[SerializeField, Tooltip( "If the other hidden place will appear first." )]
-		private bool
-			_appearFirst;
+		private
+			bool _appearFirst;
 		[SerializeField, Tooltip( "If the other hidden place will fade first." )]
-		private bool
-			_fadeFirst;
+		private
+			bool _fadeFirst;
 		[SerializeField, Tooltip( "If this object will appear/fade instantly." )]
-		private bool
-			_instantly;
+		private
+			bool _instantly;
 		[SerializeField, Tooltip( "If the place has any inferior collider." )]
-		private bool
-			_haveColliders;
+		private
+			bool _haveColliders;
 		[SerializeField, Tooltip( "If theres a follow light." )]
-		private bool
-			_hasFollowLight;
+		private
+			bool _hasFollowLight;
 		private new void Awake()
 		{
 			base.Awake();
