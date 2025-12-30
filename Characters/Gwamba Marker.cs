@@ -554,7 +554,7 @@ namespace GwambaPrimeAdventure.Character
 				if ( ComboAttackBuffer )
 					StartAttackSound();
 			}
-			_downStairs = false;
+            _sameCollisionCheck = _downStairs = false;
 		}
 		private void OnCollisionStay2D( Collision2D collision )
 		{
@@ -575,15 +575,22 @@ namespace GwambaPrimeAdventure.Character
 					EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 				}
 			}
+            void CheckPlataform()
+            {
+                if ( !transform.parent && collision.gameObject.TryGetComponent<IPlataform>( out _ ) )
+                    transform.SetParent( collision.transform );
+            }
+            if ( _sameCollisionCheck )
+                CheckPlataform();
             if ( _isOnGround && !_offGround && 0 == _walkValue && MINIMUM_VELOCITY >= _rigidbody.linearVelocityX && MINIMUM_VELOCITY >= _rigidbody.linearVelocityY )
 				return;
 			_collider.GetContacts( _groundContacts );
 			_localAtStart.Set( Local.x, Local.y - _collider.bounds.extents.y );
 			_localAtEnd.Set( _collider.size.x, WorldBuild.SNAP_LENGTH );
 			_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
-			if ( _isOnGround = 0 < _groundContacts.Count )
+			if ( _sameCollisionCheck = _isOnGround = 0 < _groundContacts.Count )
 			{
-				transform.SetParent( collision.transform );
+                CheckPlataform();
                 if ( _animator.GetBool( AirJump ) )
 				{
 					_animator.SetBool( AirJump, false );
@@ -663,15 +670,16 @@ namespace GwambaPrimeAdventure.Character
 						}
 					}
 			}
-			else
-				transform.SetParent( null );
+			else if ( transform.parent )
+                transform.SetParent( null );
             _offGround = !_isOnGround;
         }
 		private void OnCollisionExit2D( Collision2D collision )
 		{
 			if ( _instance && this == _instance && _didStart && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
 			{
-                transform.SetParent( null );
+                if ( transform.parent )
+                    transform.SetParent( null );
                 _offGround = !( _isOnGround = false );
             }
 		}
@@ -697,24 +705,25 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( MessageFormat.Transition == message.Format )
 			{
-				transform.SetParent( null );
-				_isOnGround = false;
-                DontDestroyOnLoad( gameObject );
+                if ( transform.parent )
+                    transform.SetParent( null );
+                _isOnGround = false;
+				DontDestroyOnLoad( gameObject );
 			}
 			else if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
-				if ( !message.ToggleValue.Value )
+                if ( message.ToggleValue.Value )
+                {
+                    OnEnable();
+                    _timerOfInvencibility = InvencibilityTime;
+                    _invencibility = true;
+                }
+				else
 				{
 					RestartState();
 					_animator.SetBool( Death, _bunnyHopUsed = _offBunnyHop = false );
 					transform.TurnScaleX( PointSetter.TurnToLeft );
 					transform.position = PointSetter.CheckedPoint;
 				}
-				else if ( message.ToggleValue.Value )
-				{
-					OnEnable();
-					_timerOfInvencibility = InvencibilityTime;
-					_invencibility = true;
-				}
-		}
+        }
 	};
 };
