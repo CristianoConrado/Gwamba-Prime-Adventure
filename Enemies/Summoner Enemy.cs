@@ -38,8 +38,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_waitStop = false,
 			_cancelTimerActivated = false;
 		[SerializeField, Tooltip( "The summoner statitics of this enemy." ), Header( "Summoner Enemy" )]
-		private SummonerStatistics
-			_statistics;
+		private
+			SummonerStatistics _statistics;
 		private new void Awake()
 		{
 			base.Awake();
