@@ -15,8 +15,8 @@ namespace GwambaPrimeAdventure
 		private Vector2
 			_posiontDamping = Vector2.zero;
 		[SerializeField, Tooltip( "The scene of the menu." ), Header( "Interactions" )]
-		private SceneField
-			_menuScene;
+		private
+			SceneField _menuScene;
 		public MessagePath Path =>
 			MessagePath.System;
 		private new void Awake()
