@@ -9,8 +9,8 @@ namespace GwambaPrimeAdventure.Enemy
 	internal sealed class EnemyProjectile : Projectile, IDestructible
 	{
 		[SerializeField, Tooltip( "The statitics of this projectile." ), Header( "Projectile" )]
-		private ProjectileStatistics
-			_statistics;
+		private
+			ProjectileStatistics _statistics;
 		public short Health =>
 			_vitality;
 		private void CommonInstance()
