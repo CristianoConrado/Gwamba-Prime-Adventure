@@ -13,12 +13,13 @@ namespace GwambaPrimeAdventure.Enemy
 		protected bool
 			_stopWorking = false;
 		[SerializeField, Tooltip( "The enemies to send messages." ), Header( "Enemy Provider" )]
-		private EnemyProvider[]
-			_enemiesToSend;
+		private
+			EnemyProvider[] _enemiesToSend;
         [field: SerializeField, Tooltip( "The level of priority to use the destructible side." )]
         internal ushort DestructilbePriority
 		{
 			get;
+			private set;
 		}
         protected Rigidbody2D Rigidbody =>
 			_controller.Rigidbody;
