@@ -14,13 +14,13 @@ namespace GwambaPrimeAdventure.Character
 			base.Awake();
 			if ( _instance )
 			{
-                if ( !_instance._isHubbyWorld )
+				if ( !_instance._isHubbyWorld )
 				{
 					_instance._beginingPosition = StartPosition;
 					_instance._turnLeft = TurnToLeft;
 					_instance._loadState = true;
 				}
-                Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
+				Destroy( gameObject, WorldBuild.MINIMUM_TIME_SPACE_LIMIT );
 				return;
 			}
 			_instance = this;
@@ -64,8 +64,8 @@ namespace GwambaPrimeAdventure.Character
 			_inputController.Commands.Interaction.started -= InteractionInput;
 			_inputController.Dispose();
 			SceneManager.sceneLoaded -= SceneLoaded;
-            Sender.Exclude( this );
-        }
+			Sender.Exclude( this );
+		}
 		private void OnEnable()
 		{
 			if ( !_instance || this != _instance )
@@ -80,7 +80,7 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			_animator.SetFloat( IsOn, 0F );
 			_animator.SetFloat( WalkSpeed, 0F );
-            DisableInputs();
+			DisableInputs();
 		}
 		private void EnableInputs()
 		{
@@ -109,14 +109,15 @@ namespace GwambaPrimeAdventure.Character
 			_turnLeft = TurnToLeft;
 			_loadState = true;
 			await StartLoad().SuppressCancellationThrow();
-            if ( _destroyToken.IsCancellationRequested )
+			if ( _destroyToken.IsCancellationRequested )
 				return;
-            _didStart = true;
+			DontDestroyOnLoad( gameObject );
+			_didStart = true;
 		}
 		private async UniTask StartLoad()
 		{
 			DisableInputs();
-            await UniTask.WaitUntil( () => _loadState, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
+			await UniTask.WaitUntil( () => _loadState, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			transform.TurnScaleX( _turnLeft );
@@ -126,12 +127,12 @@ namespace GwambaPrimeAdventure.Character
 			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
-            if ( _deathLoad )
+			if ( _deathLoad )
 				OnEnable();
 			else
 				EnableInputs();
-            _deathLoad = _loadState = false;
-        }
+			_deathLoad = _loadState = false;
+		}
 		public async UniTask Load()
 		{
 			if ( !_instance || _instance != this )
@@ -162,19 +163,19 @@ namespace GwambaPrimeAdventure.Character
 				Destroy( gameObject );
 				return;
 			}
-            if ( _isHubbyWorld = scene.name == HubbyWorldScene && !_loadState )
+			if ( _isHubbyWorld = scene.name == HubbyWorldScene && !_loadState )
 			{
-                _beginingPosition = PointSetter.CheckedPoint;
+				_beginingPosition = PointSetter.CheckedPoint;
 				_turnLeft = PointSetter.TurnToLeft;
 				_loadState = true;
-            }
-            if ( _didStart )
+			}
+			if ( _didStart )
 			{
 				RestartState();
 				StartLoad().Forget();
 			}
 		}
-        private void RestartState()
+		private void RestartState()
 		{
 			for ( ushort i = 0; ( _vitality = (short) _gwambaCanvas.Vitality.Length ) > i; i++ )
 			{
@@ -554,11 +555,11 @@ namespace GwambaPrimeAdventure.Character
 				if ( ComboAttackBuffer )
 					StartAttackSound();
 			}
-            _sameCollisionCheck = _downStairs = false;
+			_downStairs = false;
 		}
 		private void OnCollisionStay2D( Collision2D collision )
 		{
-            if ( !_instance || this != _instance || !isActiveAndEnabled || !_didStart || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
+			if ( !_instance || this != _instance || !isActiveAndEnabled || !_didStart || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
 			if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
 			{
@@ -575,23 +576,16 @@ namespace GwambaPrimeAdventure.Character
 					EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 				}
 			}
-            void CheckPlataform()
-            {
-                if ( !transform.parent && collision.gameObject.TryGetComponent<IPlataform>( out _ ) )
-                    transform.SetParent( collision.transform );
-            }
-            if ( _sameCollisionCheck )
-                CheckPlataform();
-            if ( _isOnGround && !_offGround && 0 == _walkValue && MINIMUM_VELOCITY >= _rigidbody.linearVelocityX && MINIMUM_VELOCITY >= _rigidbody.linearVelocityY )
+			if ( _isOnGround && !_offGround && 0 == _walkValue && MINIMUM_VELOCITY >= _rigidbody.linearVelocityX && MINIMUM_VELOCITY >= _rigidbody.linearVelocityY )
 				return;
+			_offGround = !_isOnGround;
 			_collider.GetContacts( _groundContacts );
 			_localAtStart.Set( Local.x, Local.y - _collider.bounds.extents.y );
 			_localAtEnd.Set( _collider.size.x, WorldBuild.SNAP_LENGTH );
 			_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
-			if ( _sameCollisionCheck = _isOnGround = 0 < _groundContacts.Count )
+			if ( _isOnGround = 0 < _groundContacts.Count )
 			{
-                CheckPlataform();
-                if ( _animator.GetBool( AirJump ) )
+				if ( _animator.GetBool( AirJump ) )
 				{
 					_animator.SetBool( AirJump, false );
 					_animator.SetBool( AttackAirJump, false );
@@ -670,18 +664,11 @@ namespace GwambaPrimeAdventure.Character
 						}
 					}
 			}
-			else if ( transform.parent )
-                transform.SetParent( null );
-            _offGround = !_isOnGround;
-        }
+		}
 		private void OnCollisionExit2D( Collision2D collision )
 		{
 			if ( _instance && this == _instance && _didStart && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
-			{
-                if ( transform.parent )
-                    transform.SetParent( null );
-                _offGround = !( _isOnGround = false );
-            }
+				_offGround = !( _isOnGround = false );
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
@@ -703,20 +690,13 @@ namespace GwambaPrimeAdventure.Character
 		}
 		public override void Receive( MessageData message )
 		{
-			if ( MessageFormat.Transition == message.Format )
-			{
-                if ( transform.parent )
-                    transform.SetParent( null );
-                _isOnGround = false;
-				DontDestroyOnLoad( gameObject );
-			}
-			else if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
-                if ( message.ToggleValue.Value )
-                {
-                    OnEnable();
-                    _timerOfInvencibility = InvencibilityTime;
-                    _invencibility = true;
-                }
+			if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
+				if ( message.ToggleValue.Value )
+				{
+					OnEnable();
+					_timerOfInvencibility = InvencibilityTime;
+					_invencibility = true;
+				}
 				else
 				{
 					RestartState();
@@ -724,6 +704,6 @@ namespace GwambaPrimeAdventure.Character
 					transform.TurnScaleX( PointSetter.TurnToLeft );
 					transform.position = PointSetter.CheckedPoint;
 				}
-        }
+		}
 	};
 };
