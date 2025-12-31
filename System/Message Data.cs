@@ -8,21 +8,21 @@ namespace GwambaPrimeAdventure
 			internal set;
 		}
 		public object AdditionalData
-        {
-            get;
-            internal set;
-        }
-        public bool? ToggleValue
-        {
-            get;
-            internal set;
-        }
-        public ushort? NumberValue
-        {
-            get;
-            internal set;
-        }
-    };
+		{
+			get;
+			internal set;
+		}
+		public bool? ToggleValue
+		{
+			get;
+			internal set;
+		}
+		public ushort? NumberValue
+		{
+			get;
+			internal set;
+		}
+	};
 	public enum MessagePath
 	{
 		None,
@@ -38,7 +38,6 @@ namespace GwambaPrimeAdventure
 	{
 		None,
 		State,
-		Event,
-        Transition
-    };
+		Event
+	};
 };
