@@ -40,7 +40,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		}
 		private void Update()
 		{
-			if ( !_isActive )
+			if ( !_isActive || SceneInitiator.IsInTrancision() )
 				return;
 			if ( Vector2.Distance( _rigidbody.position, _trail[ _waypointIndex ] ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT )
 				_waypointIndex = (ushort) ( _trail.Length > _waypointIndex ? _waypointIndex + 1 : 0 );
