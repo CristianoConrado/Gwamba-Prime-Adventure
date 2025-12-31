@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
+using System;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,9 +12,8 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		private
 			InputController _inputController;
-		private readonly CancellationTokenSource
-			_cancellationSource = new CancellationTokenSource(),
-			_cancelTimerSource = new CancellationTokenSource();
+		private
+			CancellationToken _destroyToken;
 		private Vector2
 			_targetPosition = Vector2.zero,
 			_direction = Vector2.zero;
@@ -39,7 +39,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_contunuosFollow = false,
 			_useTarget = false,
 			_turnFollow = false,
-			_cancelTimerActivated = false;
+			_waitResult = false;
 		[SerializeField, Tooltip( "The jumper statitics of this enemy." ), Header( "Jumper Enemy" )]
 		private
 			JumperStatistics _statistics;
@@ -57,10 +57,6 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
-			_cancellationSource?.Cancel();
-			_cancelTimerSource?.Cancel();
-			_cancellationSource?.Dispose();
-			_cancelTimerSource?.Dispose();
 			if ( _statistics.UseInput )
 			{
 				_inputController.Commands.Jump.started -= Jump;
@@ -69,15 +65,12 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			Sender.Exclude( this );
 		}
-		private void OnEnable() => _cancelTimerSource.Cancel( !( _cancelTimerActivated = false ) );
 		public async UniTask Load()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
+			_destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
 				return;
-			_cancellationSource.RegisterRaiseCancelOnDestroy( gameObject );
-			_cancelTimerSource.RegisterRaiseCancelOnDestroy( gameObject );
 			_timedJumpTime = new float[ _statistics.TimedJumps.Length ];
 			_jumpCount = new short[ _statistics.JumpPointStructures.Length ];
 			for ( ushort i = 0; _statistics.TimedJumps.Length > i; i++ )
@@ -113,29 +106,15 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _follow = !_statistics.UnFollow )
 				transform.TurnScaleX( _movementSide = (short) ( _targetPosition.x < transform.position.x ? -1 : 1 ) );
 		}
-		private async void WaitToCancel()
-		{
-			if ( !gameObject.activeSelf && !_cancelTimerActivated )
-			{
-				_cancelTimerActivated = true;
-				await UniTask.WaitForSeconds( _statistics.TimeToCancel, false, PlayerLoopTiming.Update, _cancelTimerSource.Token, true ).SuppressCancellationThrow();
-				if ( _cancelTimerSource.IsCancellationRequested )
-					return;
-				_cancellationSource.Cancel( !( _cancelTimerActivated = false ) );
-			}
-		}
 		private async void TimedJump( ushort jumpIndex )
 		{
 			if ( 0F < _timedJumpTime[ jumpIndex ] )
 				if ( 0F >= ( _timedJumpTime[ jumpIndex ] -= Time.deltaTime ) )
 				{
 					Rigidbody.AddForceY( _statistics.TimedJumps[ jumpIndex ].Strength * Rigidbody.mass, ForceMode2D.Impulse );
-					await UniTask.WaitWhile( () =>
-					{
-						WaitToCancel();
-						return OnGround;
-					}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
-					if ( _cancellationSource.IsCancellationRequested )
+					_waitResult = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true )
+						.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
+					if ( _destroyToken.IsCancellationRequested || !_waitResult )
 						return;
 					_isJumping = true;
 					_contunuosFollow = _follow = _statistics.TimedJumps[ jumpIndex ].Follow;
@@ -231,7 +210,7 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( _contunuosFollow )
 				{
 					_targetPosition.x = _statistics.RandomFollow
-						? ( 0 <= Random.Range( -1, 1 ) ? CharacterExporter.GwambaLocalization().x : _otherTarget )
+						? ( 0 <= UnityEngine.Random.Range( -1, 1 ) ? CharacterExporter.GwambaLocalization().x : _otherTarget )
 						: ( _useTarget ? _otherTarget : CharacterExporter.GwambaLocalization().x );
 					_movementSide = (short) ( _targetPosition.x < transform.position.x ? -1 : 1 );
 					if ( _turnFollow )
@@ -242,24 +221,18 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public async void OnJump( ushort jumpIndex )
 		{
-			await UniTask.WaitWhile( () =>
-			{
-				WaitToCancel();
-				return !OnGround || _detected || !isActiveAndEnabled || IsStunned;
-			}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
-			if ( _cancellationSource.IsCancellationRequested )
+			_waitResult = await UniTask.WaitWhile( () => !OnGround || _detected || !isActiveAndEnabled || IsStunned, PlayerLoopTiming.Update, _destroyToken, true )
+				.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
+			if ( _destroyToken.IsCancellationRequested || !_waitResult )
 				return;
 			if ( _stopJump || 0F < _jumpTime )
 				return;
 			if ( 0 >= _jumpCount[ jumpIndex ]-- )
 			{
 				Rigidbody.AddForceY( _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Strength * Rigidbody.mass, ForceMode2D.Impulse );
-				await UniTask.WaitWhile( () =>
-				{
-					WaitToCancel();
-					return OnGround;
-				}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
-				if ( _cancellationSource.IsCancellationRequested )
+				_waitResult = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true )
+					.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
+				if ( _destroyToken.IsCancellationRequested || !_waitResult )
 					return;
 				_isJumping = true;
 				_contunuosFollow = _follow = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Follow;
@@ -289,12 +262,9 @@ namespace GwambaPrimeAdventure.Enemy
 						else if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage )
 						{
 							Rigidbody.AddForceY( _statistics.StrenghtReact * Rigidbody.mass, ForceMode2D.Impulse );
-							await UniTask.WaitWhile( () =>
-							{
-								WaitToCancel();
-								return OnGround;
-							}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
-							if ( _cancellationSource.IsCancellationRequested )
+							_waitResult = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true )
+								.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
+							if ( _destroyToken.IsCancellationRequested || !_waitResult )
 								return;
 							_otherTarget = _statistics.OtherTarget;
 							_contunuosFollow = _follow = _statistics.FollowReact;
