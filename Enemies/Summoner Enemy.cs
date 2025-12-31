@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -10,11 +11,10 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		private
 			GameObject _summonObject;
-		private readonly CancellationTokenSource
-			_cancellationSource = new CancellationTokenSource(),
-			_cancelTimerSource = new CancellationTokenSource();
 		private
 			IEnumerator _summonEvent;
+		private
+			CancellationToken _destroyToken;
 		private Vector2
 			_summonPosition = Vector2.zero;
 		private Vector2Int
@@ -36,7 +36,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private bool
 			_stopSummon = false,
 			_waitStop = false,
-			_cancelTimerActivated = false;
+			_waitResult = false;
 		[SerializeField, Tooltip( "The summoner statitics of this enemy." ), Header( "Summoner Enemy" )]
 		private
 			SummonerStatistics _statistics;
@@ -49,27 +49,20 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
-			_cancellationSource?.Cancel();
-			_cancelTimerSource?.Cancel();
-			_cancellationSource?.Dispose();
-			_cancelTimerSource?.Dispose();
 			Sender.Exclude( this );
 		}
-		private void OnEnable() => _cancelTimerSource.Cancel( !( _cancelTimerActivated = false ) );
 		public async UniTask Load()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
+			_destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
+			if ( _destroyToken.IsCancellationRequested )
 				return;
-			_cancellationSource.RegisterRaiseCancelOnDestroy(gameObject);
-			_cancelTimerSource.RegisterRaiseCancelOnDestroy(gameObject);
 			_structureTime = new float[ _statistics.SummonPointStructures.Length ];
 			_summonTime = new float[ _statistics.TimedSummons.Length ];
 			_isSummonTime = new bool[ _statistics.TimedSummons.Length ];
 			_stopPermanently = new bool[ _statistics.TimedSummons.Length ];
 			_gravityScale = Rigidbody.gravityScale;
-			_randomSummonIndex = (ushort) Random.Range( 0, _statistics.TimedSummons.Length );
+			_randomSummonIndex = (ushort) UnityEngine.Random.Range( 0, _statistics.TimedSummons.Length );
 			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
 				_isSummonTime[ i ] = true;
 			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
@@ -79,23 +72,9 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private async void Summon( SummonObject summon )
 		{
-			await UniTask.WaitWhile( () =>
-			{
-				if ( !gameObject.activeSelf && !_cancelTimerActivated)
-				{
-					_cancelTimerActivated = true;
-					WaitToCancel();
-					async void WaitToCancel()
-					{
-						await UniTask.WaitForSeconds( _statistics.TimeToCancel, false, PlayerLoopTiming.Update, _cancelTimerSource.Token, true ).SuppressCancellationThrow();
-						if ( _cancelTimerSource.IsCancellationRequested )
-							return;
-						_cancellationSource.Cancel( !( _cancelTimerActivated = false ) );
-					}
-				}
-				return _summonEvent is not null;
-			}, PlayerLoopTiming.Update, _cancellationSource.Token, true ).SuppressCancellationThrow();
-			if ( _cancellationSource.IsCancellationRequested )
+			_waitResult = await UniTask.WaitWhile( () => _summonEvent is not null, PlayerLoopTiming.Update, _destroyToken, true )
+				.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
+			if ( _destroyToken.IsCancellationRequested || !_waitResult )
 				return;
 			_summonEvent = StopToSummon();
 			_summonEvent.MoveNext();
@@ -109,16 +88,18 @@ namespace GwambaPrimeAdventure.Enemy
 					_sender.Send( MessagePath.Enemy );
 					if ( summon.ParalyzeToSummon )
 						Rigidbody.gravityScale = 0F;
-					(_fullStopTime, _waitStop) = (_stopTime = summon.TimeToStop, summon.WaitStop);
+					_fullStopTime = _stopTime = summon.TimeToStop;
+					_waitStop = summon.WaitStop;
 					yield return null;
 				}
 				_summonIndex.Set( 0, 0 );
-				(_instantiateParameters.parent, _instantiateParameters.worldSpace) = (summon.LocalPoints ? transform : null, !summon.LocalPoints);
+				_instantiateParameters.parent = summon.LocalPoints ? transform : null;
+				_instantiateParameters.worldSpace = !summon.LocalPoints;
 				for ( ushort i = 0; summon.QuantityToSummon > i; i++ )
 				{
 					_summonPosition = summon.Self
 						? (Vector2) transform.position
-						: ( summon.Random ? summon.SummonPoints[ Random.Range( 0, summon.SummonPoints.Length ) ] : summon.SummonPoints[ _summonIndex.y ] );
+						: ( summon.Random ? summon.SummonPoints[ UnityEngine.Random.Range( 0, summon.SummonPoints.Length ) ] : summon.SummonPoints[ _summonIndex.y ] );
 					_summonObject = Instantiate( summon.Summons[ _summonIndex.x ], _summonPosition, summon.Summons[ _summonIndex.x ].transform.rotation, _instantiateParameters );
 					_summonObject.transform.SetParent( null );
 					_summonIndex.x = summon.Summons.Length - 1 > _summonIndex.x ? _summonIndex.x + 1 : 0;
@@ -149,7 +130,7 @@ namespace GwambaPrimeAdventure.Enemy
 						_summonTime[ summonIndex ] = _statistics.TimedSummons[ summonIndex ].SummonTime;
 					_isSummonTime[ summonIndex ] = !_isSummonTime[ summonIndex ];
 					if ( _statistics.RandomTimedSummons && _isSummonTime[ summonIndex ] )
-						_randomSummonIndex = (ushort) Random.Range( 0, _statistics.TimedSummons.Length );
+						_randomSummonIndex = (ushort) UnityEngine.Random.Range( 0, _statistics.TimedSummons.Length );
 				}
 		}
 		private void Update()
@@ -195,7 +176,7 @@ namespace GwambaPrimeAdventure.Enemy
 							_stopSummon = !message.ToggleValue.Value;
 						else if ( MessageFormat.Event == message.Format && _statistics.HasEventSummon && 0 < _statistics.EventSummons.Length )
 							if ( _statistics.RandomReactSummons )
-								Summon( _statistics.EventSummons[ Random.Range( 0, _statistics.EventSummons.Length ) ] );
+								Summon( _statistics.EventSummons[ UnityEngine.Random.Range( 0, _statistics.EventSummons.Length ) ] );
 							else if ( message.NumberValue.HasValue && message.NumberValue.Value < _statistics.EventSummons.Length && 0 >= message.NumberValue.Value )
 								Summon( _statistics.EventSummons[ message.NumberValue.Value ] );
 						return;
