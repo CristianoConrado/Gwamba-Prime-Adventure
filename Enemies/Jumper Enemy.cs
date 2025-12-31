@@ -112,7 +112,7 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( 0F >= ( _timedJumpTime[ jumpIndex ] -= Time.deltaTime ) )
 				{
 					Rigidbody.AddForceY( _statistics.TimedJumps[ jumpIndex ].Strength * Rigidbody.mass, ForceMode2D.Impulse );
-					_waitResult = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true )
+					( _, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
 						.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
 					if ( _destroyToken.IsCancellationRequested || !_waitResult )
 						return;
@@ -221,8 +221,8 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public async void OnJump( ushort jumpIndex )
 		{
-			_waitResult = await UniTask.WaitWhile( () => !OnGround || _detected || !isActiveAndEnabled || IsStunned, PlayerLoopTiming.Update, _destroyToken, true )
-				.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
+			( _, _waitResult ) = await UniTask.WaitWhile( () => !OnGround || _detected || !isActiveAndEnabled || IsStunned, PlayerLoopTiming.Update, _destroyToken, true )
+				.SuppressCancellationThrow().TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
 			if ( _destroyToken.IsCancellationRequested || !_waitResult )
 				return;
 			if ( _stopJump || 0F < _jumpTime )
@@ -230,7 +230,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0 >= _jumpCount[ jumpIndex ]-- )
 			{
 				Rigidbody.AddForceY( _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Strength * Rigidbody.mass, ForceMode2D.Impulse );
-				_waitResult = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true )
+				( _, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
 					.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
 				if ( _destroyToken.IsCancellationRequested || !_waitResult )
 					return;
@@ -262,7 +262,7 @@ namespace GwambaPrimeAdventure.Enemy
 						else if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage )
 						{
 							Rigidbody.AddForceY( _statistics.StrenghtReact * Rigidbody.mass, ForceMode2D.Impulse );
-							_waitResult = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true )
+							( _, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
 								.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
 							if ( _destroyToken.IsCancellationRequested || !_waitResult )
 								return;
