@@ -43,7 +43,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			if ( !_isActive || SceneInitiator.IsInTrancision() )
 				return;
 			if ( Vector2.Distance( _rigidbody.position, _trail[ _waypointIndex ] ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT )
-				_waypointIndex = (ushort) ( _trail.Length > _waypointIndex ? _waypointIndex + 1 : 0 );
+				_waypointIndex = (ushort) ( _trail.Length - 1 > _waypointIndex ? _waypointIndex + 1 : 0 );
 			_rigidbody.MovePosition( Vector2.MoveTowards( _rigidbody.position, _trail[ _waypointIndex ], Time.deltaTime * _movementSpeed ) );
 		}
 		public void Execute() => _isActive = !_isActive;
