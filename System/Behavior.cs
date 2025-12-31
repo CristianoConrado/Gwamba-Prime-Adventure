@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 namespace GwambaPrimeAdventure
 {
 	public interface ILoader
@@ -16,17 +17,17 @@ namespace GwambaPrimeAdventure
 	public interface IOccludee
 	{
 		public bool Occlude
-        {
-            get;
-        }
-    };
+		{
+			get;
+		}
+	};
 	public interface IDestructible
 	{
 		public short Health
-        {
-            get;
-        }
-        public bool Hurt( ushort damage );
+		{
+			get;
+		}
+		public bool Hurt( ushort damage );
 		public void Stun( ushort stunStength, float stunTime );
 	};
 	public interface IInteractable
@@ -36,9 +37,5 @@ namespace GwambaPrimeAdventure
 	public interface ICollectable
 	{
 		public void Collect();
-	};
-	public interface IPlataform
-	{
-
 	};
 };
