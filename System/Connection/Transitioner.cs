@@ -22,10 +22,7 @@ namespace GwambaPrimeAdventure.Connection
 				return;
 			StateController.SetState( false );
 			TransicionHud transicionHud = Instantiate( _transicionHud );
-			Sender sender = Sender.Create();
-			sender.SetFormat( MessageFormat.Transition );
-			sender.Send( MessagePath.Character );
-            CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			for ( float i = 0F; 1F > transicionHud.RootElement.style.opacity.value; i += 1E-1F )
 			{
 				transicionHud.RootElement.style.opacity = i;
