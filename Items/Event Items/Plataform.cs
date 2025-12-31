@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using System.Threading;
 using UnityEngine;
@@ -14,7 +14,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private ushort
 			_waypointIndex = 0;
 		private
-			bool _isActive = false;
+			bool _isActive = true;
 		[SerializeField, Tooltip( "The speed at which the platform moves." )]
 		private
 			float _movementSpeed;
@@ -35,7 +35,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_trail = new Vector2[ trail.points.Length ];
 			for ( ushort i = 0; trail.points.Length > i; i++ )
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
-			_isActive = _initialActive;
+			if ( _isReceptor )
+				_isActive = _initialActive;
 		}
 		private void Update()
 		{
