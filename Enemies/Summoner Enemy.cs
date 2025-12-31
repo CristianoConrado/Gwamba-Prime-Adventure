@@ -72,7 +72,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private async void Summon( SummonObject summon )
 		{
-			_waitResult = await UniTask.WaitWhile( () => _summonEvent is not null, PlayerLoopTiming.Update, _destroyToken, true )
+			( _, _waitResult) = await UniTask.WaitWhile( () => _summonEvent is not null, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
 				.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
 			if ( _destroyToken.IsCancellationRequested || !_waitResult )
 				return;
