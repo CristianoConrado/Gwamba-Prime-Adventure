@@ -9,7 +9,10 @@ namespace GwambaPrimeAdventure.Enemy
 			_deathTime = 0F;
 		private bool
 			_isDead = false;
-		[SerializeField, Tooltip( "The death statitics of this enemy." ), Header( "Death Enemy" )]
+		[SerializeField, Tooltip( "The enemy who will be destroyed." ), Header( "Death Enemy" )]
+		private
+			EnemyController _enemyToDie;
+		[SerializeField, Tooltip( "The death statitics of this enemy." )]
 		private
 			DeathStatistics _statistics;
 		private void Update()
@@ -22,7 +25,7 @@ namespace GwambaPrimeAdventure.Enemy
 						Instantiate( _statistics.ChildEnemy, _statistics.SpawnPoint, Quaternion.identity ).transform.SetParent( null );
 					if ( _statistics.ChildProjectile )
 						Instantiate( _statistics.ChildProjectile, _statistics.SpawnPoint, Quaternion.identity ).transform.SetParent( null );
-					Destroy( gameObject );
+					Destroy( _enemyToDie ? _enemyToDie.gameObject : gameObject );
 				}
 		}
 		private void OnTriggerEnter2D( Collider2D other )
