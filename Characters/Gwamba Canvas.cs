@@ -10,37 +10,37 @@ namespace GwambaPrimeAdventure.Character
 			GwambaCanvas _instance;
 		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar background." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
 		internal Color BackgroundColor
-        {
-            get;
-            private set;
-        }
-        [field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar border." )]
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar border." )]
 		internal Color BorderColor
-        {
-            get;
-            private set;
-        }
-        [field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's stun resistance bar." )]
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's stun resistance bar." )]
 		internal Color StunResistanceColor
-        {
-            get;
-            private set;
-        }
-        [field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bunny hop bar." )]
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bunny hop bar." )]
 		internal Color BunnyHopColor
-        {
-            get;
-            private set;
-        }
-        [field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bar missing piece." )]
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's bar missing piece." )]
 		internal Color MissingColor
-        {
-            get;
-            private set;
-        }
-        [SerializeField, Tooltip( "The total of vitality that Gwamba have." )]
+		{
+			get;
+			private set;
+		}
+		[SerializeField, Tooltip( "The total of vitality that Gwamba have." )]
 		private
-			ushort _vitality;
+			  ushort _vitality;
 		[SerializeField, Tooltip( "The total of recover vitality that Gwamba have." )]
 		private
 			ushort _recoverVitality;
@@ -57,46 +57,46 @@ namespace GwambaPrimeAdventure.Character
 		private
 			float _borderWidth;
 		internal VisualElement RootElement
-        {
-            get;
-            private set;
-        }
-        internal VisualElement[] Vitality
-        {
-            get;
-            private set;
-        }
-        internal VisualElement[] RecoverVitality
-        {
-            get;
-            private set;
-        }
-        internal VisualElement[] StunResistance
-        {
-            get;
-            private set;
-        }
-        internal VisualElement[] BunnyHop
-        {
-            get;
-            private set;
-        }
-        internal Label FallDamageText
-        {
-            get;
-            private set;
-        }
-        internal Label LifeText
-        {
-            get;
-            private set;
-        }
-        internal Label CoinText
-        {
-            get;
-            private set;
-        }
-        private void Awake()
+		{
+			get;
+			private set;
+		}
+		internal VisualElement[] Vitality
+		{
+			get;
+			private set;
+		}
+		internal VisualElement[] RecoverVitality
+		{
+			get;
+			private set;
+		}
+		internal VisualElement[] StunResistance
+		{
+			get;
+			private set;
+		}
+		internal VisualElement[] BunnyHop
+		{
+			get;
+			private set;
+		}
+		internal Label FallDamageText
+		{
+			get;
+			private set;
+		}
+		internal Label LifeText
+		{
+			get;
+			private set;
+		}
+		internal Label CoinText
+		{
+			get;
+			private set;
+		}
+		private void Awake()
 		{
 			if ( _instance )
 			{
@@ -122,22 +122,22 @@ namespace GwambaPrimeAdventure.Character
 			vitality.style.width = _totalWidth;
 			for ( ushort i = 0; i < _vitality; i++ )
 			{
-                vitality.Add( new VisualElement()
-                {
-                    name = VitalityPiece.name,
-                    style =
-                    {
-                        backgroundColor = BackgroundColor,
-                        borderBottomColor = BorderColor,
-                        borderLeftColor = BorderColor,
-                        borderRightColor = BorderColor,
-                        borderTopColor = BorderColor,
-                        borderBottomWidth = _borderWidth,
-                        borderLeftWidth = _borderWidth,
-                        borderRightWidth = _borderWidth,
-                        borderTopWidth = _borderWidth
-                    }
-                } );
+				vitality.Add( new VisualElement()
+				{
+					name = VitalityPiece.name,
+					style =
+					{
+					    backgroundColor = BackgroundColor,
+					    borderBottomColor = BorderColor,
+					    borderLeftColor = BorderColor,
+					    borderRightColor = BorderColor,
+					    borderTopColor = BorderColor,
+					    borderBottomWidth = _borderWidth,
+					    borderLeftWidth = _borderWidth,
+					    borderRightWidth = _borderWidth,
+					    borderTopWidth = _borderWidth
+					}
+				} );
 				Vitality[ i ] = vitality[ i + 1 ];
 			}
 			vitality.Remove( VitalityPiece );
@@ -149,14 +149,14 @@ namespace GwambaPrimeAdventure.Character
 			for ( ushort i = 0; i < _recoverVitality; i++ )
 			{
 				recoverVitality.Add( new VisualElement()
-                {
-                    name = RecoverVitalityPiece.name,
-                    style =
-                    {
-                        backgroundColor = MissingColor,
-                        width = _totalWidth / _recoverVitality - _borderWidth * 2F
-                    }
-                } );
+				{
+					name = RecoverVitalityPiece.name,
+					style =
+					{
+					    backgroundColor = MissingColor,
+					    width = _totalWidth / _recoverVitality - _borderWidth * 2F
+					}
+				} );
 				RecoverVitality[ i ] = recoverVitality[ i + 1 ];
 			}
 			recoverVitality.Remove( RecoverVitalityPiece );
@@ -168,33 +168,33 @@ namespace GwambaPrimeAdventure.Character
 			for ( ushort i = 0; i < _stunResistance; i++ )
 			{
 				stunResistance.Add( new VisualElement()
-                {
-                    name = StunResistancePiece.name,
-                    style =
-                    {
-                        backgroundColor = StunResistanceColor,
-                        width = _totalWidth / _stunResistance - _borderWidth * 2F
-                    }
-                } );
+				{
+					name = StunResistancePiece.name,
+					style =
+					{
+					    backgroundColor = StunResistanceColor,
+					    width = _totalWidth / _stunResistance - _borderWidth * 2F
+					}
+				} );
 				StunResistance[ i ] = stunResistance[ i + 1 ];
 			}
 			stunResistance.Remove( StunResistancePiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
-            VisualElement
-                bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ),
-                BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) );
+			VisualElement
+			    bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ),
+			    BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) );
 			bunnyHop.style.width = _totalWidth;
 			for ( ushort i = 0; i < _bunnyHop; i++ )
 			{
 				bunnyHop.Add( new VisualElement()
-                {
-                    name = BunnyHopPiece.name,
-                    style =
-                    {
-                        backgroundColor = MissingColor,
-                        width = _totalWidth / _bunnyHop - _borderWidth * 2F
-                    }
-                } );
+				{
+					name = BunnyHopPiece.name,
+					style =
+					{
+					    backgroundColor = MissingColor,
+					    width = _totalWidth / _bunnyHop - _borderWidth * 2F
+					}
+				} );
 				BunnyHop[ i ] = bunnyHop[ i + 1 ];
 			}
 			bunnyHop.Remove( BunnyHopPiece );
