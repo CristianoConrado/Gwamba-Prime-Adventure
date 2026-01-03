@@ -26,11 +26,11 @@
     align-self: flex-end;
 }
 #LifeIcon {
-    width: 75px;
+    width: 37.5%;
     height: 100%;
 }
 #CoinIcon {
-    width: 37.5px;
+    width: 18.75%;
     height: 50%;
     align-self: center;
     background-image: url("project://database/Assets/Items/Designs/Coin Frame.png");
