@@ -11,7 +11,6 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		private
 			EnemyProvider[] _selfEnemies;
-
 		[field: SerializeField, Tooltip( "The control statitics of this enemy." ), Header( "Enemy Statistics" )]
 		internal EnemyStatistics ProvidenceStatistics
 		{
