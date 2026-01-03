@@ -127,15 +127,16 @@ namespace GwambaPrimeAdventure.Character
 					name = VitalityPiece.name,
 					style =
 					{
-					    backgroundColor = BackgroundColor,
-					    borderBottomColor = BorderColor,
-					    borderLeftColor = BorderColor,
-					    borderRightColor = BorderColor,
-					    borderTopColor = BorderColor,
-					    borderBottomWidth = _borderWidth,
-					    borderLeftWidth = _borderWidth,
-					    borderRightWidth = _borderWidth,
-					    borderTopWidth = _borderWidth
+						width = _totalWidth / _vitality - _borderWidth * 2F,
+						backgroundColor = BackgroundColor,
+						borderBottomColor = BorderColor,
+						borderLeftColor = BorderColor,
+						borderRightColor = BorderColor,
+						borderTopColor = BorderColor,
+						borderBottomWidth = _borderWidth,
+						borderLeftWidth = _borderWidth,
+						borderRightWidth = _borderWidth,
+						borderTopWidth = _borderWidth
 					}
 				} );
 				Vitality[ i ] = vitality[ i + 1 ];
@@ -153,8 +154,8 @@ namespace GwambaPrimeAdventure.Character
 					name = RecoverVitalityPiece.name,
 					style =
 					{
-					    backgroundColor = MissingColor,
-					    width = _totalWidth / _recoverVitality - _borderWidth * 2F
+						backgroundColor = MissingColor,
+						width = _totalWidth / _recoverVitality - _borderWidth * 2F
 					}
 				} );
 				RecoverVitality[ i ] = recoverVitality[ i + 1 ];
@@ -172,8 +173,8 @@ namespace GwambaPrimeAdventure.Character
 					name = StunResistancePiece.name,
 					style =
 					{
-					    backgroundColor = StunResistanceColor,
-					    width = _totalWidth / _stunResistance - _borderWidth * 2F
+						backgroundColor = StunResistanceColor,
+						width = _totalWidth / _stunResistance - _borderWidth * 2F
 					}
 				} );
 				StunResistance[ i ] = stunResistance[ i + 1 ];
@@ -191,13 +192,20 @@ namespace GwambaPrimeAdventure.Character
 					name = BunnyHopPiece.name,
 					style =
 					{
-					    backgroundColor = MissingColor,
-					    width = _totalWidth / _bunnyHop - _borderWidth * 2F
+						backgroundColor = MissingColor,
+						width = _totalWidth / _bunnyHop - _borderWidth * 2F
 					}
 				} );
 				BunnyHop[ i ] = bunnyHop[ i + 1 ];
 			}
 			bunnyHop.Remove( BunnyHopPiece );
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
+			GroupBox Icons = RootElement.Q<GroupBox>( nameof( Icons ) );
+			Icons.style.width = _totalWidth;
+			Icons[ 0 ].style.width = _totalWidth / 2;
+			Icons[ 1 ].style.width = _totalWidth / 2;
+			Icons[ 0 ].style.height = _totalWidth / 2 * .375F;
+			Icons[ 1 ].style.height = _totalWidth / 2 * .375F;
 		}
 	};
 };
