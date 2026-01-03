@@ -203,8 +203,8 @@ namespace GwambaPrimeAdventure.Character
 			GroupBox Icons = RootElement.Q<GroupBox>( nameof( Icons ) );
 			Icons.style.width = _totalWidth;
 			Icons[ 0 ].style.width = _totalWidth / 2;
-			Icons[ 1 ].style.width = _totalWidth / 2;
 			Icons[ 0 ].style.height = _totalWidth / 2 * .375F;
+			Icons[ 1 ].style.width = _totalWidth / 2;
 			Icons[ 1 ].style.height = _totalWidth / 2 * .375F;
 		}
 	};
