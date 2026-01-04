@@ -23,6 +23,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			get;
 			private set;
 		}
+		public IDestructible Source => this;
 		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
