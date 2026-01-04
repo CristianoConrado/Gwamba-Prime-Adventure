@@ -1,9 +1,9 @@
-using UnityEngine;
-using Unity.Cinemachine;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
 using GwambaPrimeAdventure.Enemy.Supply;
+using System.Threading;
+using Unity.Cinemachine;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[RequireComponent( typeof( Rigidbody2D ), typeof( Collider2D ), typeof( CinemachineImpulseSource ) )]
@@ -19,6 +19,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		internal Rigidbody2D Rigidbody =>
 			_rigidbody;
+		public IDestructible Source => this;
 		public MessagePath Path =>
 			MessagePath.Enemy;
 		public short Health =>
@@ -55,6 +56,8 @@ namespace GwambaPrimeAdventure.Enemy
 			for ( ushort i = 0; _selfEnemies.Length - 1 > i; i++ )
 				if ( _selfEnemies[ i + 1 ].DestructilbePriority > _selfEnemies[ i ].DestructilbePriority )
 					_destructibleEnemy = _selfEnemies[ i + 1 ];
+			foreach ( OuterEnemy outerEnemy in GetComponentsInChildren<OuterEnemy>( true ) )
+				outerEnemy.Deliver( this, OnTriggerEnter2D );
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
@@ -120,7 +123,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
-			if ( !ProvidenceStatistics.NoHit && other.TryGetComponent<IDestructible>( out var destructible ) && destructible.Hurt( ProvidenceStatistics.Damage ) )
+			if ( !ProvidenceStatistics.NoHit && other.TryGetComponent<IDestructible>( out var destructible ) && destructible.Hurt( ProvidenceStatistics.Damage ) )	
 			{
 				destructible.Stun( ProvidenceStatistics.Damage, ProvidenceStatistics.StunTime );
 				_screenShaker.GenerateImpulse( ProvidenceStatistics.HurtShake );
