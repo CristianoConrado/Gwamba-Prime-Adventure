@@ -644,7 +644,7 @@ namespace GwambaPrimeAdventure.Character
 								_localAtSurface.x = transform.position.x + WorldBuild.SNAP_LENGTH * transform.localScale.x.CompareTo( 0F );
 								_localAtSurface.y = transform.position.y + _localAtAny.y;
 								transform.position = _localAtSurface;
-								_rigidbody.linearVelocityX = MovementSpeed * _walkValue;
+								_rigidbody.linearVelocityX = MovementSpeed * _walkValue * ( AttackUsage ? AttackVelocityCut : 1F );
 							}
 						}
 					}
