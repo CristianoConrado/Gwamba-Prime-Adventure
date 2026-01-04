@@ -11,6 +11,7 @@ namespace GwambaPrimeAdventure.Enemy
 		[SerializeField, Tooltip( "The statitics of this projectile." ), Header( "Projectile" )]
 		private
 			ProjectileStatistics _statistics;
+		public IDestructible Source => this;
 		public short Health =>
 			_vitality;
 		private void CommonInstance()
@@ -34,16 +35,16 @@ namespace GwambaPrimeAdventure.Enemy
 						if ( _pointToReturn++ >= _internalReturnPoint )
 						{
 							_pointToBreak = 0;
-                            _breakInUse = _statistics.AlwaysBreak;
-                        }
-                    if ( !_breakInUse || _pointToBreak < _internalBreakPoint )
+							_breakInUse = _statistics.AlwaysBreak;
+						}
+					if ( !_breakInUse || _pointToBreak < _internalBreakPoint )
 					{
 						if ( _breakInUse )
 						{
 							_pointToBreak += 1;
-                            _pointToReturn = 0;
-                        }
-                        _pointToJump = _statistics.JumpPoints;
+							_pointToReturn = 0;
+						}
+						_pointToJump = _statistics.JumpPoints;
 						_projectileRotation = Quaternion.AngleAxis( _statistics.BaseAngle + _statistics.SpreadAngle * _angleMulti, Vector3.forward );
 						_projectilePosition.Set( _cellPosition.x + 5E-1F, _cellPosition.y + 5E-1F );
 						if ( _statistics.UseQuantity )
