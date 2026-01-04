@@ -3,7 +3,7 @@ using UnityEngine.Events;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ) )]
-	internal sealed class OuterEnemy : StateController, IDestructible
+	internal sealed class InnerEnemy : StateController, IDestructible
 	{
 		private UnityAction<Collider2D> _hitEvent;
 		[SerializeField, Tooltip( "Is this enemy can hit other objects." )]
