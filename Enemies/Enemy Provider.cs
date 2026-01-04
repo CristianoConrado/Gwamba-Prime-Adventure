@@ -15,14 +15,15 @@ namespace GwambaPrimeAdventure.Enemy
 		[SerializeField, Tooltip( "The enemies to send messages." ), Header( "Enemy Provider" )]
 		private
 			EnemyProvider[] _enemiesToSend;
-        [field: SerializeField, Tooltip( "The level of priority to use the destructible side." )]
-        internal ushort DestructilbePriority
+		[field: SerializeField, Tooltip( "The level of priority to use the destructible side." )]
+		internal ushort DestructilbePriority
 		{
 			get;
 			private set;
 		}
-        protected Rigidbody2D Rigidbody =>
-			_controller.Rigidbody;
+		protected Rigidbody2D Rigidbody =>
+			  _controller.Rigidbody;
+		public IDestructible Source => this;
 		public MessagePath Path =>
 			MessagePath.Enemy;
 		protected bool IsStunned =>
