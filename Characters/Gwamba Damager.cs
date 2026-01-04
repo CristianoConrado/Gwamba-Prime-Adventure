@@ -27,29 +27,30 @@ namespace GwambaPrimeAdventure.Character
 			bool _takeDamage;
 		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Tooltip( "The velocity of the screen shake on the attack." )]
 		internal Vector2 AttackShake
-        {
-            get;
-            private set;
-        }
-        [field: SerializeField, HideIf( nameof( _takeDamage ) ), Tooltip( "The amount of damage that the attack of Gwamba hits." )]
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Tooltip( "The amount of damage that the attack of Gwamba hits." )]
 		internal ushort AttackDamage
-        {
-            get;
-            private set;
-        }
-        [field: SerializeField, HideIf( nameof( _takeDamage ) ), Min( 0F ), Tooltip( "The amount of time the attack screen shake will be applied." )]
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Min( 0F ), Tooltip( "The amount of time the attack screen shake will be applied." )]
 		internal float AttackShakeTime
-        {
-            get;
-            private set;
-        }
-        [field: SerializeField, HideIf( nameof( _takeDamage ) ), Min( 0F ), Tooltip( "The amount of time that this Gwamba's attack stun does." )]
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Min( 0F ), Tooltip( "The amount of time that this Gwamba's attack stun does." )]
 		internal float StunTime
-        {
-            get;
-            private set;
-        }
-        internal float Alpha
+		{
+			get;
+			private set;
+		}
+		public IDestructible Source => this;
+		internal float Alpha
 		{
 			get => _spriteRenderer ? _spriteRenderer.color.a : 0F;
 			set
@@ -72,7 +73,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
-			if ( !_takeDamage && other.TryGetComponent<IDestructible>( out var destructible ) && !damagedes.Contains( destructible ) )
+			if ( !_takeDamage && other.TryGetComponent<IDestructible>( out var destructible ) && destructible is not null && !damagedes.Contains( destructible.Source ) )
 				DamagerAttack.Invoke( this, destructible );
 		}
 		public bool Hurt( ushort damage ) => _takeDamage && DamagerHurt.Invoke( damage );
