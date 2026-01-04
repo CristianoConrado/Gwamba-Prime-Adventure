@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 namespace GwambaPrimeAdventure
 {
 	public interface ILoader
@@ -23,6 +22,10 @@ namespace GwambaPrimeAdventure
 	};
 	public interface IDestructible
 	{
+		public IDestructible Source
+		{
+			get;
+		}
 		public short Health
 		{
 			get;
