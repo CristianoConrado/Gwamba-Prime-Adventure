@@ -349,9 +349,10 @@ namespace GwambaPrimeAdventure.Character
 				destructible.Stun( gwambaDamager.AttackDamage, gwambaDamager.StunTime );
 				EffectsController.HitStop( HitStopTime, HitSlowTime );
 				EffectsController.SoundEffect( DamageAttackSound, gwambaDamager.transform.position );
-				(_attackDelay, _screenShaker.ImpulseDefinition.ImpulseDuration) = (DelayAfterAttack, gwambaDamager.AttackShakeTime);
+				_attackDelay = DelayAfterAttack;
+				_screenShaker.ImpulseDefinition.ImpulseDuration = gwambaDamager.AttackShakeTime;
 				_screenShaker.GenerateImpulse( gwambaDamager.AttackShake );
-				gwambaDamager.damagedes.Add( destructible );
+				gwambaDamager.damagedes.Add( destructible.Source );
 				for ( ushort amount = 0; ( destructible.Health <= 0 ? gwambaDamager.AttackDamage + 1 : gwambaDamager.AttackDamage ) > amount; amount++ )
 					if ( _gwambaCanvas.RecoverVitality.Length <= _recoverVitality && _gwambaCanvas.Vitality.Length > _vitality )
 					{
