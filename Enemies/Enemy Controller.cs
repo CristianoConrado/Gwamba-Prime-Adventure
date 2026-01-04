@@ -56,8 +56,8 @@ namespace GwambaPrimeAdventure.Enemy
 			for ( ushort i = 0; _selfEnemies.Length - 1 > i; i++ )
 				if ( _selfEnemies[ i + 1 ].DestructilbePriority > _selfEnemies[ i ].DestructilbePriority )
 					_destructibleEnemy = _selfEnemies[ i + 1 ];
-			foreach ( OuterEnemy outerEnemy in GetComponentsInChildren<OuterEnemy>( true ) )
-				outerEnemy.Deliver( this, OnTriggerEnter2D );
+			foreach ( InnerEnemy innerEnemy in GetComponentsInChildren<InnerEnemy>( true ) )
+				innerEnemy.Deliver( this, OnTriggerEnter2D );
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
