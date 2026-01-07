@@ -5,13 +5,14 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
-	[DisallowMultipleComponent, RequireComponent( typeof( CinemachineCamera ), typeof( CinemachineFollow ), typeof( Rigidbody2D ) ), RequireComponent( typeof( BoxCollider2D ) )]
+	[DisallowMultipleComponent, RequireComponent( typeof( CinemachineCamera ), typeof( CinemachinePositionComposer ), typeof( Rigidbody2D ) )]
+	[RequireComponent( typeof( BoxCollider2D ) )]
 	internal sealed class CameraOccluder : StateController, IConnector
 	{
 		private static
 			CameraOccluder _instance;
 		private
-			CinemachineFollow _cinemachineFollow;
+			CinemachinePositionComposer _cinemachineFollow;
 		private Vector2
 			_posiontDamping = Vector2.zero;
 		[SerializeField, Tooltip( "The scene of the menu." ), Header( "Interactions" )]
@@ -28,8 +29,8 @@ namespace GwambaPrimeAdventure
 				return;
 			}
 			_instance = this;
-			_cinemachineFollow = GetComponent<CinemachineFollow>();
-			_posiontDamping = _cinemachineFollow.TrackerSettings.PositionDamping;
+			_cinemachineFollow = GetComponent<CinemachinePositionComposer>();
+			_posiontDamping = _cinemachineFollow.Damping;
 			GetComponent<BoxCollider2D>().size = BuildMathemathics.OrthographicToRealSize( GetComponent<CinemachineCamera>().Lens.OrthographicSize );
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include( this );
@@ -47,7 +48,7 @@ namespace GwambaPrimeAdventure
 		{
 			if ( !_instance || this != _instance )
 				return;
-			_cinemachineFollow.TrackerSettings.PositionDamping = _posiontDamping;
+			_cinemachineFollow.Damping = _posiontDamping;
 			_cinemachineFollow.enabled = true;
 		}
 		private void OnDisable()
@@ -73,7 +74,7 @@ namespace GwambaPrimeAdventure
 				Destroy( gameObject );
 				return;
 			}
-			_cinemachineFollow.TrackerSettings.PositionDamping = Vector3.zero;
+			_cinemachineFollow.Damping = Vector3.zero;
 			_cinemachineFollow.enabled = true;
 		}
 		private void SetOtherChildren( GameObject gameObject, bool activate )
@@ -89,9 +90,9 @@ namespace GwambaPrimeAdventure
 		{
 			if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
 				if ( !message.ToggleValue.Value )
-					_cinemachineFollow.TrackerSettings.PositionDamping = Vector2.zero;
+					_cinemachineFollow.Damping = Vector2.zero;
 				else if ( message.ToggleValue.Value )
-					_cinemachineFollow.TrackerSettings.PositionDamping = _posiontDamping;
+					_cinemachineFollow.Damping = _posiontDamping;
 		}
 	};
 };
