@@ -631,6 +631,8 @@ namespace GwambaPrimeAdventure.Character
 						_localAtStart.Set( Local.x + _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F ), Local.y + WorldBuild.SNAP_LENGTH / 2F );
 						_localAtEnd.Set( WorldBuild.SNAP_LENGTH, _collider.size.y + WorldBuild.SNAP_LENGTH );
 						_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
+						if ( 0 >= _groundContacts.Count )
+							return;
 						_localAtStart.Set( Local.x + _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F ), Local.y - ( _collider.size.y - UpStairsLength ) / 2F );
 						_localAtEnd.Set( WorldBuild.SNAP_LENGTH, UpStairsLength );
 						if ( _groundContacts.TrueForAll( contact => contact.point.InsideRectangle( _localAtStart, _localAtEnd ) ) )
