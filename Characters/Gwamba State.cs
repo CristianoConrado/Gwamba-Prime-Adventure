@@ -151,12 +151,6 @@ namespace GwambaPrimeAdventure.Character
 			get;
 			private set;
 		}
-		[field: SerializeField, BoxGroup( "Control" ), Range(5E-1F, 1F), Tooltip( "The limit for Gwamba check if is grounded." )]
-		protected float GroundLimit
-		{
-			get;
-			private set;
-		}
 		[field: SerializeField, BoxGroup( "Control" ), Tooltip( "The size of the detector to climb the stairs." )]
 		protected float UpStairsLength
 		{
