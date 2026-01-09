@@ -581,7 +581,9 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			_offGround = !_isOnGround;
 			_collider.GetContacts( _groundContacts );
-			_groundContacts.RemoveAll(contact => GroundLimit > contact.normal.y);
+			_localAtStart.Set( Local.x, Local.y - _collider.bounds.extents.y );
+			_localAtEnd.Set( _collider.size.x, WorldBuild.SNAP_LENGTH );
+			_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
 			if ( _isOnGround = 0 < _groundContacts.Count )
 			{
 				if ( _animator.GetBool( AirJump ) )
@@ -650,11 +652,6 @@ namespace GwambaPrimeAdventure.Character
 					}
 					else if ( 0F >= _lastJumpTime )
 					{
-						_localAtStart.Set( Local.x, Local.y - _collider.bounds.extents.y );
-						_localAtEnd.Set( _collider.size.x, WorldBuild.SNAP_LENGTH );
-						_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
-						if ( 0 >= _groundContacts.Count )
-							return;
 						_localAtStart.x = Local.x - ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH / 2F * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
 						_localAtEnd.x = WorldBuild.SNAP_LENGTH * DownStairsDistance;
 						if ( _groundContacts.TrueForAll( contact => contact.point.x.InsideRange( _localAtStart.x, _localAtEnd.x ) ) )
