@@ -585,7 +585,7 @@ namespace GwambaPrimeAdventure.Character
 					EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 				}
 			}
-			if ( _isOnGround && !_offGround && 0 == _walkValue && MINIMUM_VELOCITY >= _rigidbody.linearVelocityX && MINIMUM_VELOCITY >= _rigidbody.linearVelocityY )
+			if ( _isOnGround && !_offGround && 0 == _walkValue && _rigidbody.linearVelocity.Abs().LessOrEqual( Vector2.one * MINIMUM_VELOCITY ) )
 				return;
 			_offGround = !_isOnGround;
 			_collider.GetContacts( _groundContacts );
@@ -635,7 +635,7 @@ namespace GwambaPrimeAdventure.Character
 						EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 					}
 				}
-				if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) || 0 == _walkValue || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
+				if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
 					return;
 				if ( MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
 				{
