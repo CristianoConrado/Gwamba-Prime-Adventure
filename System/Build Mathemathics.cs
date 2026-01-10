@@ -32,6 +32,8 @@ namespace GwambaPrimeAdventure
 		public static bool OutsideRectangle( this Vector2 pointOutside, Vector2 originPoint, Vector2 sizePoint ) => !InsideRectangle( pointOutside, originPoint, sizePoint );
 		public static bool InsideCircle( this Vector2 pointInside, Vector2 originPoint, float radius ) => Vector2.Distance( originPoint, pointInside ) <= radius;
 		public static bool OutsideCircle( this Vector2 pointOutside, Vector2 originPoint, float radius ) => !InsideCircle( pointOutside, originPoint, radius );
+		public static bool MoreOrEqual( this Vector2 firstVector, Vector2 otherVector ) => firstVector.x >= otherVector.x && firstVector.y >= otherVector.y;
+		public static bool LessOrEqual( this Vector2 firstVector, Vector2 otherVector ) => firstVector.x <= otherVector.x && firstVector.y <= otherVector.y;
 		public static float Negative(this float input) => -Mathf.Abs( input );
 		public static short RangeNormalize( this float input, float maxDelimiter, float minDelimiter ) =>
 			(short) ( input.CompareTo( Mathf.Abs( maxDelimiter ) ) + input.CompareTo( minDelimiter.Negative() ) ).CompareTo( 0 );
