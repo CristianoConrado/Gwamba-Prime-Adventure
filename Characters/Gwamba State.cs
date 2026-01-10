@@ -85,6 +85,7 @@ namespace GwambaPrimeAdventure.Character
 			_longJumping = false,
 			_bunnyHopUsed = false,
 			_offBunnyHop = false,
+			_cannotAttackDrop = false,
 			_fallStarted = false,
 			_invencibility = false,
 			_loadState = false,
@@ -101,8 +102,9 @@ namespace GwambaPrimeAdventure.Character
 			Attack = Animator.StringToHash( nameof( Attack ) ),
 			AttackCombo = Animator.StringToHash( nameof( AttackCombo ) ),
 			AttackJump = Animator.StringToHash( nameof( AttackJump ) ),
-			AttackAirJump = Animator.StringToHash( nameof( AttackAirJump ) ),
 			AttackSlide = Animator.StringToHash( nameof( AttackSlide ) ),
+			AttackAirJump = Animator.StringToHash( nameof( AttackAirJump ) ),
+			AttackDrop = Animator.StringToHash( nameof( AttackDrop ) ),
 			Stun = Animator.StringToHash( nameof( Stun ) ),
 			Death = Animator.StringToHash( nameof( Death ) );
 		[field: SerializeField, BoxGroup( "Control" ), Tooltip( "The scene of the hubby world." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
@@ -244,13 +246,13 @@ namespace GwambaPrimeAdventure.Character
 			private set;
 		}
 		[field: SerializeField, BoxGroup( "Movement" ), Range( 1E-1F, 1F ), Tooltip( "The amount of speed that Gwamba moves yourself." )]
-		protected float AirJumpInputZone
+		protected float UpInputZone
 		{
 			get;
 			private set;
 		}
 		[field: SerializeField, BoxGroup( "Movement" ), Range( -1E-1F, -1F ), Tooltip( "The amount of speed that Gwamba moves yourself." )]
-		protected float DashSlideInputZone
+		protected float DownInputZone
 		{
 			get;
 			private set;
@@ -303,6 +305,12 @@ namespace GwambaPrimeAdventure.Character
 			get;
 			private set;
 		}
+		[field: SerializeField, BoxGroup( "Movement" ), Min( 0F ), Tooltip( "The amount of strenght that Gwamba can impulse himself in the up and down movements." )]
+		protected float ImpulseStrenght
+		{
+			get;
+			private set;
+		}
 		[field: SerializeField, BoxGroup( "Jump" ), Tooltip( "The sound to play when Gwamba execute a jump." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
 		protected AudioClip JumpSound
 		{
@@ -311,12 +319,6 @@ namespace GwambaPrimeAdventure.Character
 		}
 		[field: SerializeField, BoxGroup( "Jump" ), Min( 0F ), Tooltip( "The amount of strenght that Gwamba can Jump." )]
 		protected float JumpStrenght
-		{
-			get;
-			private set;
-		}
-		[field: SerializeField, BoxGroup( "Jump" ), Min( 0F ), Tooltip( "The amount of strenght that Gwamba can Jump on the air." )]
-		protected float AirJumpStrenght
 		{
 			get;
 			private set;
