@@ -40,6 +40,8 @@ namespace GwambaPrimeAdventure.Character
 			_localAtEnd = Vector2.zero,
 			_localAtSurface = Vector2.zero,
 			_localAtLinearVelocity = Vector2.zero,
+			_selfRelativeVelocity = Vector2.zero,
+			_otherRelativeVelocity = Vector2.zero,
 			_beginingPosition = Vector2.zero;
 		protected Vector3
 			_localAtAny = Vector3.zero;
@@ -147,6 +149,12 @@ namespace GwambaPrimeAdventure.Character
 		}
 		[field: SerializeField, BoxGroup( "Control" ), Tooltip( "The amount of distance to get down stairs." )]
 		protected ushort DownStairsDistance
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, BoxGroup( "Control" ), Range( 5E-1F, 1F ), Tooltip( "The limit for Gwamba check if the contact point is the ground." )]
+		protected float CheckGroundLimit
 		{
 			get;
 			private set;
