@@ -196,30 +196,40 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !isActiveAndEnabled || _animator.GetBool( Stun ) )
 				return;
-			if ( 0 != ( _walkValue = ( _localAtStart = movement.ReadValue<Vector2>() ).x.RangeNormalize( MovementInputZone ) ) && ( !AttackUsage || ComboAttackBuffer ) )
-				if ( _localAtStart.y > AirJumpInputZone && !_isOnGround && _canAirJump && !_animator.GetBool( AirJump ) )
+			_walkValue = ( _localAtStart = movement.ReadValue<Vector2>() ).x.RangeNormalize( MovementInputZone );
+			if ( ( !AttackUsage || ComboAttackBuffer ) )
+				if ( 0 != _walkValue && _localAtStart.y > UpInputZone && _offGround && _canAirJump && !_animator.GetBool( AirJump ) )
 				{
 					_animator.SetBool( AirJump, !( _canAirJump = false ) );
 					_animator.SetBool( AttackAirJump, ComboAttackBuffer );
 					transform.TurnScaleX( _localAtAny.z = _walkValue );
 					_rigidbody.linearVelocity = Vector2.zero;
 					_isJumping = false;
-					_rigidbody.AddForceX( ( AirJumpStrenght + BunnyHop( JumpBoost ) ) * _localAtAny.z * _rigidbody.mass, ForceMode2D.Impulse );
-					_rigidbody.AddForceY( ( AirJumpStrenght + BunnyHop( JumpBoost ) ) * _rigidbody.mass, ForceMode2D.Impulse );
+					_rigidbody.AddForceX( ( ImpulseStrenght + BunnyHop( JumpBoost ) ) * _localAtAny.z * _rigidbody.mass, ForceMode2D.Impulse );
+					_rigidbody.AddForceY( ( ImpulseStrenght + BunnyHop( JumpBoost ) ) * _rigidbody.mass, ForceMode2D.Impulse );
 					EffectsController.SoundEffect( AirJumpSound, transform.position );
 					if ( ComboAttackBuffer )
 						StartAttackSound();
 				}
-				else if ( _localAtStart.y < DashSlideInputZone && _isOnGround && !_animator.GetBool( DashSlide ) )
-				{
-					_animator.SetBool( DashSlide, true );
-					_animator.SetBool( AttackSlide, ComboAttackBuffer );
-					transform.TurnScaleX( _localAtAny.z = _walkValue );
-					_localAtAny.x = transform.position.x;
-					EffectsController.SoundEffect( DashSlideSound, transform.position );
-					if ( ComboAttackBuffer )
+				else if ( _localAtStart.y < DownInputZone )
+					if ( 0 != _walkValue && _isOnGround && !_animator.GetBool( DashSlide ) )
+					{
+						_animator.SetBool( DashSlide, true );
+						_animator.SetBool( AttackSlide, ComboAttackBuffer );
+						transform.TurnScaleX( _localAtAny.z = _walkValue );
+						_localAtAny.x = transform.position.x;
+						EffectsController.SoundEffect( DashSlideSound, transform.position );
+						if ( ComboAttackBuffer )
+							StartAttackSound();
+					}
+					else if ( _offGround && !_animator.GetBool( AttackDrop ) && ComboAttackBuffer && !_cannotAttackDrop )
+					{
+						_animator.SetBool( AttackDrop, _cannotAttackDrop = true );
+						_rigidbody.linearVelocity = Vector2.zero;
+						_isJumping = false;
+						_rigidbody.AddForceY( ( ImpulseStrenght + BunnyHop( JumpBoost ) ) * -_rigidbody.mass, ForceMode2D.Impulse );
 						StartAttackSound();
-				}
+					}
 		}
 		private void GroundSound( float stepPositionX )
 		{
@@ -304,8 +314,9 @@ namespace GwambaPrimeAdventure.Character
 				_animator.SetBool( AirJump, false );
 				_animator.SetBool( DashSlide, false );
 				_animator.SetBool( AttackJump, false );
-				_animator.SetBool( AttackAirJump, false );
 				_animator.SetBool( AttackSlide, false );
+				_animator.SetBool( AttackAirJump, false );
+				_animator.SetBool( AttackDrop, false );
 				_animator.SetBool( Stun, false );
 				_animator.SetBool( Death, true );
 				_sender.SetToggle( false );
@@ -332,8 +343,9 @@ namespace GwambaPrimeAdventure.Character
 				_animator.SetBool( AirJump, false );
 				_animator.SetBool( DashSlide, false );
 				_animator.SetBool( AttackJump, false );
-				_animator.SetBool( AttackAirJump, false );
 				_animator.SetBool( AttackSlide, false );
+				_animator.SetBool( AttackAirJump, false );
+				_animator.SetBool( AttackDrop, false );
 				_animator.SetBool( Stun, !( _invencibility = false ) );
 				for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
 					_gwambaDamagers[ i ].Alpha = 1F;
@@ -433,11 +445,12 @@ namespace GwambaPrimeAdventure.Character
 					_rigidbody.linearVelocityX = DashSpeed * _localAtAny.z;
 			else
 			{
-				if ( _animator.GetBool( AirJump ) )
+				if ( _animator.GetBool( AirJump ) || _animator.GetBool( AttackDrop ) )
 					if ( _isJumping )
 					{
 						_animator.SetBool( AirJump, false );
 						_animator.SetBool( AttackAirJump, false );
+						_animator.SetBool( AttackDrop, _cannotAttackDrop = false );
 					}
 					else
 						_lastGroundedTime = JumpCoyoteTime;
@@ -499,7 +512,7 @@ namespace GwambaPrimeAdventure.Character
 								_fallDamage = 0F;
 							}
 						}
-						if ( AttackUsage )
+						if ( AttackUsage && !_animator.GetBool( AttackJump ) && !_animator.GetBool( AttackDrop ) )
 							_rigidbody.linearVelocityY *= AttackVelocityCut;
 					}
 					_localAtAny.x = ( _longJumping ? DashSpeed : MovementSpeed + BunnyHop( VelocityBoost ) ) * ( AttackUsage ? AttackVelocityCut : 1F );
@@ -580,18 +593,18 @@ namespace GwambaPrimeAdventure.Character
 			_collider.GetContacts( _groundContacts );
 			if ( _isOnGround = _groundContacts.Exists( contact => CheckGroundLimit <= contact.normal.y ) )
 			{
-				if ( _animator.GetBool( AirJump ) )
-				{
-					_animator.SetBool( AirJump, false );
-					_animator.SetBool( AttackAirJump, false );
-					EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
-				}
 				if ( _offGround )
 				{
 					if ( _animator.GetBool( Jump ) )
 						_animator.SetBool( Jump, false );
 					if ( _animator.GetBool( Fall ) )
 						_animator.SetBool( Fall, false );
+					if ( _animator.GetBool( AirJump ) )
+					{
+						_animator.SetBool( AirJump, false );
+						_animator.SetBool( AttackAirJump, false );
+						EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
+					}
 					_lastGroundedTime = JumpCoyoteTime;
 					_canAirJump = !( _offGround = _longJumping = _isJumping = false );
 					_bunnyHopBoost = 0F < _lastJumpTime ? _bunnyHopBoost : (ushort) 0;
@@ -605,7 +618,8 @@ namespace GwambaPrimeAdventure.Character
 					{
 						_screenShaker.ImpulseDefinition.ImpulseDuration = FallShakeTime;
 						_screenShaker.GenerateImpulse( _fallDamage / FallDamageDistance * FallShake );
-						DamagerHurt( (ushort) Mathf.FloorToInt( _fallDamage / FallDamageDistance ) );
+						if ( !_animator.GetBool( AttackDrop ) )
+							DamagerHurt( (ushort) Mathf.FloorToInt( _fallDamage / FallDamageDistance ) );
 						GroundSound( 0F );
 						_fallStarted = false;
 						_fallDamage = 0F;
@@ -616,6 +630,11 @@ namespace GwambaPrimeAdventure.Character
 							_gwambaCanvas.FallDamageText.style.opacity = 0F;
 							_gwambaCanvas.FallDamageText.text = $"X 0";
 						}
+					}
+					if ( _animator.GetBool( AttackDrop ) )
+					{
+						_animator.SetBool( AttackDrop, _cannotAttackDrop = false );
+						EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 					}
 				}
 				if ( !_animator.GetBool( AirJump ) && !_animator.GetBool( DashSlide ) && 0 != _walkValue && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
