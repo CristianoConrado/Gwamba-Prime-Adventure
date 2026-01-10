@@ -200,11 +200,10 @@ namespace GwambaPrimeAdventure.Character
 			if ( ( !AttackUsage || ComboAttackBuffer ) && !_animator.GetBool( AttackCombo ) )
 				if ( 0 != _walkValue && _localAtStart.y > UpInputZone && _offGround && _canAirJump && !_animator.GetBool( AirJump ) )
 				{
-					_animator.SetBool( AirJump, !( _canAirJump = false ) );
+					_animator.SetBool( AirJump, !( _isJumping = _canAirJump = false ) );
 					_animator.SetBool( AttackAirJump, ComboAttackBuffer );
 					transform.TurnScaleX( _localAtAny.z = _walkValue );
 					_rigidbody.linearVelocity = Vector2.zero;
-					_isJumping = false;
 					_rigidbody.AddForceX( ( ImpulseStrenght + BunnyHop( JumpBoost ) ) * _localAtAny.z * _rigidbody.mass, ForceMode2D.Impulse );
 					_rigidbody.AddForceY( ( ImpulseStrenght + BunnyHop( JumpBoost ) ) * _rigidbody.mass, ForceMode2D.Impulse );
 					EffectsController.SoundEffect( AirJumpSound, transform.position );
@@ -222,11 +221,10 @@ namespace GwambaPrimeAdventure.Character
 						if ( ComboAttackBuffer )
 							StartAttackSound();
 					}
-					else if ( _offGround && !_animator.GetBool( AttackDrop ) && ComboAttackBuffer && !_cannotAttackDrop )
+					else if ( _offGround && !_animator.GetBool( AttackDrop ) && ComboAttackBuffer && _canAttackDrop )
 					{
-						_animator.SetBool( AttackDrop, _cannotAttackDrop = true );
+						_animator.SetBool( AttackDrop, !( _isJumping = _canAttackDrop = false ) );
 						_rigidbody.linearVelocity = Vector2.zero;
-						_isJumping = false;
 						_rigidbody.AddForceY( ( ImpulseStrenght + BunnyHop( JumpBoost ) ) * -_rigidbody.mass, ForceMode2D.Impulse );
 						StartAttackSound();
 					}
@@ -450,7 +448,7 @@ namespace GwambaPrimeAdventure.Character
 					{
 						_animator.SetBool( AirJump, false );
 						_animator.SetBool( AttackAirJump, false );
-						_animator.SetBool( AttackDrop, _cannotAttackDrop = false );
+						_animator.SetBool( AttackDrop, false );
 					}
 					else
 						_lastGroundedTime = JumpCoyoteTime;
@@ -604,7 +602,7 @@ namespace GwambaPrimeAdventure.Character
 						EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 					}
 					_lastGroundedTime = JumpCoyoteTime;
-					_canAirJump = !( _offGround = _longJumping = _isJumping = false );
+					_canAttackDrop = _canAirJump = !( _offGround = _longJumping = _isJumping = false );
 					_bunnyHopBoost = 0F < _lastJumpTime ? _bunnyHopBoost : (ushort) 0;
 					if ( 0 >= _bunnyHopBoost && _offBunnyHop )
 					{
@@ -631,7 +629,7 @@ namespace GwambaPrimeAdventure.Character
 					}
 					if ( _animator.GetBool( AttackDrop ) )
 					{
-						_animator.SetBool( AttackDrop, _cannotAttackDrop = false );
+						_animator.SetBool( AttackDrop, false );
 						EffectsController.SurfaceSound( _groundContacts[ 0 ].point );
 					}
 				}
@@ -641,20 +639,12 @@ namespace GwambaPrimeAdventure.Character
 				{
 					_localAtStart.Set( Local.x + _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F ), Local.y + WorldBuild.SNAP_LENGTH / 2F );
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, _collider.size.y + WorldBuild.SNAP_LENGTH );
-					_groundContacts.RemoveAll( contact =>
-					{
-						return contact.point.OutsideRectangle( _localAtStart, _localAtEnd )
-						|| contact.point.CorrectedPoint( contact.relativeVelocity ).OutsideRectangle( _localAtStart, _localAtEnd );
-					} );
+					_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
 					if ( 0 >= _groundContacts.Count )
 						return;
 					_localAtStart.Set( Local.x + _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F ), Local.y - ( _collider.size.y - UpStairsLength ) / 2F );
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, UpStairsLength );
-					if ( _groundContacts.Exists( contact =>
-					{
-						return contact.point.OutsideRectangle( _localAtStart, _localAtEnd )
-						&& contact.point.CorrectedPoint( contact.relativeVelocity ).OutsideRectangle( _localAtStart, _localAtEnd );
-					} ) )
+					if ( _groundContacts.Exists( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) ) )
 						return;
 					_localAtAny.x = ( _collider.bounds.extents.x + WorldBuild.SNAP_LENGTH / 2F ) * transform.localScale.x.CompareTo( 0F );
 					_localAtStart.Set( Local.x + _localAtAny.x, Local.y + _collider.bounds.extents.y );
@@ -675,7 +665,7 @@ namespace GwambaPrimeAdventure.Character
 					if ( _groundContacts.Exists( contact =>
 					{
 						return contact.point.OutsideRectangle( _localAtStart, _localAtEnd )
-						&& contact.point.CorrectedPoint( contact.relativeVelocity ).OutsideRectangle( _localAtStart, _localAtEnd );
+						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideRectangle( _localAtStart, _localAtEnd );
 					} ) )
 						return;
 					_localAtStart.x = Local.x - ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
