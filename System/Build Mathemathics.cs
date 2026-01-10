@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 namespace GwambaPrimeAdventure
 {
 	public static class BuildMathemathics
@@ -26,6 +26,7 @@ namespace GwambaPrimeAdventure
 			transform.localScale = _scaleTurner;
 		}
 		public static void TurnScaleX( this Transform transform, bool conditionChanger ) => TurnScaleX( transform, conditionChanger ? -1F : 1F );
+		public static Vector2 CorrectedPoint( this Vector2 pointToCorrect, Vector2 relativeVelocity ) => pointToCorrect - relativeVelocity * Time.fixedDeltaTime;
 		public static bool InsideRectangle( this Vector2 pointInside, Vector2 originPoint, Vector2 sizePoint ) =>
 			pointInside.x.InsideRange(originPoint.x, sizePoint.x) && pointInside.y.InsideRange(originPoint.y, sizePoint.y);
 		public static bool OutsideRectangle( this Vector2 pointOutside, Vector2 originPoint, Vector2 sizePoint ) => !InsideRectangle( pointOutside, originPoint, sizePoint );
