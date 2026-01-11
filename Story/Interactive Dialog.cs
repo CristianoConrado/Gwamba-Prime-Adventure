@@ -59,7 +59,7 @@ namespace GwambaPrimeAdventure.Story
 			if ( _nextSlide )
 			{
 				_nextSlide = false;
-				await _storyTeller.NextSlide().SuppressCancellationThrow();
+				await _storyTeller.NextSlide().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 				_dialogHud.RootElement.style.display = DisplayStyle.Flex;
