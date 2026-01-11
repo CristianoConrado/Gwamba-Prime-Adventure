@@ -574,7 +574,7 @@ namespace GwambaPrimeAdventure.Character
 			if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
 			{
 				_collider.GetContacts( _groundContacts );
-				if ( _groundContacts.Exists( contact => CheckGroundLimit <= Mathf.Abs( contact.normal.x ) ) )
+				if ( _groundContacts.Exists( contact => 0F > contact.normal.x ? -CheckGroundLimit >= contact.normal.x : CheckGroundLimit <= contact.normal.x ) )
 				{
 					_animator.SetBool( AirJump, false );
 					_animator.SetBool( DashSlide, false );
