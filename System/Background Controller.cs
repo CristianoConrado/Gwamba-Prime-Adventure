@@ -81,6 +81,9 @@ namespace GwambaPrimeAdventure
 							childRenderer.sprite = _childrenRederers[ i ].sprite;
 							childRenderer.sortingOrder = _childrenRederers[ i ].sortingOrder;
 						}
+				await UniTask.Yield( PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
+				if ( destroyToken.IsCancellationRequested )
+					return;
 			}
 		}
 		private void LateUpdate()
