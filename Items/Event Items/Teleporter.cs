@@ -73,6 +73,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			foreach ( Transform child in transform )
 				child.position = _locations[ _index ];
 			_index = (ushort) ( _index < _locations.Length - 1 ? _index + 1 : 0 );
+			transform.DetachChildren();
 			await UniTask.NextFrame( PlayerLoopTiming.PostLateUpdate, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
@@ -94,9 +95,15 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		{
 			if ( _active && _onCollision )
 				if ( _useTimer )
+				{
+					other.transform.SetParent( transform );
 					Timer();
+				}
 				else if ( CharacterExporter.EqualGwamba( other.gameObject ) )
+				{
+					other.transform.SetParent( transform );
 					Teleport().Forget();
+				}
 		}
 		public void Execute()
 		{
