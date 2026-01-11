@@ -1,8 +1,8 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.Cinemachine;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 namespace GwambaPrimeAdventure
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( CinemachineCamera ), typeof( CinemachinePositionComposer ), typeof( Rigidbody2D ) )]
@@ -89,10 +89,7 @@ namespace GwambaPrimeAdventure
 		public void Receive( MessageData message )
 		{
 			if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
-				if ( !message.ToggleValue.Value )
-					_cinemachineFollow.Damping = Vector2.zero;
-				else if ( message.ToggleValue.Value )
-					_cinemachineFollow.Damping = _posiontDamping;
+				_cinemachineFollow.Damping = message.ToggleValue.Value ? _posiontDamping : Vector3.zero;
 		}
 	};
 };
