@@ -59,7 +59,12 @@ namespace GwambaPrimeAdventure.Story
 				return;
 			if ( _storySceneObject.SceneComponents[ _imageIndex ].OffDialog )
 			{
-				await UniTask.WaitForSeconds( _storySceneObject.SceneComponents[ _imageIndex ].TimeToDesapear, true, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
+				await UniTask.WaitForSeconds(
+					duration: _storySceneObject.SceneComponents[ _imageIndex ].TimeToDesapear,
+					ignoreTimeScale: true,
+					delayTiming: PlayerLoopTiming.Update,
+					cancellationToken: _destroyToken,
+					cancelImmediately: true ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
 				if ( _storySceneObject.SceneComponents[ _imageIndex ].JumpToNext )
