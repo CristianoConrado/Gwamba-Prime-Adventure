@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using NaughtyAttributes;
-namespace GwambaPrimeAdventure.Enemy
+namespace GwambaPrimeAdventure.Item
 {
 	[DisallowMultipleComponent]
 	internal sealed class ItemGenerator : StateController
