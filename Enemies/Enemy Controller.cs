@@ -75,8 +75,8 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( RigidbodyType2D.Static != _rigidbody.bodyType )
 			{
-				_rigidbody.linearVelocity = _guardedLinearVelocity;
 				_rigidbody.gravityScale = ProvidenceStatistics.GravityScale;
+				_rigidbody.linearVelocity = _guardedLinearVelocity;
 			}
 		}
 		internal void OnDisable()
