@@ -1,3 +1,4 @@
+using GwambaPrimeAdventure.Connection;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
@@ -36,6 +37,16 @@ namespace GwambaPrimeAdventure.Enemy
 			_controller = GetComponent<EnemyController>();
 			_collider = GetComponent<Collider2D>();
 			_sender.SetAdditionalData( _enemiesToSend );
+		}
+		private new void OnDestroy()
+		{
+			base.OnDestroy();
+			if ( !_controller.ProvidenceStatistics.IsLevelBoss )
+				return;
+			SaveController.Load( out SaveFile saveFile );
+			ushort bossIndex = (ushort) ( int.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 );
+			if ( !saveFile.DeafetedBosses[ bossIndex ] )
+				saveFile.DeafetedBosses[ bossIndex ] = true;
 		}
 		public bool Hurt( ushort damage )
 		{
