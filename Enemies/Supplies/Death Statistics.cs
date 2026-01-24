@@ -4,7 +4,8 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	[CreateAssetMenu( fileName = "Death Enemy", menuName = "Enemy Statistics/Death", order = 10 )]
 	public sealed class DeathStatistics : ScriptableObject
 	{
-		[field: SerializeField, Tooltip( "The enemy that this enemy will spawn in death." ), Header( "Death Enemy", order = 0 ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F, order = 1 )]
+		[field: SerializeField, Tooltip( "The enemy that this enemy will spawn in death." )]
+		[field: Header( "Death Enemy", order = 0 ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F, order = 1 )]
 		public Control ChildEnemy
 		{
 			get;
