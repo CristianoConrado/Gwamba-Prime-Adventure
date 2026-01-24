@@ -36,7 +36,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, HideIf( EConditionOperator.Or, nameof( ShootInfinity ), nameof( CircularDetection ) ), Tooltip( "The angle fo the direction of ray of the detection." )]
+		[field: SerializeField, HideIf( EConditionOperator.Or, nameof( ShootInfinity ), nameof( CircularDetection ) ), Tooltip( "The angle of the direction of detection's ray." )]
 		public float RayAngleDirection
 		{
 			get;
