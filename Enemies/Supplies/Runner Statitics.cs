@@ -5,7 +5,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	[CreateAssetMenu( fileName = "Runner Enemy", menuName = "Enemy Statistics/Runner", order = 2 )]
 	public sealed class RunnerStatistics : MovingStatistics
 	{
-		[field: SerializeField, Tooltip( "If the off edge verifier will be turned off." ), Header( "Runner Enemy", order = 0 ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F, order = 1 )]
+		[field: SerializeField, Tooltip( "If the edge's verifier will be turned off." ), Header( "Runner Enemy", order = 0 ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F, order = 1 )]
 		public bool TurnOffEdge
 		{
 			get;
