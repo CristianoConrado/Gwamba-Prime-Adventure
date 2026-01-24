@@ -5,7 +5,8 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	[CreateAssetMenu( fileName = "Enemy Summon", menuName = "Enemy Statistics/Summon", order = 7 )]
 	public sealed class SummonObject : ScriptableObject
 	{
-		[field: SerializeField, Tooltip( "The enemy that will be instantiate." ), Header( "Components Statistics", order = 0 ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F, order = 1 )]
+		[field: SerializeField, Tooltip( "The enemy that will be instantiate." )]
+		[field: Header( "Components Statistics", order = 0 ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F, order = 1 )]
 		public GameObject[] Summons
 		{
 			get;
@@ -77,13 +78,13 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, ShowIf( nameof( StopToSummon ) ), Tooltip( "If the instanciation will be instantly after stop." )]
+		[field: SerializeField, ShowIf( nameof( StopToSummon ) ), Tooltip( "If the instanciation will be instantly before the stop." )]
 		public bool InstantlySummon
 		{
 			get;
 			private set;
 		}
-		[field: SerializeField, HideIf( nameof( InstantlySummon ) ), ShowIf( nameof( StopToSummon ) ), Tooltip( "If the instanciation will wait return from the stop to summon." )]
+		[field: SerializeField, ShowIf( nameof( StopToSummon ) ), HideIf( nameof( InstantlySummon ) ), Tooltip( "If the instanciation will wait return from the stop to summon." )]
 		public bool WaitStop
 		{
 			get;
