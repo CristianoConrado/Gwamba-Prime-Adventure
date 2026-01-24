@@ -1,9 +1,10 @@
-using UnityEngine;
-using System;
-using System.Collections;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
@@ -11,8 +12,13 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		private
 			GameObject _summonObject;
-		private
-			IEnumerator _summonEvent;
+		private readonly Queue<IEnumerator>
+			_queuedSummons = new Queue<IEnumerator>();
+		private readonly List<IEnumerator>
+			_listedSummons = new List<IEnumerator>();
+		private IEnumerator
+			_summonEvent = null,
+			_temporarySummonEvent = null;
 		private
 			CancellationToken _destroyToken;
 		private Vector2
@@ -49,6 +55,8 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
+			_queuedSummons.Clear();
+			_listedSummons.Clear();
 			Sender.Exclude( this );
 		}
 		public async UniTask Load()
@@ -72,14 +80,33 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private async void Summon( SummonObject summon )
 		{
-			( _, _waitResult) = await UniTask.WaitWhile( () => _summonEvent is not null, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
-				.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
+			_temporarySummonEvent = StopToSummon();
+			_queuedSummons.Enqueue( _temporarySummonEvent );
+			_listedSummons.Add( _temporarySummonEvent );
+			(_, _waitResult) = await UniTask.WaitWhile(
+				predicate: () =>
+				{
+					if (_summonEvent is not null)
+						return true;
+					foreach ( IEnumerator listedSummon in _listedSummons )
+						if ( listedSummon is not null && listedSummon != _queuedSummons.Peek() )
+							return true;
+					return false;
+				},
+				timing: PlayerLoopTiming.Update,
+				cancellationToken: _destroyToken,
+				cancelImmediately: true )
+				.SuppressCancellationThrow().TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
 			if ( _destroyToken.IsCancellationRequested || !_waitResult )
+			{
+				_queuedSummons.Clear();
+				_listedSummons.Clear();
 				return;
-			_summonEvent = StopToSummon();
-			_summonEvent.MoveNext();
+			}
+			_summonEvent = _queuedSummons.Peek();
+			_summonEvent?.MoveNext();
 			if ( summon.InstantlySummon )
-				_summonEvent.MoveNext();
+				_summonEvent?.MoveNext();
 			IEnumerator StopToSummon()
 			{
 				if ( summon.StopToSummon )
@@ -105,6 +132,7 @@ namespace GwambaPrimeAdventure.Enemy
 					_summonIndex.x = summon.Summons.Length - 1 > _summonIndex.x ? _summonIndex.x + 1 : 0;
 					_summonIndex.y = summon.SummonPoints.Length - 1 > _summonIndex.y ? _summonIndex.y + 1 : 0;
 				}
+				_listedSummons.Remove( _queuedSummons.Dequeue() );
 				_summonEvent = null;
 			}
 		}
