@@ -56,6 +56,8 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Shoot()
 		{
+			if ( _statistics.ShootInfinity )
+				_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
 			if ( !_statistics.PureInstance )
 				_projectileRotation = _statistics.CircularDetection
 					? Quaternion.AngleAxis( ( Mathf.Atan2( _targetDirection.y, _targetDirection.x ) * Mathf.Rad2Deg ) - 90F, Vector3.forward )
