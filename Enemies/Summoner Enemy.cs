@@ -14,8 +14,6 @@ namespace GwambaPrimeAdventure.Enemy
 			GameObject _summonObject;
 		private readonly Queue<IEnumerator>
 			_queuedSummons = new Queue<IEnumerator>();
-		private readonly List<IEnumerator>
-			_listedSummons = new List<IEnumerator>();
 		private IEnumerator
 			_summonEvent = null,
 			_temporarySummonEvent = null;
@@ -56,7 +54,6 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			base.OnDestroy();
 			_queuedSummons.Clear();
-			_listedSummons.Clear();
 			Sender.Exclude( this );
 		}
 		public async UniTask Load()
@@ -82,14 +79,13 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			_temporarySummonEvent = StopToSummon();
 			_queuedSummons.Enqueue( _temporarySummonEvent );
-			_listedSummons.Add( _temporarySummonEvent );
 			(_, _waitResult) = await UniTask.WaitWhile(
 				predicate: () =>
 				{
-					if (_summonEvent is not null)
+					if ( _summonEvent is not null )
 						return true;
-					foreach ( IEnumerator listedSummon in _listedSummons )
-						if ( listedSummon is not null && listedSummon != _queuedSummons.Peek() )
+					foreach ( IEnumerator queuedSummon in _queuedSummons )
+						if ( queuedSummon != _queuedSummons.Peek() )
 							return true;
 					return false;
 				},
@@ -100,7 +96,6 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _destroyToken.IsCancellationRequested || !_waitResult )
 			{
 				_queuedSummons.Clear();
-				_listedSummons.Clear();
 				return;
 			}
 			_summonEvent = _queuedSummons.Peek();
@@ -132,7 +127,7 @@ namespace GwambaPrimeAdventure.Enemy
 					_summonIndex.x = summon.Summons.Length - 1 > _summonIndex.x ? _summonIndex.x + 1 : 0;
 					_summonIndex.y = summon.SummonPoints.Length - 1 > _summonIndex.y ? _summonIndex.y + 1 : 0;
 				}
-				_listedSummons.Remove( _queuedSummons.Dequeue() );
+				_queuedSummons.Dequeue();
 				_summonEvent = null;
 			}
 		}
