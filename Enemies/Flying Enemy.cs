@@ -52,7 +52,8 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			GameObject detectionObject = new( "Detection Collider", typeof( CapsuleCollider2D ) )
 			{
-				layer = WorldBuild.ENEMY_LAYER
+				layer = WorldBuild.ENEMY_LAYER,
+				tag = tag
 			};
 			( _detectionObject = detectionObject.transform ).SetParent( transform );
 			_detectionObject.localPosition = Vector3.zero;
