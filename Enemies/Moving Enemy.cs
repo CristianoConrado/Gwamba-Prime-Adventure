@@ -53,10 +53,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( WorldBuild.SCENE_LAYER != collision.gameObject.layer || ( OnGround && Mathf.Abs( Rigidbody.linearVelocityY ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT * 10F ) )
 				return;
 			_collider.GetContacts( _groundContacts );
-			_originCast.Set( transform.position.x + _collider.offset.x, transform.position.y + _collider.offset.y - _collider.bounds.extents.y * transform.up.y );
-			_sizeCast.Set( _collider.bounds.size.x, WorldBuild.SNAP_LENGTH );
-			_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _originCast, _sizeCast ) );
-			OnGround = 0 < _groundContacts.Count;
+			OnGround = _groundContacts.Exists( contact => _moving.CheckGroundLimit <= contact.normal.y );
 		}
 		protected void OnCollisionExit2D( Collision2D collision )
 		{
