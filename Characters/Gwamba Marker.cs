@@ -646,16 +646,14 @@ namespace GwambaPrimeAdventure.Character
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, UpStairsLength );
 					if ( _groundContacts.Exists( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) ) )
 						return;
-					_localAtAny.x = ( _collider.bounds.extents.x + WorldBuild.SNAP_LENGTH / 2F ) * transform.localScale.x.CompareTo( 0F );
-					_localAtStart.Set( Local.x + _localAtAny.x, Local.y + _collider.bounds.extents.y );
-					_localAtEnd.Set( Local.x + _localAtAny.x, Local.y - _collider.bounds.extents.y );
-					if ( _castHit = Physics2D.Linecast( _localAtStart, _localAtEnd, WorldBuild.SCENE_LAYER_MASK ) )
-					{
-						_localAtSurface.x = transform.position.x + WorldBuild.SNAP_LENGTH * transform.localScale.x.CompareTo( 0F );
-						_localAtSurface.y = transform.position.y + Mathf.Abs( _castHit.point.y - ( transform.position.y - _collider.bounds.extents.y ) );
-						transform.position = _localAtSurface;
-						_rigidbody.linearVelocityX = MovementSpeed * _walkValue * ( AttackUsage ? AttackVelocityCut : 1F );
-					}
+					_localAtEnd = _groundContacts[0].point;
+					for ( ushort i = 1; _groundContacts.Count > i; i++ )
+						if ( Vector2.Distance( _localAtStart, _groundContacts[ i ].point ) < Vector2.Distance( _localAtStart, _localAtEnd ) )
+							_localAtEnd = _groundContacts[ i ].point;
+					_localAtSurface.x = transform.position.x + WorldBuild.SNAP_LENGTH * transform.localScale.x.CompareTo( 0F );
+					_localAtSurface.y = transform.position.y + Mathf.Abs( _localAtEnd.y - ( transform.position.y - _collider.bounds.extents.y ) );
+					transform.position = _localAtSurface;
+					_rigidbody.linearVelocityX = MovementSpeed * _walkValue * ( AttackUsage ? AttackVelocityCut : 1F );
 				}
 				else if ( 0F >= _lastJumpTime )
 				{
