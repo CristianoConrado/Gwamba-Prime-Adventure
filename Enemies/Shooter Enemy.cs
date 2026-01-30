@@ -160,7 +160,7 @@ namespace GwambaPrimeAdventure.Enemy
 					if ( enemy && this == enemy && MessageFormat.Event == message.Format && _statistics.ReactToDamage )
 					{
 						_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
-						transform.TurnScaleX( CharacterExporter.GwambaLocalization().x < transform.position.x );
+						transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
 						Shoot();
 						return;
 					}
