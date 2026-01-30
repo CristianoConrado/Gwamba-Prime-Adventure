@@ -53,9 +53,12 @@ namespace GwambaPrimeAdventure.Enemy
 			_rigidbody = GetComponent<Rigidbody2D>();
 			_screenShaker = GetComponent<CinemachineImpulseSource>();
 			_destructibleEnemy = _selfEnemies[ 0 ];
-			for ( ushort i = 0; _selfEnemies.Length - 1 > i; i++ )
-				if ( _selfEnemies[ i + 1 ].DestructilbePriority > _selfEnemies[ i ].DestructilbePriority )
-					_destructibleEnemy = _selfEnemies[ i + 1 ];
+			for ( ushort i = 1; _selfEnemies.Length > i; i++ )
+				if ( _selfEnemies[ i ].DestructilbePriority > _destructiblePriority )
+				{
+					_destructiblePriority = _selfEnemies[ i ].DestructilbePriority;
+					_destructibleEnemy = _selfEnemies[ i ];
+				}
 			foreach ( InnerEnemy innerEnemy in GetComponentsInChildren<InnerEnemy>( true ) )
 				innerEnemy.Deliver( this, OnTriggerEnter2D );
 			Sender.Include( this );
