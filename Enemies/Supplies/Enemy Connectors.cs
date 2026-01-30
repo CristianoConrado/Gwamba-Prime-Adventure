@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections.Generic;
 namespace GwambaPrimeAdventure.Enemy.Supply
@@ -14,6 +14,8 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			IDestructible _destructibleEnemy;
 		protected Vector2
 			_guardedLinearVelocity = Vector2.zero;
+		protected ushort
+			_destructiblePriority = 0;
 		protected short
 			_vitality = 0,
 			_armorResistance = 0;
