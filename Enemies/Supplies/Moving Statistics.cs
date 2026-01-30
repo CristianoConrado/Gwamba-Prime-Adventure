@@ -17,6 +17,12 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
+		[field: SerializeField, Range( 5E-1F, 1F ), Tooltip( "The limit for this enemy check if the contact point is the ground." )]
+		public float CheckGroundLimit
+		{
+			get;
+			private set;
+		}
 		[field: SerializeField, Tooltip( "If this enemy will invert the side of movement." )]
 		public bool InvertMovementSide
 		{
