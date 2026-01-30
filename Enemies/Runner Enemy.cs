@@ -212,12 +212,11 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnCollisionStay2D( collision );
 			if ( WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
-			_originCast = (Vector2) transform.position + _collider.offset;
-			_originCast.x += _collider.bounds.extents.x * ( 0F < transform.localScale.x ? 1F : -1F ) * transform.right.x;
-			_sizeCast.Set( WorldBuild.SNAP_LENGTH, _collider.bounds.size.y );
 			_collider.GetContacts( _groundContacts );
-			_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _originCast, _sizeCast ) );
-			_wayBlocked = 0 < _groundContacts.Count;
+			_originCast = (Vector2) transform.position + _collider.offset;
+			_originCast.x += _collider.bounds.extents.x * ( transform.localScale.x.CompareTo( 0F ) ) * transform.right.x;
+			_sizeCast.Set( WorldBuild.SNAP_LENGTH, _collider.bounds.size.y );
+			_wayBlocked = _groundContacts.Exists( contact => contact.point.InsideRectangle( _originCast, _sizeCast ) );
 		}
 		public new bool Hurt( ushort damage )
 		{
