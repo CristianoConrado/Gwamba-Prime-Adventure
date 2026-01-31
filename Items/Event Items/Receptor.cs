@@ -13,8 +13,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_selfes = new HashSet<Receptor>();
 		private readonly HashSet<Activator>
 			_activatorsNeeded = new HashSet<Activator>();
-		private
-            ISignalReceptor _receptor;
+		private 
+			ISignalReceptor _receptor;
 		private ushort
 			_signals = 0,
 			_1X1Index = 0;
@@ -37,13 +37,13 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		[SerializeField, HideIf( nameof( _1X1 ) ), Tooltip( "If is needed only one activator to activate." )]
 		private
 			bool _oneNeeded;
-		[SerializeField, HideIf( nameof( _1X1 ) ), ShowIf( nameof( _oneNeeded ) ), Tooltip( "If it will be inactive after one activation" )]
+		[SerializeField, ShowIf( nameof( _oneNeeded ) ), HideIf( nameof( _1X1 ) ), Tooltip( "If it will be inactive after one activation" )]
 		private
 			bool _oneActivation;
 		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), Tooltip( "If are multiples activators needed to activate." )]
 		private
 			bool _multiplesNeeded;
-		[SerializeField, HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) ), ShowIf( nameof( _multiplesNeeded ) )]
+		[SerializeField, ShowIf( nameof( _multiplesNeeded ) ), HideIf( EConditionOperator.Or, nameof( _1X1 ), nameof( _oneNeeded ) )]
 		[Tooltip( "The amount activators needed to activate." )]
 		private
 			ushort _quantityNeeded;
