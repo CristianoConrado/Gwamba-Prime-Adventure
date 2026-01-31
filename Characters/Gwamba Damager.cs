@@ -22,6 +22,8 @@ namespace GwambaPrimeAdventure.Character
 			UnityAction<GwambaDamager, IDestructible> DamagerAttack;
 		private Color
 			_alphaChanger = new Color();
+		private bool?
+			_hurtCondition = false;
 		[SerializeField, Tooltip( "If this Gwamba's part will take damage." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
 		private
 			bool _takeDamage;
@@ -74,13 +76,13 @@ namespace GwambaPrimeAdventure.Character
 		private void OnTriggerEnter2D( Collider2D other )
 		{
 			if ( !_takeDamage && other.TryGetComponent<IDestructible>( out var destructible ) && destructible is not null && !damagedes.Contains( destructible.Source ) )
-				DamagerAttack.Invoke( this, destructible );
+				DamagerAttack?.Invoke( this, destructible );
 		}
-		public bool Hurt( ushort damage ) => _takeDamage && DamagerHurt.Invoke( damage );
+		public bool Hurt( ushort damage ) => _takeDamage && ( _hurtCondition = DamagerHurt?.Invoke( damage ) ).HasValue && _hurtCondition.Value;
 		public void Stun( ushort stunStength, float stunTime )
 		{
 			if ( _takeDamage )
-				DamagerStun.Invoke( stunStength, stunTime );
+				DamagerStun?.Invoke( stunStength, stunTime );
 		}
 	};
 };
