@@ -32,14 +32,14 @@ namespace GwambaPrimeAdventure
 				yield break;
 			TransicionHud transicionHud = Instantiate( _transicionHud, transform );
 			transicionHud.RootElement.style.opacity = 1F;
-            transicionHud.LoadingBar.highValue = _objectLoaders.Length;
-            ProgressIndex = 0;
+			transicionHud.LoadingBar.highValue = _objectLoaders.Length;
+			ProgressIndex = 0;
 			ObjectLoader requestedLoader;
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			foreach ( ObjectLoader loader in _objectLoaders )
 			{
 				requestedLoader = Instantiate( loader );
-                yield return requestedLoader.Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow().ToCoroutine();
+				yield return requestedLoader.Load( transicionHud.LoadingBar ).AttachExternalCancellation( destroyToken ).SuppressCancellationThrow().ToCoroutine();
 				if ( destroyToken.IsCancellationRequested )
 				{
 					Destroy( requestedLoader.gameObject );
@@ -59,6 +59,6 @@ namespace GwambaPrimeAdventure
 			Destroy( gameObject );
 			StateController.SetState( true );
 		}
-		public static bool IsInTrancision() => _instance;
+		public static bool IsInTransition() => _instance;
 	};
 };
