@@ -8,36 +8,36 @@ namespace GwambaPrimeAdventure.Hud
 		private static
 			DeathScreenHud _instance;
 		internal VisualElement RootElement
-        {
-            get;
-            private set;
-        }
-        internal VisualElement Curtain
-        {
-            get;
-            private set;
-        }
-        internal Label Text
-        {
-            get;
-            private set;
-        }
-        internal Button Continue
-        {
-            get;
-            private set;
-        }
-        internal Button OutLevel
-        {
-            get;
-            private set;
-        }
-        internal Button GameOver
-        {
-            get;
-            private set;
-        }
-        private void Awake()
+		{
+			get;
+			private set;
+		}
+		internal VisualElement Curtain
+		{
+			get;
+			private set;
+		}
+		internal Label Text
+		{
+			get;
+			private set;
+		}
+		internal Button Continue
+		{
+			get;
+			private set;
+		}
+		internal Button OutLevel
+		{
+			get;
+			private set;
+		}
+		internal Button GameOver
+		{
+			get;
+			private set;
+		}
+		private void Awake()
 		{
 			if ( _instance )
 			{
