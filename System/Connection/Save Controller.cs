@@ -49,7 +49,7 @@ namespace GwambaPrimeAdventure.Connection
 			ReadOnlySpan<char> actualSaveFile = FilesController.Select( _actualSaveFile );
 			if ( string.IsNullOrEmpty( actualSaveFile.ToString() ) )
 				return saveFile;
-            ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{actualSaveFile.ToString()}.txt";
+			ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{actualSaveFile.ToString()}.txt";
 			if ( File.Exists( actualPath.ToString() ) )
 			{
 				bool filesCondition = FilesController.Select( 1 ) != actualSaveFile.ToString() && FilesController.Select( 2 ) != actualSaveFile.ToString();
@@ -60,7 +60,7 @@ namespace GwambaPrimeAdventure.Connection
 				}
 				saveFile = FileEncoder.ReadData<SaveFile>( actualPath.ToString() );
 				saveFile.Books = new Dictionary<string, bool>();
-				for ( ushort i = 0; saveFile.BooksName.Count > i; i++ )
+				for ( ushort i = 0; saveFile.BooksName.Count > i++; )
 					saveFile.Books.Add( saveFile.BooksName[ i ], saveFile.BooksValue[ i ] );
 			}
 			return saveFile;
@@ -77,13 +77,13 @@ namespace GwambaPrimeAdventure.Connection
 			if ( string.IsNullOrEmpty( newName ) )
 				return;
 			FilesController.SaveData( (actualSave, newName) );
-            ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{FilesController.Select( actualSave )}.txt";
+			ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{FilesController.Select( actualSave )}.txt";
 			if ( File.Exists( actualPath.ToString() ) )
 				FileEncoder.WriteData( FileEncoder.ReadData<SaveFile>( actualPath.ToString() ), $@"{Application.persistentDataPath}\{newName}.txt" );
 		}
 		public static string DeleteData( ushort actualSave )
 		{
-            ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{FilesController.Select( actualSave )}.txt";
+			ReadOnlySpan<char> actualPath = $@"{Application.persistentDataPath}\{FilesController.Select( actualSave )}.txt";
 			if ( File.Exists( actualPath.ToString() ) )
 				File.Delete( actualPath.ToString() );
 			return FilesController.SaveData( (actualSave, $"Data File {actualSave}") );
@@ -91,17 +91,17 @@ namespace GwambaPrimeAdventure.Connection
 		public static void SaveData()
 		{
 			FilesController.SaveData();
-            ReadOnlySpan<char> actualSaveFile = FilesController.Select( _actualSaveFile );
+			ReadOnlySpan<char> actualSaveFile = FilesController.Select( _actualSaveFile );
 			if ( string.IsNullOrEmpty( actualSaveFile.ToString() ) )
 				return;
 			SaveFile newSaveFile = _saveFile;
 			newSaveFile.BooksName.Clear();
-            newSaveFile.BooksValue.Clear();
-            if ( 0F < _saveFile.Books?.Count )
+			newSaveFile.BooksValue.Clear();
+			if ( 0F < _saveFile.Books?.Count )
 			{
-                newSaveFile.BooksName.AddRange( _saveFile.Books.Keys );
-                newSaveFile.BooksValue.AddRange( _saveFile.Books.Values );
-            }
+				newSaveFile.BooksName.AddRange( _saveFile.Books.Keys );
+				newSaveFile.BooksValue.AddRange( _saveFile.Books.Values );
+			}
 			FileEncoder.WriteData( newSaveFile, $@"{Application.persistentDataPath}\{actualSaveFile.ToString()}.txt" );
 		}
 	};
