@@ -27,7 +27,7 @@ namespace GwambaPrimeAdventure.Item
 		[SerializeField, HideIf( nameof( _existentItems ) ), Tooltip( "If the quantity of the generation is limited." )]
 		private
 			bool _especifiedGeneration;
-		[SerializeField, HideIf( nameof( _existentItems ) ), ShowIf( nameof( _especifiedGeneration ) ), Tooltip( "If this generator will destroy the entire object." )]
+		[SerializeField, ShowIf( nameof( _especifiedGeneration ) ), HideIf( nameof( _existentItems ) ), Tooltip( "If this generator will destroy the entire object." )]
 		private
 			bool _destroyObject;
 		private void Update()
