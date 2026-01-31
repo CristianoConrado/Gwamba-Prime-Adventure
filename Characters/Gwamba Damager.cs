@@ -23,7 +23,7 @@ namespace GwambaPrimeAdventure.Character
 		private Color
 			_alphaChanger = new Color();
 		private bool?
-			_hurtCondition = false;
+			_hurtCondition = null;
 		[SerializeField, Tooltip( "If this Gwamba's part will take damage." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
 		private
 			bool _takeDamage;
