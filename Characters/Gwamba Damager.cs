@@ -65,7 +65,7 @@ namespace GwambaPrimeAdventure.Character
 		private async void Start()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTransition(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			_spriteRenderer = GetComponent<SpriteRenderer>();
