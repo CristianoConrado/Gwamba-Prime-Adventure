@@ -16,7 +16,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_vitality;
 		private void CommonInstance()
 		{
-			for ( ushort i = 0; _statistics.QuantityToSummon > i; i++ )
+			for ( ushort i = 0; _statistics.QuantityToSummon > i++; )
 			{
 				_projectileRotation = _statistics.UseSelfRotation
 					? Quaternion.AngleAxis( transform.eulerAngles.z + _statistics.BaseAngle + _statistics.SpreadAngle * i, Vector3.forward )
@@ -63,7 +63,7 @@ namespace GwambaPrimeAdventure.Enemy
 			float distance = Physics2D.Raycast( transform.position, transform.up, _statistics.DistanceRay, WorldBuild.SCENE_LAYER_MASK ).distance;
 			if ( _statistics.UseQuantity )
 				distance = _statistics.QuantityToSummon;
-			for ( ushort i = 0; distance > i; i++ )
+			for ( ushort i = 0; distance > i++; )
 			{
 				_cellPosition.Set( (int) ( _cellPosition.x + transform.up.x ), (int) ( _cellPosition.y + transform.up.y ) );
 				CellInstance();
@@ -83,13 +83,13 @@ namespace GwambaPrimeAdventure.Enemy
 			{
 				_internalBreakPoint = (ushort) Random.Range( _statistics.BreakPoint, _statistics.ReturnPoint - _statistics.MinimumRandomValue );
 				if ( _statistics.MinimumRandomValue > _internalReturnPoint - _internalBreakPoint )
-					for ( ushort i = 0; _statistics.MinimumRandomValue - ( _internalReturnPoint - _internalBreakPoint ) > i; i++ )
+					for ( ushort i = 0; _statistics.MinimumRandomValue - ( _internalReturnPoint - _internalBreakPoint ) > i++; )
 						if ( _statistics.MinimumRandomValue >= _internalBreakPoint )
 							_internalReturnPoint++;
 						else
 							_internalBreakPoint--;
 				else if ( _statistics.ExtrictRandom && _statistics.MinimumRandomValue < _internalReturnPoint - _internalBreakPoint )
-					for ( ushort i = 0; _statistics.MinimumRandomValue - ( _internalReturnPoint - _internalBreakPoint ) > i; i++ )
+					for ( ushort i = 0; _statistics.MinimumRandomValue - ( _internalReturnPoint - _internalBreakPoint ) > i++; )
 						if ( _statistics.MinimumRandomValue >= _internalBreakPoint )
 							_internalBreakPoint++;
 						else
