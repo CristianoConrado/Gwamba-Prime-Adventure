@@ -68,7 +68,7 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			PolygonCollider2D trail = GetComponent<PolygonCollider2D>();
 			_trail = new Vector2[ trail.points.Length ];
-			for ( ushort i = 0; trail.points.Length > i; i++ )
+			for ( ushort i = 0; trail.points.Length > i++; )
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
 			_movementDirection = Vector2.right * _movementSide;
 			_pointOrigin = Rigidbody.position;
@@ -191,7 +191,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_sizeCast.y = Vector2.Distance( CharacterExporter.GwambaLocalization(), Rigidbody.position + _selfCollider.offset );
 				_detectionCollider.size = _sizeCast;
 				_originCast.Set( _sizeCast.y / 2F * transform.localScale.x.CompareTo( 0F ) * _originCast.x, _sizeCast.y / 2F * _originCast.y );
-				_detectionObject.localPosition = _originCast;
+				_detectionCollider.offset = _originCast;
 				if ( _detected = !_detectionCollider.IsTouchingLayers( WorldBuild.SCENE_LAYER_MASK ) )
 				{
 					transform.TurnScaleX( CharacterExporter.GwambaLocalization().x < transform.position.x );
