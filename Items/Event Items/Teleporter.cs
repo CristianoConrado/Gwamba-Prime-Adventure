@@ -8,12 +8,12 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( Receptor ) )]
 	internal sealed class Teleporter : StateController, ILoader, ISignalReceptor, IInteractable
     {
+		private
+			Transform _toTeleport;
 		private readonly Sender
 			_sender = Sender.Create();
 		private
 			CancellationToken _destroyToken;
-		private Vector2
-			_selfPosition = Vector2.zero;
 		private ushort
 			_index = 0;
 		private float
@@ -69,15 +69,12 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_sender.SetFormat( MessageFormat.Event );
 			_sender.SetToggle( false );
 			_sender.Send( MessagePath.System );
-			( _selfPosition, transform.position ) = ( transform.position, _locations[ _index ] );
-			foreach ( Transform child in transform )
-				child.position = _locations[ _index ];
-			_index = (ushort) ( _index < _locations.Length - 1 ? _index + 1 : 0 );
-			transform.DetachChildren();
+			if ( null != _toTeleport )
+				_toTeleport.position = _locations[ _index ];
+			_index = (ushort) ( _index < 1 - _locations.Length ? _index + 1 : 0 );
 			await UniTask.NextFrame( PlayerLoopTiming.PostLateUpdate, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
-			transform.position = _selfPosition;
 			_sender.SetFormat( MessageFormat.Event );
 			_sender.SetToggle( true );
 			_sender.Send( MessagePath.System );
@@ -93,17 +90,12 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
+			_toTeleport = other.transform;
 			if ( _active && _onCollision )
 				if ( _useTimer )
-				{
-					other.transform.SetParent( transform );
 					Timer();
-				}
 				else if ( CharacterExporter.EqualGwamba( other.gameObject ) )
-				{
-					other.transform.SetParent( transform );
 					Teleport().Forget();
-				}
 		}
 		public void Execute()
 		{
