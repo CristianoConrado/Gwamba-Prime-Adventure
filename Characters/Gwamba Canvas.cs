@@ -120,14 +120,14 @@ namespace GwambaPrimeAdventure.Character
 				vitality = RootElement.Q<VisualElement>( nameof( Vitality ) ),
 				VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) );
 			vitality.style.width = _totalWidth;
-			for ( ushort i = 0; i < _vitality; i++ )
+			for ( ushort i = 0; _vitality > i++; )
 			{
 				vitality.Add( new VisualElement()
 				{
-					name = VitalityPiece.name,
+					name = $"{VitalityPiece.name} {1 + i}",
 					style =
 					{
-						width = _totalWidth / _vitality - _borderWidth * 2F,
+						width = _totalWidth / _vitality - 2F * _borderWidth,
 						backgroundColor = BackgroundColor,
 						borderBottomColor = BorderColor,
 						borderLeftColor = BorderColor,
@@ -139,7 +139,7 @@ namespace GwambaPrimeAdventure.Character
 						borderTopWidth = _borderWidth
 					}
 				} );
-				Vitality[ i ] = vitality[ i + 1 ];
+				Vitality[ i ] = vitality[ 1 + i ];
 			}
 			vitality.Remove( VitalityPiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
@@ -147,18 +147,18 @@ namespace GwambaPrimeAdventure.Character
 				recoverVitality = RootElement.Q<VisualElement>( nameof( RecoverVitality ) ),
 				RecoverVitalityPiece = RootElement.Q<VisualElement>( nameof( RecoverVitalityPiece ) );
 			recoverVitality.style.width = _totalWidth;
-			for ( ushort i = 0; i < _recoverVitality; i++ )
+			for ( ushort i = 0; _recoverVitality > i++; )
 			{
 				recoverVitality.Add( new VisualElement()
 				{
-					name = RecoverVitalityPiece.name,
+					name = $"{RecoverVitalityPiece.name} {1 + i}",
 					style =
 					{
 						backgroundColor = MissingColor,
-						width = _totalWidth / _recoverVitality - _borderWidth * 2F
+						width = _totalWidth / _recoverVitality - 2F * _borderWidth
 					}
 				} );
-				RecoverVitality[ i ] = recoverVitality[ i + 1 ];
+				RecoverVitality[ i ] = recoverVitality[ 1 + i ];
 			}
 			recoverVitality.Remove( RecoverVitalityPiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
@@ -166,18 +166,18 @@ namespace GwambaPrimeAdventure.Character
 				stunResistance = RootElement.Q<VisualElement>( nameof( StunResistance ) ),
 				StunResistancePiece = RootElement.Q<VisualElement>( nameof( StunResistancePiece ) );
 			stunResistance.style.width = _totalWidth;
-			for ( ushort i = 0; i < _stunResistance; i++ )
+			for ( ushort i = 0; _stunResistance > i++; )
 			{
 				stunResistance.Add( new VisualElement()
 				{
-					name = StunResistancePiece.name,
+					name = $"{StunResistancePiece.name} {1 + i}",
 					style =
 					{
 						backgroundColor = StunResistanceColor,
-						width = _totalWidth / _stunResistance - _borderWidth * 2F
+						width = _totalWidth / _stunResistance - 2F * _borderWidth
 					}
 				} );
-				StunResistance[ i ] = stunResistance[ i + 1 ];
+				StunResistance[ i ] = stunResistance[ 1 + i ];
 			}
 			stunResistance.Remove( StunResistancePiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
@@ -185,18 +185,18 @@ namespace GwambaPrimeAdventure.Character
 			    bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ),
 			    BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) );
 			bunnyHop.style.width = _totalWidth;
-			for ( ushort i = 0; i < _bunnyHop; i++ )
+			for ( ushort i = 0; _bunnyHop > i++; )
 			{
 				bunnyHop.Add( new VisualElement()
 				{
-					name = BunnyHopPiece.name,
+					name = $"{BunnyHopPiece.name} {1 + i}",
 					style =
 					{
 						backgroundColor = MissingColor,
-						width = _totalWidth / _bunnyHop - _borderWidth * 2F
+						width = _totalWidth / _bunnyHop - 2F * _borderWidth
 					}
 				} );
-				BunnyHop[ i ] = bunnyHop[ i + 1 ];
+				BunnyHop[ i ] = bunnyHop[ 1 + i ];
 			}
 			bunnyHop.Remove( BunnyHopPiece );
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate );
