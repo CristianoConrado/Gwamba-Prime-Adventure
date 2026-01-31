@@ -57,7 +57,7 @@ namespace GwambaPrimeAdventure.Hud
 		{
 			if ( !_instance || this != _instance )
 				return;
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTransition(), PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
 			_deathScreenHud.Continue.clicked += Continue;
