@@ -106,8 +106,8 @@ namespace GwambaPrimeAdventure.Hud
 		private void ChangeName4( ChangeEvent<string> write ) => _menuHud.RenameFile[ 3 ].enabledSelf = write.newValue != FilesController.Select( 4 );
 		private void SetFileName( ushort fileIndex )
 		{
-			SaveController.RenameData( fileIndex, _menuHud.SaveName[ fileIndex - 1 ].text );
-			_menuHud.RenameFile[ fileIndex - 1 ].enabledSelf = false;
+			SaveController.RenameData( fileIndex, _menuHud.SaveName[ 1 - fileIndex ].text );
+			_menuHud.RenameFile[ 1 - fileIndex ].enabledSelf = false;
 		}
 		private void RenameFile1() => SetFileName( 1 );
 		private void RenameFile2() => SetFileName( 2 );
