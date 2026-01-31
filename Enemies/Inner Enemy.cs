@@ -7,6 +7,8 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		private
 			UnityAction<Collider2D> _hitEvent;
+		private
+			bool? _hurtCondition = null;
 		[SerializeField, Tooltip( "Is this enemy can hit other objects." )]
 		private
 			bool _isOnlyHit;
@@ -24,7 +26,7 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			Source = destructibleEnemy;
 		}
-		public bool Hurt( ushort damage ) => Source is not null && Source.Hurt( damage );
+		public bool Hurt( ushort damage ) => Source is not null && ( _hurtCondition = Source?.Hurt( damage ) ).HasValue && _hurtCondition.Value;
 		public void Stun( ushort stunStrenght, float stunTime ) => Source?.Stun( stunStrenght, stunTime );
 		private void OnTriggerEnter2D( Collider2D other ) => _hitEvent?.Invoke( other );
 	};
