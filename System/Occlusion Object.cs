@@ -27,7 +27,7 @@ namespace GwambaPrimeAdventure
 		private async void Start()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTrancision(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
+			await UniTask.WaitWhile( () => SceneInitiator.IsInTransition(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			StateController[] states = GetComponentsInChildren<StateController>( true );
