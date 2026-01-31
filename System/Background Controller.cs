@@ -61,7 +61,7 @@ namespace GwambaPrimeAdventure
 			SpriteRenderer childRenderer;
 			Vector3 childOffset = Vector3.zero;
 			ushort childIndex;
-			for ( ushort i = 0; i < _backgroundImages.Length; i++ )
+			for ( ushort i = 0; _backgroundImages.Length > i; i++ )
 			{
 				_childrenTransforms[ i ] = Instantiate( _backgroundObject, transform );
 				_startPosition[ i ] = _childrenTransforms[ i ].transform.position = (Vector2) _childrenTransforms[ i ].transform.position;
@@ -88,7 +88,7 @@ namespace GwambaPrimeAdventure
 		}
 		private void LateUpdate()
 		{
-			if ( SceneInitiator.IsInTrancision() )
+			if ( SceneInitiator.IsInTransition() )
 				return;
 			for ( ushort i = 0; _childrenTransforms.Length > i; i++ )
 			{
