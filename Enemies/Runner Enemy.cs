@@ -128,7 +128,7 @@ namespace GwambaPrimeAdventure.Enemy
 			{
 				_originCast.Set( transform.position.x + _collider.offset.x + _collider.bounds.extents.x * _movementSide, transform.position.y + _collider.offset.y );
 				_castSize = Physics2D.RaycastNonAlloc( _originCast, transform.right * _movementSide, _detections, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
-				for ( int i = 0; _castSize > i; i++ )
+				for ( int i = 0; _castSize > i++; )
 					if ( _detected = _detections[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 						break;
 			}
