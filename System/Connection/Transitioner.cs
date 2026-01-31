@@ -46,13 +46,14 @@ namespace GwambaPrimeAdventure.Connection
 			else
 			{
 				transicionHud.LoadingBar.highValue = 100F;
-				while ( !asyncOperation.isDone )
+				do
 				{
 					transicionHud.LoadingBar.value = asyncOperation.progress * 100F;
 					await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 					if ( destroyToken.IsCancellationRequested )
 						return;
 				}
+				while ( !asyncOperation.isDone );
 			}
 			asyncOperation.allowSceneActivation = true;
 		}
