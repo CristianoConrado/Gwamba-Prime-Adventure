@@ -47,7 +47,7 @@ namespace GwambaPrimeAdventure.Character
 			base.OnDestroy();
 			if ( !_instance || this != _instance )
 				return;
-			for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
+			for ( ushort i = 0; _gwambaDamagers.Length > i++; )
 			{
 				_gwambaDamagers[ i ].DamagerHurt -= DamagerHurt;
 				_gwambaDamagers[ i ].DamagerStun -= DamagerStun;
@@ -145,7 +145,7 @@ namespace GwambaPrimeAdventure.Character
 			_gwambaCanvas.CoinText.text = $"X {saveFile.Coins}";
 			_vitality = (short) _gwambaCanvas.Vitality.Length;
 			_stunResistance = (short) _gwambaCanvas.StunResistance.Length;
-			for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
+			for ( ushort i = 0; _gwambaDamagers.Length > i++; )
 			{
 				_gwambaDamagers[ i ].DamagerHurt += DamagerHurt;
 				_gwambaDamagers[ i ].DamagerStun += DamagerStun;
@@ -177,7 +177,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void RestartState()
 		{
-			for ( ushort i = 0; ( _vitality = (short) _gwambaCanvas.Vitality.Length ) > i; i++ )
+			for ( ushort i = 0; ( _vitality = (short) _gwambaCanvas.Vitality.Length ) > i++; )
 			{
 				_gwambaCanvas.Vitality[ i ].style.backgroundColor = _gwambaCanvas.BackgroundColor;
 				_gwambaCanvas.Vitality[ i ].style.borderBottomColor = _gwambaCanvas.BorderColor;
@@ -185,11 +185,11 @@ namespace GwambaPrimeAdventure.Character
 				_gwambaCanvas.Vitality[ i ].style.borderRightColor = _gwambaCanvas.BorderColor;
 				_gwambaCanvas.Vitality[ i ].style.borderTopColor = _gwambaCanvas.BorderColor;
 			}
-			for ( ushort i = _recoverVitality = 0; _gwambaCanvas.RecoverVitality.Length > i; i++ )
+			for ( ushort i = _recoverVitality = 0; _gwambaCanvas.RecoverVitality.Length > i++; )
 				_gwambaCanvas.RecoverVitality[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
-			for ( ushort i = 0; ( _stunResistance = (short) _gwambaCanvas.StunResistance.Length ) > i; i++ )
+			for ( ushort i = 0; ( _stunResistance = (short) _gwambaCanvas.StunResistance.Length ) > i++; )
 				_gwambaCanvas.StunResistance[ i ].style.backgroundColor = _gwambaCanvas.StunResistanceColor;
-			for ( ushort i = _bunnyHopBoost = 0; _gwambaCanvas.BunnyHop.Length > i; i++ )
+			for ( ushort i = _bunnyHopBoost = 0; _gwambaCanvas.BunnyHop.Length > i++; )
 				_gwambaCanvas.BunnyHop[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
 		}
 		private void MovementInput( InputAction.CallbackContext movement )
@@ -268,11 +268,11 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !_isOnGround || 0 != _walkValue || !isActiveAndEnabled || _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) || _animator.GetBool( Stun ) )
 				return;
-			for ( int i = Physics2D.OverlapCollider( _collider, _interactionFilter, _interactions ) - 1; 0 < i; i-- )
+			for ( int i = Physics2D.OverlapCollider( _collider, _interactionFilter, _interactions ) - 1; 0 < i--; )
 				if ( _interactions[ i ].TryGetComponent<IInteractable>( out _ ) )
 				{
 					_interactionsPerObject = _interactions[ i ].GetComponents<IInteractable>();
-					for ( ushort j = 0; _interactionsPerObject.Length > j; j++ )
+					for ( ushort j = 0; _interactionsPerObject.Length > j++; )
 						_interactionsPerObject[ j ]?.Interaction();
 					return;
 				}
@@ -285,7 +285,7 @@ namespace GwambaPrimeAdventure.Character
 			_vitality = (short) ( _vitality - damage );
 			_timerOfInvencibility = InvencibilityTime;
 			_invencibility = true;
-			for ( ushort i = (ushort) _gwambaCanvas.Vitality.Length; ( 0 <= _vitality ? _vitality : 0 ) < i; i-- )
+			for ( ushort i = (ushort) _gwambaCanvas.Vitality.Length; ( 0 <= _vitality ? _vitality : 0 ) < i--; )
 			{
 				_gwambaCanvas.Vitality[ i - 1 ].style.backgroundColor = _gwambaCanvas.MissingColor;
 				_gwambaCanvas.Vitality[ i - 1 ].style.borderBottomColor = _gwambaCanvas.MissingColor;
@@ -330,8 +330,8 @@ namespace GwambaPrimeAdventure.Character
 		public void DamagerStun( ushort stunStrength, float stunTime )
 		{
 			_stunResistance -= (short) stunStrength;
-			for ( ushort i = (ushort) _gwambaCanvas.StunResistance.Length; ( 0 <= _stunResistance ? _stunResistance : 0 ) < i; i-- )
-				_gwambaCanvas.StunResistance[ i - 1 ].style.backgroundColor = _gwambaCanvas.MissingColor;
+			for ( ushort i = (ushort) _gwambaCanvas.StunResistance.Length; ( 0 <= _stunResistance ? _stunResistance : 0 ) < i--; )
+				_gwambaCanvas.StunResistance[ 1 - i ].style.backgroundColor = _gwambaCanvas.MissingColor;
 			if ( 0 >= _stunResistance && !_animator.GetBool( Death ) )
 			{
 				DisableInputs();
@@ -345,9 +345,9 @@ namespace GwambaPrimeAdventure.Character
 				_animator.SetBool( AttackAirJump, false );
 				_animator.SetBool( AttackDrop, false );
 				_animator.SetBool( Stun, !( _invencibility = false ) );
-				for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
+				for ( ushort i = 0; _gwambaDamagers.Length > i++; )
 					_gwambaDamagers[ i ].Alpha = 1F;
-				for ( ushort i = 0; ( _stunResistance = (short) _gwambaCanvas.StunResistance.Length ) > i; i++ )
+				for ( ushort i = 0; ( _stunResistance = (short) _gwambaCanvas.StunResistance.Length ) > i++; )
 					_gwambaCanvas.StunResistance[ i ].style.backgroundColor = _gwambaCanvas.StunResistanceColor;
 				EffectsController.SoundEffect( StunSound, transform.position );
 			}
@@ -363,11 +363,11 @@ namespace GwambaPrimeAdventure.Character
 				_screenShaker.ImpulseDefinition.ImpulseDuration = gwambaDamager.AttackShakeTime;
 				_screenShaker.GenerateImpulse( gwambaDamager.AttackShake );
 				gwambaDamager.damagedes.Add( destructible.Source );
-				for ( ushort amount = 0; ( destructible.Health <= 0 ? gwambaDamager.AttackDamage + 1 : gwambaDamager.AttackDamage ) > amount; amount++ )
+				for ( ushort amount = 0; ( destructible.Health <= 0 ? gwambaDamager.AttackDamage + 1 : gwambaDamager.AttackDamage ) > amount++; )
 					if ( _gwambaCanvas.RecoverVitality.Length <= _recoverVitality && _gwambaCanvas.Vitality.Length > _vitality )
 					{
 						_vitality += 1;
-						for ( ushort i = 0; _vitality > i; i++ )
+						for ( ushort i = 0; _vitality > i++; )
 						{
 							_gwambaCanvas.Vitality[ i ].style.backgroundColor = _gwambaCanvas.BackgroundColor;
 							_gwambaCanvas.Vitality[ i ].style.borderBottomColor = _gwambaCanvas.BorderColor;
@@ -375,16 +375,16 @@ namespace GwambaPrimeAdventure.Character
 							_gwambaCanvas.Vitality[ i ].style.borderRightColor = _gwambaCanvas.BorderColor;
 							_gwambaCanvas.Vitality[ i ].style.borderTopColor = _gwambaCanvas.BorderColor;
 						}
-						for ( ushort i = _recoverVitality = 0; _gwambaCanvas.RecoverVitality.Length > i; i++ )
+						for ( ushort i = _recoverVitality = 0; _gwambaCanvas.RecoverVitality.Length > i++; )
 							_gwambaCanvas.RecoverVitality[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
 						_stunResistance = (short) ( _stunResistance < _gwambaCanvas.StunResistance.Length ? _stunResistance + 1 : _stunResistance );
-						for ( ushort i = 0; _stunResistance > i; i++ )
+						for ( ushort i = 0; _stunResistance > i++; )
 							_gwambaCanvas.StunResistance[ i ].style.backgroundColor = _gwambaCanvas.StunResistanceColor;
 					}
 					else if ( _gwambaCanvas.RecoverVitality.Length > _recoverVitality )
 					{
 						_recoverVitality += 1;
-						for ( ushort i = 0; _recoverVitality > i; i++ )
+						for ( ushort i = 0; _recoverVitality > i++; )
 							_gwambaCanvas.RecoverVitality[ i ].style.backgroundColor = _gwambaCanvas.BorderColor;
 					}
 			}
@@ -398,12 +398,12 @@ namespace GwambaPrimeAdventure.Character
 				_invencibility = 0F < ( _timerOfInvencibility -= Time.deltaTime );
 				if ( _invencibility && 0F >= ( _showInvencibilityTimer -= Time.deltaTime ) )
 				{
-					for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
+					for ( ushort i = 0; _gwambaDamagers.Length > i++; )
 						_gwambaDamagers[ i ].Alpha = _gwambaDamagers[ i ].Alpha >= 1F ? InvencibilityValue : 1F;
 					_showInvencibilityTimer = TimeStep;
 				}
 				if ( !_invencibility )
-					for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
+					for ( ushort i = 0; _gwambaDamagers.Length > i++; )
 						_gwambaDamagers[ i ].Alpha = 1F;
 			}
 			if ( _animator.GetBool( Stun ) )
@@ -425,7 +425,7 @@ namespace GwambaPrimeAdventure.Character
 			}
 			if ( 0F < _attackDelay )
 				if ( 0F >= ( _attackDelay -= Time.deltaTime ) )
-					for ( ushort i = 0; _gwambaDamagers.Length > i; i++ )
+					for ( ushort i = 0; _gwambaDamagers.Length > i++; )
 						_gwambaDamagers[ i ].damagedes.Clear();
 		}
 		private float BunnyHop( float callBackValue ) => 0 < _bunnyHopBoost ? _bunnyHopBoost * callBackValue : 0F;
@@ -558,7 +558,7 @@ namespace GwambaPrimeAdventure.Character
 				_rigidbody.gravityScale = GravityScale;
 				_rigidbody.linearVelocityY = 0F;
 				if ( _offBunnyHop = 0 < _bunnyHopBoost )
-					for ( ushort i = 0; _bunnyHopBoost > i; i++ )
+					for ( ushort i = 0; _bunnyHopBoost > i++; )
 						_gwambaCanvas.BunnyHop[ i ].style.backgroundColor = _gwambaCanvas.BunnyHopColor;
 				_rigidbody.AddForceY( ( JumpStrenght + BunnyHop( JumpBoost ) ) * _rigidbody.mass, ForceMode2D.Impulse );
 				EffectsController.SoundEffect( JumpSound, transform.position );
@@ -607,7 +607,7 @@ namespace GwambaPrimeAdventure.Character
 					if ( 0 >= _bunnyHopBoost && _offBunnyHop )
 					{
 						_bunnyHopUsed = _offBunnyHop = false;
-						for ( ushort i = 0; _gwambaCanvas.BunnyHop.Length > i; i++ )
+						for ( ushort i = 0; _gwambaCanvas.BunnyHop.Length > i++; )
 							_gwambaCanvas.BunnyHop[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
 					}
 					if ( _fallStarted && 0 >= _bunnyHopBoost && !_isHubbyWorld )
@@ -647,7 +647,7 @@ namespace GwambaPrimeAdventure.Character
 					if ( _groundContacts.Exists( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) ) )
 						return;
 					_localAtEnd = _groundContacts[0].point;
-					for ( ushort i = 1; _groundContacts.Count > i; i++ )
+					for ( ushort i = 1; _groundContacts.Count > i++; )
 						if ( Vector2.Distance( _localAtStart, _groundContacts[ i ].point ) < Vector2.Distance( _localAtStart, _localAtEnd ) )
 							_localAtEnd = _groundContacts[ i ].point;
 					_localAtSurface.x = transform.position.x + WorldBuild.SNAP_LENGTH * transform.localScale.x.CompareTo( 0F );
@@ -694,7 +694,7 @@ namespace GwambaPrimeAdventure.Character
 		internal bool EqualObject( params GameObject[] others )
 		{
 			if ( _didStart && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
-				for ( ushort i = 0; others.Length > i; i++ )
+				for ( ushort i = 0; others.Length > i++; )
 					if ( gameObject == others[ i ] )
 						return true;
 			return false;
