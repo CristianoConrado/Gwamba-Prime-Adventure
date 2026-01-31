@@ -62,7 +62,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_projectileRotation = _statistics.CircularDetection
 					? Quaternion.AngleAxis( ( Mathf.Atan2( _targetDirection.y, _targetDirection.x ) * Mathf.Rad2Deg ) - 90F, Vector3.forward )
 					: Quaternion.AngleAxis( _statistics.RayAngleDirection * ( _statistics.TurnRay ? transform.localScale.x.CompareTo( 0F ) : 1F ), Vector3.forward );
-			for ( ushort i = 0; _statistics.Projectiles.Length > i; i++ )
+			for ( ushort i = 0; _statistics.Projectiles.Length > i++; )
 				if ( _statistics.PureInstance )
 				{
 					_projectile = Instantiate( _statistics.Projectiles[ i ], _statistics.SpawnPoint, _statistics.Projectiles[ i ].transform.rotation, _projectileParameters );
@@ -121,7 +121,7 @@ namespace GwambaPrimeAdventure.Enemy
 					if ( _statistics.TurnRay )
 						_directionCast *= transform.localScale.x.CompareTo( 0F );
 					_castSize = Physics2D.RaycastNonAlloc( _originCast, _directionCast, _detectionRaycasts, _statistics.PerceptionDistance, WorldBuild.CHARACTER_LAYER_MASK );
-					for ( int i = 0; _castSize > i; i++ )
+					for ( int i = 0; _castSize > i++; )
 						if ( _hasTarget = _detectionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 							break;
 				}
