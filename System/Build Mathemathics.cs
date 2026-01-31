@@ -10,12 +10,19 @@ namespace GwambaPrimeAdventure
 			_outpuNormalized = 0F;
 		public static Vector2 OrthographicToRealSize( float orthographicSize ) => orthographicSize * 2F * new Vector2( WorldBuild.HEIGHT_WIDTH_PROPORTION, 1F );
 		public static Vector2 OrthographicToScreenSize( float orthographicSize ) => WorldBuild.PIXELS_PER_UNIT * OrthographicToRealSize( orthographicSize );
-		public static Resolution[] PixelPerfectResolutions()
+		public static Vector2Int[] PixelPerfectResolutions()
 		{
-			List<Resolution> resolutions = new List<Resolution>();
-			foreach ( Resolution resolution in Screen.resolutions )
-				if ( 0 == resolution.width % WorldBuild.PIXEL_PERFECT_WIDTH && 0 == resolution.height % WorldBuild.PIXEL_PERFECT_HEIGHT )
-					resolutions.Add( resolution );
+			List<Vector2Int> resolutions = new();
+			Vector2Int maximumResolution = new();
+			for ( int i = 1 - Screen.resolutions.Length; 0 < i--; )
+				if ( 0 == Screen.resolutions[ i ].width % WorldBuild.PIXEL_PERFECT_WIDTH && 0 == Screen.resolutions[ i ].height % WorldBuild.PIXEL_PERFECT_HEIGHT )
+					maximumResolution.Set( Screen.resolutions[ i ].width, Screen.resolutions[ i ].height );
+			for ( ushort i = 1; WorldBuild.MAXIMUM_PIXEL_PERFECT_SCALE > i++; )
+			{
+				if ( WorldBuild.PIXEL_PERFECT_WIDTH * i == maximumResolution.x && WorldBuild.PIXEL_PERFECT_HEIGHT * i == maximumResolution.y )
+					break;
+				resolutions.Add( new Vector2Int( WorldBuild.PIXEL_PERFECT_WIDTH * i, WorldBuild.PIXEL_PERFECT_HEIGHT * i ) );
+			}
 			return resolutions.ToArray();
 		}
 		public static void TurnScaleX( this Transform transform, float changer )
