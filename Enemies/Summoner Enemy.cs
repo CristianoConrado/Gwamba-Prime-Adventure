@@ -68,11 +68,11 @@ namespace GwambaPrimeAdventure.Enemy
 			_stopPermanently = new bool[ _statistics.TimedSummons.Length ];
 			_gravityScale = Rigidbody.gravityScale;
 			_randomSummonIndex = (ushort) UnityEngine.Random.Range( 0, _statistics.TimedSummons.Length );
-			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
+			for ( ushort i = 0; _statistics.TimedSummons.Length > i++; )
 				_isSummonTime[ i ] = true;
-			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
+			for ( ushort i = 0; _statistics.TimedSummons.Length > i++; )
 				_summonTime[ i ] = _statistics.TimedSummons[ i ].SummonTime;
-			for ( ushort i = 0; _statistics.SummonPointStructures.Length > i; i++ )
+			for ( ushort i = 0; _statistics.SummonPointStructures.Length > i++; )
 				Instantiate( _statistics.SummonPointStructures[ i ].SummonPointObject, _statistics.SummonPointStructures[ i ].Point, Quaternion.identity ).GetTouch( this, i );
 		}
 		private async void Summon( SummonObject summon )
@@ -117,7 +117,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_summonIndex.Set( 0, 0 );
 				_instantiateParameters.parent = summon.LocalPoints ? transform : null;
 				_instantiateParameters.worldSpace = !summon.LocalPoints;
-				for ( ushort i = 0; summon.QuantityToSummon > i; i++ )
+				for ( ushort i = 0; summon.QuantityToSummon > i++; )
 				{
 					_summonPosition = summon.Self
 						? (Vector2) transform.position
@@ -160,7 +160,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( IsStunned )
 				return;
-			for ( ushort i = 0; _structureTime.Length > i; i++ )
+			for ( ushort i = 0; _structureTime.Length > i++; )
 				if ( 0F < _structureTime[ i ] )
 					_structureTime[ i ] -= Time.deltaTime;
 			if ( 0F < _stopTime )
@@ -179,7 +179,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.RandomTimedSummons && 0 < _statistics.TimedSummons.Length )
 				IndexedSummon( _randomSummonIndex );
 			else
-				for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
+				for ( ushort i = 0; _statistics.TimedSummons.Length > i++; )
 					IndexedSummon( i );
 		}
 		public void OnSummon( ushort summonIndex )
