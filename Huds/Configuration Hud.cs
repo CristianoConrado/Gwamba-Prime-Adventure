@@ -11,95 +11,95 @@ namespace GwambaPrimeAdventure.Hud
 		private static
 			ConfigurationHud _instance;
 		internal VisualElement RootElement
-        {
-            get;
-            private set;
-        }
-        internal GroupBox Settings
-        {
-            get;
-            private set;
-        }
-        internal GroupBox Confirmation
-        {
-            get;
-            private set;
-        }
-        internal DropdownField ScreenResolution
-        {
-            get;
-            private set;
-        }
-        internal DropdownField FullScreenModes
-        {
-            get;
-            private set;
-        }
-        internal DropdownField SimulationHertz
-        {
-            get;
-            private set;
-        }
-        internal Toggle GeneralVolumeToggle
-        {
-            get;
-            private set;
-        }
-        internal Toggle EffectsVolumeToggle
-        {
-            get;
-            private set;
-        }
-        internal Toggle MusicVolumeToggle
-        {
-            get;
-            private set;
-        }
-        internal Toggle InfinityFPS
-        {
-            get;
-            private set;
-        }
-        internal Toggle DialogToggle
-        {
-            get;
-            private set;
-        }
-        internal Slider ScreenBrightness
-        {
-            get;
-            private set;
-        }
-        internal Slider GeneralVolume
-        {
-            get;
-            private set;
-        }
-        internal Slider EffectsVolume
-        {
-            get;
-            private set;
-        }
-        internal Slider MusicVolume
-        {
-            get;
-            private set;
-        }
-        internal SliderInt FrameRate
-        {
-            get;
-            private set;
-        }
-        internal SliderInt VSync
-        {
-            get;
-            private set;
-        }
-        internal SliderInt SpeachDelay
-        {
-            get;
-            private set;
-        }
+		{
+			get;
+			private set;
+		}
+		internal GroupBox Settings
+		{
+			get;
+			private set;
+		}
+		internal GroupBox Confirmation
+		{
+			get;
+			private set;
+		}
+		internal DropdownField ScreenResolution
+		{
+			get;
+			private set;
+		}
+		internal DropdownField FullScreenModes
+		{
+			get;
+			private set;
+		}
+		internal DropdownField SimulationHertz
+		{
+			get;
+			private set;
+		}
+		internal Toggle GeneralVolumeToggle
+		{
+			get;
+			private set;
+		}
+		internal Toggle EffectsVolumeToggle
+		{
+			get;
+			private set;
+		}
+		internal Toggle MusicVolumeToggle
+		{
+			get;
+			private set;
+		}
+		internal Toggle InfinityFPS
+		{
+			get;
+			private set;
+		}
+		internal Toggle DialogToggle
+		{
+			get;
+			private set;
+		}
+		internal Slider ScreenBrightness
+		{
+			get;
+			private set;
+		}
+		internal Slider GeneralVolume
+		{
+			get;
+			private set;
+		}
+		internal Slider EffectsVolume
+		{
+			get;
+			private set;
+		}
+		internal Slider MusicVolume
+		{
+			get;
+			private set;
+		}
+		internal SliderInt FrameRate
+		{
+			get;
+			private set;
+		}
+		internal SliderInt VSync
+		{
+			get;
+			private set;
+		}
+		internal SliderInt SpeachDelay
+		{
+			get;
+			private set;
+		}
 		internal Button Close
 		{
 			get;
@@ -212,8 +212,8 @@ namespace GwambaPrimeAdventure.Hud
 			MusicVolume.lowValue = EffectsVolume.lowValue = GeneralVolume.lowValue = WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			FrameRate.lowValue = 10;
 			ScreenBrightness.lowValue = VSync.lowValue = SpeachDelay.lowValue = 0;
-			foreach ( Resolution resolution in BuildMathemathics.PixelPerfectResolutions() )
-				ScreenResolution.choices.Add( $@"{resolution.width} x {resolution.height}" );
+			foreach ( Vector2Int resolution in BuildMathemathics.PixelPerfectResolutions() )
+				ScreenResolution.choices.Add( $@"{resolution.x} x {resolution.y}" );
 			foreach ( FullScreenMode mode in Enum.GetValues( typeof( FullScreenMode ) ) )
 				FullScreenModes.choices.Add( $"{mode}" );
 			SimulationHertz.choices.Add( $"{WorldBuild.DEFAULT_HERTZ_PER_SECOND} hertz" );
@@ -236,8 +236,8 @@ namespace GwambaPrimeAdventure.Hud
 			VSync.value = settings.VSync;
 			ScreenBrightnessText.text = $"{settings.ScreenBrightness}";
 			GeneralVolumeText.text = $"{( WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.GeneralVolume ? settings.GeneralVolume / 1F : 0 )}";
-			EffectsVolumeText.text = $"{(WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.EffectsVolume ? settings.EffectsVolume / 1F : 0)}";
-			MusicVolumeText.text = $"{(WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.MusicVolume ? settings.MusicVolume / 1F : 0)}";
+			EffectsVolumeText.text = $"{( WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.EffectsVolume ? settings.EffectsVolume / 1F : 0 )}";
+			MusicVolumeText.text = $"{( WorldBuild.MINIMUM_TIME_SPACE_LIMIT < settings.MusicVolume ? settings.MusicVolume / 1F : 0 )}";
 			SpeachDelayText.text = $"{settings.SpeachDelay * 10F}";
 			FrameRateText.text = $"{settings.FrameRate}";
 			VSyncText.text = $"{settings.VSync}";
