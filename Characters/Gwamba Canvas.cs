@@ -39,8 +39,8 @@ namespace GwambaPrimeAdventure.Character
 			private set;
 		}
 		[SerializeField, Tooltip( "The total of vitality that Gwamba have." )]
-		private
-			  ushort _vitality;
+		private 
+			ushort _vitality;
 		[SerializeField, Tooltip( "The total of recover vitality that Gwamba have." )]
 		private
 			ushort _recoverVitality;
