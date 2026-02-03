@@ -64,7 +64,7 @@
     height: 40px;
     align-self: flex-start;
 }
-#VitalityPiece {
+#Vitality VisualElement {
     width: 40px;
     height: 100%;
     border-radius: 10px;
@@ -74,11 +74,11 @@
     height: 30px;
     align-self: center;
 }
-#RecoverVitalityPiece {
+#RecoverVitality VisualElement {
     height: 100%;
     border-radius: 10px;
 }
-#StunResistancePiece {
+#StunResistance VisualElement {
     height: 100%;
     border-radius: 5px;
 }
@@ -87,7 +87,7 @@
     height: 10px;
     align-self: flex-end;
 }
-#BunnyHopPiece {
+#BunnyHop VisualElement {
     height: 100%;
     border-radius: 5px;
 }
