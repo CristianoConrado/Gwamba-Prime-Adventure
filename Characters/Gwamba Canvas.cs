@@ -122,7 +122,6 @@ namespace GwambaPrimeAdventure.Character
 			vitality.style.width = _totalWidth;
 			for ( ushort i = 0; _vitality > i; i++ )
 			{
-
 				vitality.Add( new VisualElement()
 				{
 					name = $"{VitalityPiece.name} {1 + i}",
