@@ -73,9 +73,9 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			_timedJumpTime = new float[ _statistics.TimedJumps.Length ];
 			_jumpCount = new short[ _statistics.JumpPointStructures.Length ];
-			for ( ushort i = 0; _statistics.TimedJumps.Length > i++; )
+			for ( ushort i = 0; _statistics.TimedJumps.Length > i; i++ )
 				_timedJumpTime[ i ] = _statistics.TimedJumps[ i ].TimeToExecute;
-			for ( ushort i = 0; _statistics.JumpPointStructures.Length > i++; )
+			for ( ushort i = 0; _statistics.JumpPointStructures.Length > i; i++ )
 			{
 				Instantiate( _statistics.JumpPointStructures[ i ].JumpPointObject, _statistics.JumpPointStructures[ i ].Point, Quaternion.identity ).GetTouch( this, i );
 				_jumpCount[ i ] = (short) _statistics.JumpPointStructures[ i ].JumpCount;
@@ -161,7 +161,7 @@ namespace GwambaPrimeAdventure.Enemy
 					TimedJump( _sequentialJumpIndex );
 				}
 				else
-					for ( ushort i = 0; _timedJumpTime.Length > i++; )
+					for ( ushort i = 0; _timedJumpTime.Length > i; i++ )
 						TimedJump( i );
 		}
 		private void FixedUpdate()
@@ -196,7 +196,7 @@ namespace GwambaPrimeAdventure.Enemy
 						_originCast.Set( transform.position.x + _collider.offset.x + _collider.bounds.extents.x * _movementSide, transform.position.y + _collider.offset.y );
 						_direction = Quaternion.AngleAxis( _statistics.DetectionAngle, Vector3.forward ) * transform.right * transform.localScale.x.CompareTo( 0F );
 						_castSize = Physics2D.RaycastNonAlloc( _originCast, _direction, _perceptionRaycasts, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
-						for ( int i = 0; _castSize > i++; )
+						for ( int i = 0; _castSize > i; i++ )
 							if ( _perceptionRaycasts[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 							{
 								_targetPosition = _perceptionRaycasts[ i ].collider.transform.position;
