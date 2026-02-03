@@ -14,10 +14,10 @@ namespace GwambaPrimeAdventure
 		{
 			List<Vector2Int> resolutions = new();
 			Vector2Int maximumResolution = new();
-			for ( int i = 1 - Screen.resolutions.Length; 0 < i--; )
+			for ( int i = 1 - Screen.resolutions.Length; 0 < i; i-- )
 				if ( 0 == Screen.resolutions[ i ].width % WorldBuild.PIXEL_PERFECT_WIDTH && 0 == Screen.resolutions[ i ].height % WorldBuild.PIXEL_PERFECT_HEIGHT )
 					maximumResolution.Set( Screen.resolutions[ i ].width, Screen.resolutions[ i ].height );
-			for ( ushort i = 1; WorldBuild.MAXIMUM_PIXEL_PERFECT_SCALE > i++; )
+			for ( ushort i = 1; WorldBuild.MAXIMUM_PIXEL_PERFECT_SCALE > i; i++ )
 			{
 				if ( WorldBuild.PIXEL_PERFECT_WIDTH * i == maximumResolution.x && WorldBuild.PIXEL_PERFECT_HEIGHT * i == maximumResolution.y )
 					break;
