@@ -122,17 +122,13 @@ namespace GwambaPrimeAdventure.Character
 			vitality.style.width = _totalWidth;
 			for ( ushort i = 0; _vitality > i; i++ )
 			{
+
 				vitality.Add( new VisualElement()
 				{
-					name = $"{VitalityPiece.name} {1 + i}",
+					name = VitalityPiece.name,
 					style =
 					{
 						width = _totalWidth / _vitality - 2F * _borderWidth,
-						height = VitalityPiece.style.height,
-						borderBottomLeftRadius = VitalityPiece.style.borderBottomLeftRadius,
-						borderBottomRightRadius = VitalityPiece.style.borderBottomRightRadius,
-						borderTopLeftRadius = VitalityPiece.style.borderTopLeftRadius,
-						borderTopRightRadius = VitalityPiece.style.borderTopRightRadius,
 						backgroundColor = BackgroundColor,
 						borderBottomColor = BorderColor,
 						borderLeftColor = BorderColor,
@@ -156,15 +152,10 @@ namespace GwambaPrimeAdventure.Character
 			{
 				recoverVitality.Add( new VisualElement()
 				{
-					name = $"{RecoverVitalityPiece.name} {1 + i}",
+					name = RecoverVitalityPiece.name,
 					style =
 					{
 						width = _totalWidth / _recoverVitality - 2F * _borderWidth,
-						height = RecoverVitalityPiece.style.height,
-						borderBottomLeftRadius = RecoverVitalityPiece.style.borderBottomLeftRadius,
-						borderBottomRightRadius = RecoverVitalityPiece.style.borderBottomRightRadius,
-						borderTopLeftRadius = RecoverVitalityPiece.style.borderTopLeftRadius,
-						borderTopRightRadius = RecoverVitalityPiece.style.borderTopRightRadius,
 						backgroundColor = MissingColor
 					}
 				} );
@@ -180,15 +171,10 @@ namespace GwambaPrimeAdventure.Character
 			{
 				stunResistance.Add( new VisualElement()
 				{
-					name = $"{StunResistancePiece.name} {1 + i}",
+					name = StunResistancePiece.name,
 					style =
 					{
 						width = _totalWidth / _stunResistance - 2F * _borderWidth,
-						height = StunResistancePiece.style.height,
-						borderBottomLeftRadius = StunResistancePiece.style.borderBottomLeftRadius,
-						borderBottomRightRadius = StunResistancePiece.style.borderBottomRightRadius,
-						borderTopLeftRadius = StunResistancePiece.style.borderTopLeftRadius,
-						borderTopRightRadius = StunResistancePiece.style.borderTopRightRadius,
 						backgroundColor = StunResistanceColor
 					}
 				} );
@@ -204,15 +190,10 @@ namespace GwambaPrimeAdventure.Character
 			{
 				bunnyHop.Add( new VisualElement()
 				{
-					name = $"{BunnyHopPiece.name} {1 + i}",
+					name = BunnyHopPiece.name,
 					style =
 					{
 						width = _totalWidth / _bunnyHop - 2F * _borderWidth,
-						height = BunnyHopPiece.style.height,
-						borderBottomLeftRadius = BunnyHopPiece.style.borderBottomLeftRadius,
-						borderBottomRightRadius = BunnyHopPiece.style.borderBottomRightRadius,
-						borderTopLeftRadius = BunnyHopPiece.style.borderTopLeftRadius,
-						borderTopRightRadius = BunnyHopPiece.style.borderTopRightRadius,
 						backgroundColor = MissingColor
 					}
 				} );
