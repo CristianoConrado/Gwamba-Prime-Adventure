@@ -120,7 +120,7 @@ namespace GwambaPrimeAdventure.Character
 				vitality = RootElement.Q<VisualElement>( nameof( Vitality ) ),
 				VitalityPiece = RootElement.Q<VisualElement>( nameof( VitalityPiece ) );
 			vitality.style.width = _totalWidth;
-			for ( ushort i = 0; _vitality > i++; )
+			for ( ushort i = 0; _vitality > i; i++ )
 			{
 				vitality.Add( new VisualElement()
 				{
@@ -147,7 +147,7 @@ namespace GwambaPrimeAdventure.Character
 				recoverVitality = RootElement.Q<VisualElement>( nameof( RecoverVitality ) ),
 				RecoverVitalityPiece = RootElement.Q<VisualElement>( nameof( RecoverVitalityPiece ) );
 			recoverVitality.style.width = _totalWidth;
-			for ( ushort i = 0; _recoverVitality > i++; )
+			for ( ushort i = 0; _recoverVitality > i; i++ )
 			{
 				recoverVitality.Add( new VisualElement()
 				{
@@ -166,7 +166,7 @@ namespace GwambaPrimeAdventure.Character
 				stunResistance = RootElement.Q<VisualElement>( nameof( StunResistance ) ),
 				StunResistancePiece = RootElement.Q<VisualElement>( nameof( StunResistancePiece ) );
 			stunResistance.style.width = _totalWidth;
-			for ( ushort i = 0; _stunResistance > i++; )
+			for ( ushort i = 0; _stunResistance > i; i++ )
 			{
 				stunResistance.Add( new VisualElement()
 				{
@@ -185,7 +185,7 @@ namespace GwambaPrimeAdventure.Character
 			    bunnyHop = RootElement.Q<VisualElement>( nameof( BunnyHop ) ),
 			    BunnyHopPiece = RootElement.Q<VisualElement>( nameof( BunnyHopPiece ) );
 			bunnyHop.style.width = _totalWidth;
-			for ( ushort i = 0; _bunnyHop > i++; )
+			for ( ushort i = 0; _bunnyHop > i; i++ )
 			{
 				bunnyHop.Add( new VisualElement()
 				{
