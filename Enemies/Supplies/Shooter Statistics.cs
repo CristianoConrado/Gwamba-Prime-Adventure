@@ -30,12 +30,6 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, HideIf( nameof( ShootInfinity ) ), Tooltip( "If the detection will be circular." )]
-		public bool CircularDetection
-		{
-			get;
-			private set;
-		}
 		[field: SerializeField, HideIf( EConditionOperator.Or, nameof( ShootInfinity ), nameof( CircularDetection ) ), Tooltip( "The angle of the direction of detection's ray." )]
 		public float RayAngleDirection
 		{
@@ -44,6 +38,12 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		}
 		[field: SerializeField, HideIf( nameof( ShootInfinity ) ), Tooltip( "If this enemy will turn the ray to the looking side." )]
 		public bool TurnRay
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, Tooltip( "If the detection will be circular." )]
+		public bool CircularDetection
 		{
 			get;
 			private set;
