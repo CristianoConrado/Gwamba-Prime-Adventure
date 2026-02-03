@@ -53,7 +53,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_rigidbody = GetComponent<Rigidbody2D>();
 			_screenShaker = GetComponent<CinemachineImpulseSource>();
 			_destructibleEnemy = _selfEnemies[ 0 ];
-			for ( ushort i = 1; _selfEnemies.Length > i++; )
+			for ( ushort i = 1; _selfEnemies.Length > i; i++ )
 				if ( _selfEnemies[ i ].DestructilbePriority > _destructiblePriority )
 				{
 					_destructiblePriority = _selfEnemies[ i ].DestructilbePriority;
@@ -145,7 +145,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( MessageFormat.None == message.Format && message.ToggleValue.HasValue )
 			{
 				OnDisable();
-				for ( ushort i = 0; _selfEnemies.Length > i++; )
+				for ( ushort i = 0; _selfEnemies.Length > i; i++ )
 					_selfEnemies[ i ].enabled = message.ToggleValue.Value;
 			}
 		}
