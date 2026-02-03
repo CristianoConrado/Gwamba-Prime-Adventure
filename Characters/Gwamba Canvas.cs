@@ -125,7 +125,7 @@ namespace GwambaPrimeAdventure.Character
 
 				vitality.Add( new VisualElement()
 				{
-					name = VitalityPiece.name,
+					name = $"{VitalityPiece.name} {1 + i}",
 					style =
 					{
 						width = _totalWidth / _vitality - 2F * _borderWidth,
@@ -152,7 +152,7 @@ namespace GwambaPrimeAdventure.Character
 			{
 				recoverVitality.Add( new VisualElement()
 				{
-					name = RecoverVitalityPiece.name,
+					name = $"{RecoverVitalityPiece.name} {1 + i}",
 					style =
 					{
 						width = _totalWidth / _recoverVitality - 2F * _borderWidth,
@@ -171,7 +171,7 @@ namespace GwambaPrimeAdventure.Character
 			{
 				stunResistance.Add( new VisualElement()
 				{
-					name = StunResistancePiece.name,
+					name = $"{StunResistancePiece.name} {1 + i}",
 					style =
 					{
 						width = _totalWidth / _stunResistance - 2F * _borderWidth,
@@ -190,7 +190,7 @@ namespace GwambaPrimeAdventure.Character
 			{
 				bunnyHop.Add( new VisualElement()
 				{
-					name = BunnyHopPiece.name,
+					name = $"{BunnyHopPiece.name} {1 + i}",
 					style =
 					{
 						width = _totalWidth / _bunnyHop - 2F * _borderWidth,
