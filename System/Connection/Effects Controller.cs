@@ -54,7 +54,7 @@ namespace GwambaPrimeAdventure.Connection
 		{
 			if ( ( active && !_lightsStack.Contains( globalLight ) || !active && _lightsStack.Contains( globalLight ) ) && globalLight && _lightsStack[ 0 ] )
 			{
-				for ( ushort i = 0; _lightsStack.Count > i++; )
+				for ( ushort i = 0; _lightsStack.Count > i; i++ )
 					if ( _lightsStack[ i ] )
 						_lightsStack[ i ].enabled = false;
 				if ( active )
