@@ -285,13 +285,13 @@ namespace GwambaPrimeAdventure.Character
 			_vitality = (short) ( _vitality - damage );
 			_timerOfInvencibility = InvencibilityTime;
 			_invencibility = true;
-			for ( ushort i = (ushort) _gwambaCanvas.Vitality.Length; ( 0 <= _vitality ? _vitality : 0 ) < i; i-- )
+			for ( ushort i = (ushort) ( _gwambaCanvas.Vitality.Length - 1 ); ( 0 <= _vitality ? _vitality : 0 ) < i; i-- )
 			{
-				_gwambaCanvas.Vitality[ i - 1 ].style.backgroundColor = _gwambaCanvas.MissingColor;
-				_gwambaCanvas.Vitality[ i - 1 ].style.borderBottomColor = _gwambaCanvas.MissingColor;
-				_gwambaCanvas.Vitality[ i - 1 ].style.borderLeftColor = _gwambaCanvas.MissingColor;
-				_gwambaCanvas.Vitality[ i - 1 ].style.borderRightColor = _gwambaCanvas.MissingColor;
-				_gwambaCanvas.Vitality[ i - 1 ].style.borderTopColor = _gwambaCanvas.MissingColor;
+				_gwambaCanvas.Vitality[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
+				_gwambaCanvas.Vitality[ i ].style.borderBottomColor = _gwambaCanvas.MissingColor;
+				_gwambaCanvas.Vitality[ i ].style.borderLeftColor = _gwambaCanvas.MissingColor;
+				_gwambaCanvas.Vitality[ i ].style.borderRightColor = _gwambaCanvas.MissingColor;
+				_gwambaCanvas.Vitality[ i ].style.borderTopColor = _gwambaCanvas.MissingColor;
 			}
 			if ( 0 >= _vitality )
 			{
@@ -330,8 +330,8 @@ namespace GwambaPrimeAdventure.Character
 		public void DamagerStun( ushort stunStrength, float stunTime )
 		{
 			_stunResistance -= (short) stunStrength;
-			for ( ushort i = (ushort) _gwambaCanvas.StunResistance.Length; ( 0 <= _stunResistance ? _stunResistance : 0 ) < i; i-- )
-				_gwambaCanvas.StunResistance[ 1 - i ].style.backgroundColor = _gwambaCanvas.MissingColor;
+			for ( ushort i = (ushort) ( _gwambaCanvas.StunResistance.Length - 1 ); ( 0 <= _stunResistance ? _stunResistance : 0 ) < i; i-- )
+				_gwambaCanvas.StunResistance[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
 			if ( 0 >= _stunResistance && !_animator.GetBool( Death ) )
 			{
 				DisableInputs();
