@@ -66,13 +66,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, ShowIf( nameof( StopToSummon ) ), Tooltip( "If the timed summon will stop permanently." )]
-		public bool StopPermanently
-		{
-			get;
-			private set;
-		}
-		[field: SerializeField, ShowIf( nameof( StopToSummon ) ), HideIf( nameof( StopPermanently ) ), Min( 0F ), Tooltip( "The amount of time to stop the instantiator." )]
+		[field: SerializeField, ShowIf( nameof( StopToSummon ) ), Min( 0F ), Tooltip( "The amount of time to stop the instantiator." )]
 		public float TimeToStop
 		{
 			get;
