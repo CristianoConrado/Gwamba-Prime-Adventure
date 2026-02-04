@@ -22,9 +22,9 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					_isDead = false;
 					if ( _statistics.ChildEnemy )
-						Instantiate( _statistics.ChildEnemy, _statistics.SpawnPoint, Quaternion.identity ).transform.SetParent( null );
+						Instantiate( _statistics.ChildEnemy, _statistics.SpawnPoint, Quaternion.identity, transform ).transform.SetParent( null );
 					if ( _statistics.ChildProjectile )
-						Instantiate( _statistics.ChildProjectile, _statistics.SpawnPoint, Quaternion.identity ).transform.SetParent( null );
+						Instantiate( _statistics.ChildProjectile, _statistics.SpawnPoint, Quaternion.identity, transform ).transform.SetParent( null );
 					Destroy( _enemyToDie ? _enemyToDie.gameObject : gameObject );
 				}
 		}
