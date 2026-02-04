@@ -106,8 +106,8 @@ namespace GwambaPrimeAdventure.Hud
 					return;
 			}
 			_sender.SetToggle( true );
-			_sender.Send( MessagePath.System );
 			_sender.Send( MessagePath.Character );
+			_sender.Send( MessagePath.System );
 			_sender.SetFormat( MessageFormat.None );
 			_sender.Send( MessagePath.Enemy );
 			ConfigurationController.SetActive( true );
