@@ -36,14 +36,14 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, Tooltip( "The amount of time to wait to execute the next instance." )]
-		public float PostSummonTime
+		[field: SerializeField, Tooltip( "If the post summon time will be skipped." )]
+		public bool SkipPostSummon
 		{
 			get;
 			private set;
 		}
-		[field: SerializeField, Tooltip( "If the post summon time will be skipped." )]
-		public bool SkipPostSummon
+		[field: SerializeField, HideIf( nameof( SkipPostSummon ) ), Tooltip( "The amount of time to wait to execute the next instance." )]
+		public float PostSummonTime
 		{
 			get;
 			private set;
