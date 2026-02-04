@@ -1,7 +1,5 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
@@ -23,6 +21,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private ushort
 			_pointIndex = 0;
 		private bool
+			_started = false,
 			_returnOrigin = false,
 			_afterDash = false,
 			_returnDash = false;
@@ -43,13 +42,9 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		private async new void Start()
+		private new void Start()
 		{
 			base.Start();
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
 			GameObject detectionObject = new( "Detection Collider", typeof( CapsuleCollider2D ) )
 			{
 				layer = WorldBuild.ENEMY_LAYER,
@@ -63,15 +58,13 @@ namespace GwambaPrimeAdventure.Enemy
 			_detectionCollider.isTrigger = true;
 			_detectionCollider.contactCaptureLayers = WorldBuild.SCENE_LAYER_MASK;
 			_detectionCollider.callbackLayers = WorldBuild.SCENE_LAYER_MASK;
-			await UniTask.Yield( PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
 			PolygonCollider2D trail = GetComponent<PolygonCollider2D>();
 			_trail = new Vector2[ trail.points.Length ];
 			for ( ushort i = 0; trail.points.Length > i; i++ )
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
 			_movementDirection = Vector2.right * _movementSide;
 			_pointOrigin = Rigidbody.position;
+			_started = true;
 		}
 		private void Chase()
 		{
@@ -117,8 +110,7 @@ namespace GwambaPrimeAdventure.Enemy
 			else if ( 0 < _trail.Length )
 			{
 				if ( Vector2.Distance( Rigidbody.position, _trail[ _pointIndex ] ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT )
-					if ( _repeatWay )
-						_pointIndex = (ushort) ( _pointIndex < _trail.Length - 1 ? _pointIndex + 1 : 0 );
+					_pointIndex = (ushort) ( _pointIndex < _trail.Length - 1 ? _pointIndex + 1 : 0 );
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _trail[ _pointIndex ], Time.fixedDeltaTime * _statistics.MovementSpeed ) );
 				transform.TurnScaleX( _trail[ _pointIndex ].x < Rigidbody.position.x );
 				_pointOrigin = Rigidbody.position;
@@ -137,7 +129,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void FixedUpdate()
 		{
-			if ( _stopWorking || IsStunned )
+			if ( _stopWorking || IsStunned || !_started )
 				return;
 			if ( _statistics.Target )
 			{
@@ -175,12 +167,10 @@ namespace GwambaPrimeAdventure.Enemy
 				_detected = false;
 			if ( _statistics.LookPerception && !_isDashing && CharacterExporter.GwambaLocalization().InsideCircle( _pointOrigin, _statistics.LookDistance ) )
 			{
-				_originCast = ( CharacterExporter.GwambaLocalization() - ( Rigidbody.position + _selfCollider.offset ) ).normalized;
-				_detectionObject.rotation = Quaternion.AngleAxis( Mathf.Atan2( _originCast.y, _originCast.x ) * Mathf.Rad2Deg - 90F, Vector3.forward );
-				_sizeCast.x = _detectionCollider.size.x;
-				_sizeCast.y = Vector2.Distance( CharacterExporter.GwambaLocalization(), Rigidbody.position + _selfCollider.offset );
-				_detectionCollider.size = _sizeCast;
-				_originCast.Set( _sizeCast.y / 2F * transform.localScale.x.CompareTo( 0F ) * _originCast.x, _sizeCast.y / 2F * _originCast.y );
+				_movementDirection = ( CharacterExporter.GwambaLocalization() - ( Rigidbody.position + _selfCollider.offset ) ).normalized;
+				_detectionObject.rotation = Quaternion.AngleAxis( Mathf.Atan2( _movementDirection.y, _movementDirection.x ) * Mathf.Rad2Deg - 90F, Vector3.forward );
+				_sizeCast.Set( _detectionCollider.size.x, Vector2.Distance( CharacterExporter.GwambaLocalization(), Rigidbody.position + _selfCollider.offset ) );
+				_originCast.Set( 0F, ( _detectionCollider.size = _sizeCast ).y / 2F );
 				_detectionCollider.offset = _originCast;
 				if ( _detected = !_detectionCollider.IsTouchingLayers( WorldBuild.SCENE_LAYER_MASK ) )
 				{
