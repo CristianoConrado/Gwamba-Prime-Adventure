@@ -23,7 +23,6 @@ namespace GwambaPrimeAdventure.Enemy
 		private ushort
 			_pointIndex = 0;
 		private bool
-			_normal = true,
 			_returnOrigin = false,
 			_afterDash = false,
 			_returnDash = false;
@@ -119,16 +118,6 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( Vector2.Distance( Rigidbody.position, _trail[ _pointIndex ] ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT )
 					if ( _repeatWay )
 						_pointIndex = (ushort) ( _pointIndex < _trail.Length - 1 ? _pointIndex + 1 : 0 );
-					else if ( _normal )
-					{
-						_pointIndex += 1;
-						_normal = _pointIndex != _trail.Length - 1;
-					}
-					else if ( !_normal )
-					{
-						_pointIndex -= 1;
-						_normal = _pointIndex == 0;
-					}
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _trail[ _pointIndex ], Time.fixedDeltaTime * _statistics.MovementSpeed ) );
 				transform.TurnScaleX( _trail[ _pointIndex ].x < Rigidbody.position.x );
 				_pointOrigin = Rigidbody.position;
