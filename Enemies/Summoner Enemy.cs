@@ -8,7 +8,7 @@ using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class SummonerEnemy : EnemyProvider, ILoader, ISummoner, IConnector
+	internal sealed class SummonerEnemy : EnemyProvider, ISummoner, IConnector
 	{
 		private
 			GameObject _summonObject;
@@ -35,10 +35,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_stopTime = 0F,
 			_gravityScale = 0F;
 		private bool[]
-			_isSummonTime,
-			_stopPermanently;
+			_isSummonTime;
 		private bool
-			_stopSummon = false,
 			_waitStop = false,
 			_isTimeout = false,
 			_waitResult = false;
@@ -57,16 +55,12 @@ namespace GwambaPrimeAdventure.Enemy
 			_queuedSummons.Clear();
 			Sender.Exclude( this );
 		}
-		public async UniTask Load()
+		private void Start()
 		{
 			_destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
-			if ( _destroyToken.IsCancellationRequested )
-				return;
 			_structureTime = new float[ _statistics.SummonPointStructures.Length ];
 			_summonTime = new float[ _statistics.TimedSummons.Length ];
 			_isSummonTime = new bool[ _statistics.TimedSummons.Length ];
-			_stopPermanently = new bool[ _statistics.TimedSummons.Length ];
 			_gravityScale = Rigidbody.gravityScale;
 			_randomSummonIndex = (ushort) UnityEngine.Random.Range( 0, _statistics.TimedSummons.Length );
 			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
@@ -123,6 +117,7 @@ namespace GwambaPrimeAdventure.Enemy
 					_summonPosition = summon.Self
 						? (Vector2) transform.position
 						: ( summon.Random ? summon.SummonPoints[ UnityEngine.Random.Range( 0, summon.SummonPoints.Length ) ] : summon.SummonPoints[ _summonIndex.y ] );
+					_summonPosition.x *= transform.localScale.x.CompareTo( 0F );
 					_summonObject = Instantiate( summon.Summons[ _summonIndex.x ], _summonPosition, summon.Summons[ _summonIndex.x ].transform.rotation, _instantiateParameters );
 					_summonObject.transform.SetParent( null );
 					_summonIndex.x = summon.Summons.Length - 1 > _summonIndex.x ? _summonIndex.x + 1 : 0;
@@ -134,14 +129,6 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void IndexedSummon( ushort summonIndex )
 		{
-			if ( _stopPermanently[ summonIndex ] )
-				return;
-			if ( _stopSummon )
-			{
-				if ( _statistics.TimedSummons[ summonIndex ].StopPermanently && !_stopPermanently[ summonIndex ] )
-					_stopPermanently[ summonIndex ] = true;
-				return;
-			}
 			if ( 0F < _summonTime[ summonIndex ] )
 				if ( 0F >= ( _summonTime[ summonIndex ] -= Time.deltaTime ) )
 				{
@@ -159,7 +146,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned )
+			if ( _stopWorking || IsStunned )
 				return;
 			for ( ushort i = 0; _structureTime.Length > i; i++ )
 				if ( 0F < _structureTime[ i ] )
@@ -185,7 +172,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public void OnSummon( ushort summonIndex )
 		{
-			if ( 0F < _structureTime[ summonIndex ] )
+			if ( 0F < _structureTime[ summonIndex ] || _stopWorking )
 				return;
 			_structureTime[ summonIndex ] = _statistics.SummonPointStructures[ summonIndex ].TimeToUse;
 			Summon( _statistics.SummonPointStructures[ summonIndex ].Summon );
@@ -197,13 +184,12 @@ namespace GwambaPrimeAdventure.Enemy
 					if ( enemy && this == enemy )
 					{
 						if ( MessageFormat.State == message.Format && message.ToggleValue.HasValue )
-							_stopSummon = !message.ToggleValue.Value;
+							_stopWorking = !message.ToggleValue.Value;
 						else if ( MessageFormat.Event == message.Format && _statistics.HasEventSummon && 0 < _statistics.EventSummons.Length )
 							if ( _statistics.RandomReactSummons )
 								Summon( _statistics.EventSummons[ UnityEngine.Random.Range( 0, _statistics.EventSummons.Length ) ] );
 							else if ( message.NumberValue.HasValue && message.NumberValue.Value < _statistics.EventSummons.Length && 0 >= message.NumberValue.Value )
 								Summon( _statistics.EventSummons[ message.NumberValue.Value ] );
-						return;
 					}
 		}
 	};
