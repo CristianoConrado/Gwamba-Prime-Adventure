@@ -135,7 +135,9 @@ namespace GwambaPrimeAdventure.Enemy
 					if ( _isSummonTime[ summonIndex ] )
 					{
 						Summon( _statistics.TimedSummons[ summonIndex ] );
-						_summonTime[ summonIndex ] = _statistics.TimedSummons[ summonIndex ].PostSummonTime;
+						_summonTime[ summonIndex ] = _statistics.TimedSummons[ summonIndex ].SkipPostSummon 
+							?  _statistics.TimedSummons[ summonIndex ].SummonTime 
+							:  _statistics.TimedSummons[ summonIndex ].PostSummonTime;
 					}
 					else
 						_summonTime[ summonIndex ] = _statistics.TimedSummons[ summonIndex ].SummonTime;
