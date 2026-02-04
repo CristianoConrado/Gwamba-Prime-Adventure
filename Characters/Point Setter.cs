@@ -12,6 +12,9 @@ namespace GwambaPrimeAdventure.Character
 		[SerializeField, Tooltip( "The name of the hubby world scene." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
 		private
 			SceneField _hubbyWorldScene;
+		[SerializeField, Tooltip( "If this point is the initial point to be the instance." )]
+		private
+			bool _initial;
 		[SerializeField, Tooltip( "If this point is faced to left." )]
 		private
 			bool _turnToLeft;
@@ -30,6 +33,8 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			SaveController.Load( out SaveFile saveFile );
 			if ( gameObject.scene.name == _hubbyWorldScene && !string.IsNullOrEmpty( saveFile.LastLevelEntered ) && saveFile.LastLevelEntered.Contains( $"{_selfIndex}" ) )
+				Instance = this;
+			else if ( _initial && !Instance )
 				Instance = this;
 		}
 		private void OnTriggerEnter2D( Collider2D other )
