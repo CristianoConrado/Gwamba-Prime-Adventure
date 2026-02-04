@@ -5,6 +5,8 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class DeathEnemy : EnemyProvider, IDestructible
 	{
+		private
+			InstantiateParameters _deathParameters;
 		private float
 			_summonTime = 0F,
 			_deathTime = 0F;
@@ -18,6 +20,11 @@ namespace GwambaPrimeAdventure.Enemy
 			DeathStatistics _statistics;
 		private void Start()
 		{
+			_deathParameters = new InstantiateParameters()
+			{
+				parent = transform,
+				worldSpace = false
+			};
 			_sender.SetFormat( MessageFormat.State );
 			_sender.SetToggle( false );
 			_summonTime = _statistics.TimeToSummon;
@@ -36,9 +43,9 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					_isDead = false;
 					if ( _statistics.ChildEnemy )
-						Instantiate( _statistics.ChildEnemy, _statistics.SpawnPoint, Quaternion.identity, transform ).transform.SetParent( null );
+						Instantiate( _statistics.ChildEnemy, _statistics.SpawnPoint, Quaternion.identity, _deathParameters ).transform.SetParent( null );
 					if ( _statistics.ChildProjectile )
-						Instantiate( _statistics.ChildProjectile, _statistics.SpawnPoint, Quaternion.identity, transform ).transform.SetParent( null );
+						Instantiate( _statistics.ChildProjectile, _statistics.SpawnPoint, Quaternion.identity, _deathParameters ).transform.SetParent( null );
 					Destroy( _enemyToDie ? _enemyToDie.gameObject : gameObject );
 				}
 		}
