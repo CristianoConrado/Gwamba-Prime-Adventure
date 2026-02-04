@@ -6,7 +6,7 @@ using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( PolygonCollider2D ) )]
-	internal sealed class FlyingEnemy : MovingEnemy, ILoader, IConnector
+	internal sealed class FlyingEnemy : MovingEnemy, IConnector
 	{
 		private
 			CircleCollider2D _selfCollider;
@@ -43,8 +43,9 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		public async UniTask Load()
+		private async new void Start()
 		{
+			base.Start();
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
