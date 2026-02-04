@@ -57,11 +57,14 @@ namespace GwambaPrimeAdventure.Enemy
 		private void Shoot()
 		{
 			if ( _statistics.ShootInfinity )
+			{
 				_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
+				transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
+			}
 			if ( !_statistics.PureInstance )
-				_projectileRotation = _statistics.CircularDetection
+				_projectileRotation = _statistics.CircularUse
 					? Quaternion.AngleAxis( ( Mathf.Atan2( _targetDirection.y, _targetDirection.x ) * Mathf.Rad2Deg ) - 90F, Vector3.forward )
-					: Quaternion.AngleAxis( _statistics.RayAngleDirection * ( _statistics.TurnRay ? transform.localScale.x.CompareTo( 0F ) : 1F ), Vector3.forward );
+					: Quaternion.AngleAxis( _statistics.DirectionAngle * ( _statistics.TurnRay ? transform.localScale.x.CompareTo( 0F ) : 1F ), Vector3.forward );
 			for ( ushort i = 0; _statistics.Projectiles.Length > i; i++ )
 				if ( _statistics.PureInstance )
 				{
@@ -105,7 +108,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			_hasTarget = false;
 			if ( 0F >= _shootInterval )
-				if ( _statistics.CircularDetection )
+				if ( _statistics.CircularUse )
 				{
 					if ( _hasTarget = CharacterExporter.GwambaLocalization().InsideCircle( (Vector2) transform.position + _collider.offset, _statistics.PerceptionDistance ) )
 					{
@@ -117,7 +120,7 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					_originCast = (Vector2) transform.position + _collider.offset;
 					_originCast.x += _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F );
-					_directionCast = Quaternion.AngleAxis( _statistics.RayAngleDirection, Vector3.forward ) * Vector2.up;
+					_directionCast = Quaternion.AngleAxis( _statistics.DirectionAngle, Vector3.forward ) * Vector2.up;
 					if ( _statistics.TurnRay )
 						_directionCast *= transform.localScale.x.CompareTo( 0F );
 					_castSize = Physics2D.RaycastNonAlloc( _originCast, _directionCast, _detectionRaycasts, _statistics.PerceptionDistance, WorldBuild.CHARACTER_LAYER_MASK );
