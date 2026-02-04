@@ -6,10 +6,8 @@ using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class ShooterEnemy : EnemyProvider, ILoader, IConnector, IDestructible
+	internal sealed class ShooterEnemy : EnemyProvider, IConnector, IDestructible
 	{
-		private
-			Projectile _projectile;
 		private Vector2
 			_originCast = Vector2.zero,
 			_directionCast = Vector2.zero,
@@ -42,12 +40,8 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		public async UniTask Load()
+		private void Start()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
 			_projectileParameters = new InstantiateParameters()
 			{
 				parent = transform,
@@ -56,21 +50,17 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Shoot()
 		{
-			if ( _statistics.ShootInfinity )
-			{
-				_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
-				transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
-			}
 			if ( !_statistics.PureInstance )
 				_projectileRotation = _statistics.CircularUse
 					? Quaternion.AngleAxis( ( Mathf.Atan2( _targetDirection.y, _targetDirection.x ) * Mathf.Rad2Deg ) - 90F, Vector3.forward )
 					: Quaternion.AngleAxis( _statistics.DirectionAngle * ( _statistics.TurnRay ? transform.localScale.x.CompareTo( 0F ) : 1F ), Vector3.forward );
 			for ( ushort i = 0; _statistics.Projectiles.Length > i; i++ )
 				if ( _statistics.PureInstance )
-				{
-					_projectile = Instantiate( _statistics.Projectiles[ i ], _statistics.SpawnPoint, _statistics.Projectiles[ i ].transform.rotation, _projectileParameters );
-					_projectile.transform.SetParent( null );
-				}
+					Instantiate(
+						original: _statistics.Projectiles[ i ],
+						position: _statistics.SpawnPoint,
+						rotation: _statistics.Projectiles[ i ].transform.rotation,
+						parameters: _projectileParameters ).transform.SetParent( null );
 				else
 					Instantiate( _statistics.Projectiles[ i ], _statistics.SpawnPoint, _projectileRotation, _projectileParameters ).transform.SetParent( null );
 			if ( _statistics.InvencibleShoot )
@@ -108,13 +98,13 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			_hasTarget = false;
 			if ( 0F >= _shootInterval )
-				if ( _statistics.CircularUse )
+				if ( _statistics.CircularUse &&
+					( _statistics.ShootInfinity ||
+					( _hasTarget = CharacterExporter.GwambaLocalization().InsideCircle( (Vector2) transform.position + _collider.offset, _statistics.PerceptionDistance ) ) ) )
 				{
-					if ( _hasTarget = CharacterExporter.GwambaLocalization().InsideCircle( (Vector2) transform.position + _collider.offset, _statistics.PerceptionDistance ) )
-					{
-						_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
-						transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
-					}
+					transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
+					_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
+					_targetDirection.x *= transform.localScale.x.CompareTo( 0F );
 				}
 				else
 				{
@@ -160,13 +150,16 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] enemies && 0 < enemies.Length )
 				foreach ( EnemyProvider enemy in enemies )
-					if ( enemy && this == enemy && MessageFormat.Event == message.Format && _statistics.ReactToDamage )
-					{
-						_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
-						transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
-						Shoot();
-						return;
-					}
+					if ( enemy && this == enemy )
+						if ( MessageFormat.State == message.Format && message.ToggleValue.HasValue )
+							_stopWorking = message.ToggleValue.Value;
+						else if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage )
+						{
+							transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
+							_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
+							_targetDirection.x *= transform.localScale.x.CompareTo( 0F );
+							Shoot();
+						}
 		}
 	};
 };
