@@ -40,6 +40,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private bool
 			_stopSummon = false,
 			_waitStop = false,
+			_isTimeout = false,
 			_waitResult = false;
 		[SerializeField, Tooltip( "The summoner statitics of this enemy." ), Header( "Summoner Enemy" )]
 		private
@@ -79,7 +80,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			_temporarySummonEvent = StopToSummon();
 			_queuedSummons.Enqueue( _temporarySummonEvent );
-			(_, _waitResult) = await UniTask.WaitWhile(
+			(_isTimeout, _waitResult) = await UniTask.WaitWhile(
 				predicate: () =>
 				{
 					if ( _summonEvent is not null )
@@ -93,7 +94,7 @@ namespace GwambaPrimeAdventure.Enemy
 				cancellationToken: _destroyToken,
 				cancelImmediately: true )
 				.SuppressCancellationThrow().TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
-			if ( _destroyToken.IsCancellationRequested || !_waitResult )
+			if ( _destroyToken.IsCancellationRequested || ( _isTimeout && !_waitResult ) )
 			{
 				_queuedSummons.Clear();
 				return;
