@@ -13,8 +13,6 @@ namespace GwambaPrimeAdventure
 			CameraOccluder _instance;
 		private
 			CinemachinePositionComposer _cinemachineFollow;
-		private Vector2
-			_posiontDamping = Vector2.zero;
 		[SerializeField, Tooltip( "The scene of the menu." ), Header( "Interactions" )]
 		private
 			SceneField _menuScene;
@@ -30,7 +28,6 @@ namespace GwambaPrimeAdventure
 			}
 			_instance = this;
 			_cinemachineFollow = GetComponent<CinemachinePositionComposer>();
-			_posiontDamping = _cinemachineFollow.Damping;
 			GetComponent<BoxCollider2D>().size = BuildMathemathics.OrthographicToRealSize( GetComponent<CinemachineCamera>().Lens.OrthographicSize );
 			SceneManager.sceneLoaded += SceneLoaded;
 			Sender.Include( this );
@@ -48,8 +45,7 @@ namespace GwambaPrimeAdventure
 		{
 			if ( !_instance || this != _instance )
 				return;
-			_cinemachineFollow.Damping = _posiontDamping;
-			_cinemachineFollow.enabled = true;
+			_cinemachineFollow.enabled = _cinemachineFollow.Lookahead.Enabled = true;
 		}
 		private void OnDisable()
 		{
@@ -74,8 +70,7 @@ namespace GwambaPrimeAdventure
 				Destroy( gameObject );
 				return;
 			}
-			_cinemachineFollow.Damping = Vector3.zero;
-			_cinemachineFollow.enabled = true;
+			_cinemachineFollow.enabled = !( _cinemachineFollow.Lookahead.Enabled = false );
 		}
 		private void SetOtherChildren( GameObject gameObject, bool activate )
 		{
@@ -89,7 +84,7 @@ namespace GwambaPrimeAdventure
 		public void Receive( MessageData message )
 		{
 			if ( MessageFormat.Event == message.Format && message.ToggleValue.HasValue )
-				_cinemachineFollow.Damping = message.ToggleValue.Value ? _posiontDamping : Vector3.zero;
+				_cinemachineFollow.Lookahead.Enabled = message.ToggleValue.Value;
 		}
 	};
 };
