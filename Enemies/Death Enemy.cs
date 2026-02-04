@@ -6,6 +6,7 @@ namespace GwambaPrimeAdventure.Enemy
 	internal sealed class DeathEnemy : EnemyProvider, IDestructible
 	{
 		private float
+			_summonTime = 0F,
 			_deathTime = 0F;
 		private bool
 			_isDead = false;
@@ -15,8 +16,21 @@ namespace GwambaPrimeAdventure.Enemy
 		[SerializeField, Tooltip( "The death statitics of this enemy." )]
 		private
 			DeathStatistics _statistics;
+		private void Start()
+		{
+			_sender.SetFormat( MessageFormat.State );
+			_sender.SetToggle( false );
+			_summonTime = _statistics.TimeToSummon;
+			_deathTime = _statistics.TimeToDie;
+		}
 		private void Update()
 		{
+			if ( 0F < _summonTime )
+				if ( 0F >= ( _summonTime -= Time.deltaTime ) )
+				{
+					_sender.Send( MessagePath.Enemy );
+					_isDead = true;
+				}
 			if ( _isDead )
 				if ( 0F >= ( _deathTime -= Time.deltaTime ) )
 				{
@@ -32,10 +46,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( !_isDead && _statistics.OnTouch && other.TryGetComponent<IDestructible>( out _ ) )
 			{
-				_sender.SetFormat( MessageFormat.State );
-				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Enemy );
-				_deathTime = _statistics.TimeToDie;
 				_isDead = true;
 			}
 		}
@@ -43,12 +54,9 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( _isDead )
 				return false;
-			if ( 0 >= Health - (short) damage )
+			if ( 0 >= Health - (short) damage && !_statistics.OnlyTimer )
 			{
-				_sender.SetFormat( MessageFormat.State );
-				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Enemy );
-				_deathTime = _statistics.TimeToDie;
 				return _isDead = true;
 			}
 			return base.Hurt( damage );
