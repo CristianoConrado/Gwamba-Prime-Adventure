@@ -31,13 +31,19 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, Tooltip( "The amount of time to execute the instance." )]
-		public ushort SummonTime
+		public float SummonTime
 		{
 			get;
 			private set;
 		}
 		[field: SerializeField, Tooltip( "The amount of time to wait to execute the next instance." )]
-		public ushort PostSummonTime
+		public float PostSummonTime
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, Tooltip( "If the post summon time will be skipped." )]
+		public bool SkipPostSummon
 		{
 			get;
 			private set;
