@@ -29,6 +29,18 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
+		[field: SerializeField, Tooltip( "If this enemy will only summon when the timer ends." )]
+		public bool OnlyTimer
+		{
+			get;
+			private set;
+		}
+		[field: SerializeField, Tooltip( "The time to this enemy summon." )]
+		public float TimeToSummon
+		{
+			get;
+			private set;
+		}
 		[field: SerializeField, Tooltip( "The time to this enemy die." )]
 		public float TimeToDie
 		{
