@@ -646,10 +646,10 @@ namespace GwambaPrimeAdventure.Character
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, UpStairsLength );
 					if ( _groundContacts.Exists( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) ) )
 						return;
-					_localAtEnd = _groundContacts[0].point;
+					_localAtEnd.y = _groundContacts[ 0 ].point.y;
 					for ( ushort i = 1; _groundContacts.Count > i; i++ )
-						if ( Vector2.Distance( _localAtStart, _groundContacts[ i ].point ) < Vector2.Distance( _localAtStart, _localAtEnd ) )
-							_localAtEnd = _groundContacts[ i ].point;
+						if ( _groundContacts[ i ].point.y < _localAtEnd.y )
+							_localAtEnd.y = _groundContacts[ i ].point.y;
 					_localAtSurface.x = transform.position.x + WorldBuild.SNAP_LENGTH * transform.localScale.x.CompareTo( 0F );
 					_localAtSurface.y = transform.position.y + Mathf.Abs( _localAtEnd.y - ( transform.position.y - _collider.bounds.extents.y ) );
 					transform.position = _localAtSurface;
