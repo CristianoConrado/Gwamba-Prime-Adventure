@@ -571,7 +571,7 @@ namespace GwambaPrimeAdventure.Character
 		{
 			if ( !_instance || this != _instance || !isActiveAndEnabled || !_didStart || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
-			if ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
+			if ( ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) ) && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
 			{
 				_collider.GetContacts( _groundContacts );
 				if ( _groundContacts.Exists( contact => 0F > contact.normal.x ? -CheckGroundLimit >= contact.normal.x : CheckGroundLimit <= contact.normal.x ) )
@@ -587,6 +587,8 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			_offGround = !_isOnGround;
 			_collider.GetContacts( _groundContacts );
+			_localAtStart.Set( Local.x, Local.y - _collider.bounds.extents.y );
+			_localAtEnd.Set( _collider.size.x, WorldBuild.SNAP_LENGTH );
 			if ( _isOnGround = _groundContacts.Exists( contact => CheckGroundLimit <= contact.normal.y ) )
 			{
 				if ( _offGround )
@@ -679,7 +681,12 @@ namespace GwambaPrimeAdventure.Character
 		private void OnCollisionExit2D( Collision2D collision )
 		{
 			if ( _instance && this == _instance && _didStart && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
+			{
+				_collider.GetContacts( _groundContacts );
+				if ( _groundContacts.Exists( contact => CheckGroundLimit <= contact.normal.y ) )
+					return;
 				_offGround = !( _isOnGround = false );
+			}
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
