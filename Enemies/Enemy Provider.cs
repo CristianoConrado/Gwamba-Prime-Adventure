@@ -11,6 +11,11 @@ namespace GwambaPrimeAdventure.Enemy
 			Collider2D _collider;
 		protected readonly Sender
 			_sender = Sender.Create();
+		protected readonly int
+			Fall = Animator.StringToHash( nameof( Fall ) ),
+			Stop = Animator.StringToHash( nameof( Stop ) ),
+			Stunned = Animator.StringToHash( nameof( Stunned ) ),
+			Death = Animator.StringToHash( nameof( Death ) );
 		protected bool
 			_stopWorking = false;
 		[SerializeField, Tooltip( "The enemies to send messages." ), Header( "Enemy Provider" )]
@@ -22,6 +27,8 @@ namespace GwambaPrimeAdventure.Enemy
 			get;
 			private set;
 		}
+		protected Animator Animator =>
+			  _controller.Animator;
 		protected Rigidbody2D Rigidbody =>
 			  _controller.Rigidbody;
 		public IDestructible Source => this;
