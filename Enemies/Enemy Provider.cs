@@ -72,6 +72,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( _controller.IsStunned = !_controller.ProvidenceStatistics.NoHitStun )
 			{
+				Animator.SetBool( Stunned, true );
 				_controller.OnDisable();
 				_controller.StunTimer = stunTime;
 			}
