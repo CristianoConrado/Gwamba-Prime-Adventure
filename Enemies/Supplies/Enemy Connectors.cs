@@ -7,6 +7,8 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	public abstract class Control : StateController
 	{
 		protected
+			Animator _animator;
+		protected
 			Rigidbody2D _rigidbody;
 		protected
 			CinemachineImpulseSource _screenShaker;
