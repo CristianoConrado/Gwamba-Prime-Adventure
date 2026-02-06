@@ -20,6 +20,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_movementDirection = Vector2.zero,
 			_pointOrigin = Vector2.zero,
 			_targetPoint = Vector2.zero;
+		private readonly int
+			Chase = Animator.StringToHash( nameof( Chase ) );
 		private ushort
 			_pointIndex = 0;
 		private bool
@@ -63,6 +65,9 @@ namespace GwambaPrimeAdventure.Enemy
 			_detectionCollider.isTrigger = true;
 			_detectionCollider.contactCaptureLayers = WorldBuild.SCENE_LAYER_MASK;
 			_detectionCollider.callbackLayers = WorldBuild.SCENE_LAYER_MASK;
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			PolygonCollider2D trail = GetComponent<PolygonCollider2D>();
 			_trail = new Vector2[ trail.points.Length ];
 			for ( ushort i = 0; trail.points.Length > i; i++ )
@@ -71,9 +76,11 @@ namespace GwambaPrimeAdventure.Enemy
 			_pointOrigin = Rigidbody.position;
 			_started = true;
 		}
-		private void Chase()
+		private void Chasing()
 		{
 			_returnOrigin = true;
+			if ( !Animator.GetBool( Chase ) )
+				Animator.SetBool( Chase, true );
 			if ( _returnDash )
 			{
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _pointOrigin, Time.fixedDeltaTime * _statistics.ReturnSpeed ) );
@@ -83,11 +90,19 @@ namespace GwambaPrimeAdventure.Enemy
 			else if ( !_isDashing && Vector2.Distance( Rigidbody.position, _targetPoint ) <= _statistics.TargetDistance )
 				if ( _statistics.DetectionStop )
 				{
-					(_stopWorking, _stoppedTime) = (true, _statistics.StopTime);
+					Animator.SetBool( Move, false );
+					Animator.SetBool( Chase, false );
+					Animator.SetBool( Dash, false );
+					Animator.SetBool( Stop, _stopWorking = true );
+					_stoppedTime = _statistics.StopTime;
 					return;
 				}
 				else
-					_isDashing = true;
+				{
+					Animator.SetBool( Move, false );
+					Animator.SetBool( Chase, false );
+					Animator.SetBool( Dash, _isDashing = true );
+				}
 			if ( _isDashing )
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _targetPoint, Time.fixedDeltaTime * _statistics.DashSpeed ) );
 			else
@@ -98,22 +113,32 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _isDashing && Vector2.Distance( Rigidbody.position, _targetPoint ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT )
 				if ( _statistics.DetectionStop )
 				{
-					_stopWorking = _returnDash = _afterDash = true;
+					Animator.SetBool( Move, false );
+					Animator.SetBool( Chase, false );
+					Animator.SetBool( Dash, false );
+					Animator.SetBool( Stop, _stopWorking = _returnDash = _afterDash = true );
 					_stoppedTime = _statistics.AfterTime;
 				}
 				else
-					_isDashing = !( _returnDash = true );
+				{
+					Animator.SetBool( Dash, _isDashing = !( _returnDash = true ) );
+					Animator.SetBool( Chase, true );
+				}
 		}
 		private void Trail()
 		{
 			if ( _returnOrigin )
 			{
+				if ( !Animator.GetBool( Move ) )
+					Animator.SetBool( Move, true );
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _pointOrigin, Time.fixedDeltaTime * _statistics.ReturnSpeed ) );
 				transform.TurnScaleX( _pointOrigin.x < Rigidbody.position.x );
 				_returnOrigin = Vector2.Distance( Rigidbody.position, _pointOrigin ) > WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			}
 			else if ( 0 < _trail.Length )
 			{
+				if ( !Animator.GetBool( Move ) )
+					Animator.SetBool( Move, true );
 				if ( Vector2.Distance( Rigidbody.position, _trail[ _pointIndex ] ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT )
 					_pointIndex = (ushort) ( _pointIndex < _trail.Length - 1 ? _pointIndex + 1 : 0 );
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _trail[ _pointIndex ], Time.fixedDeltaTime * _statistics.MovementSpeed ) );
@@ -128,8 +153,12 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.DetectionStop && _stopWorking )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
 				{
-					_stopWorking = false;
+					Animator.SetBool( Move, false );
+					Animator.SetBool( Chase, false );
+					Animator.SetBool( Dash, false );
+					Animator.SetBool( Stop, _stopWorking = false );
 					(_isDashing, _afterDash) = (!_afterDash, false);
+					Animator.SetBool( Dash, _isDashing );
 				}
 		}
 		private new void FixedUpdate()
@@ -163,11 +192,17 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( Physics2D.CircleCast( _originCast, _selfCollider.radius, ( _targetPoint - _originCast ).normalized, _selfCollider.radius / 2f, WorldBuild.SCENE_LAYER_MASK ) )
 					if ( _statistics.DetectionStop )
 					{
-						_stopWorking = _returnDash = _afterDash = true;
+						Animator.SetBool( Move, false );
+						Animator.SetBool( Chase, false );
+						Animator.SetBool( Dash, false );
+						Animator.SetBool( Stop, _stopWorking = _returnDash = _afterDash = true );
 						_stoppedTime = _statistics.AfterTime;
 					}
 					else
-						_isDashing = !( _returnDash = true );
+					{
+						Animator.SetBool( Dash, _isDashing = !( _returnDash = true ) );
+						Animator.SetBool( Chase, true );
+					}
 			}
 			else
 				_detected = false;
@@ -185,7 +220,7 @@ namespace GwambaPrimeAdventure.Enemy
 				}
 			}
 			if ( _detected || _returnDash )
-				Chase();
+				Chasing();
 			else
 				Trail();
 		}
@@ -194,10 +229,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] enemies && 0 < enemies.Length )
 				foreach ( EnemyProvider enemy in enemies )
 					if ( enemy && this == enemy )
-					{
 						base.Receive( message );
-						return;
-					}
 		}
 	};
 };
