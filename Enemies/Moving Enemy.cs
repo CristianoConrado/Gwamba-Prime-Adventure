@@ -55,7 +55,11 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		protected void FixedUpdate()
 		{
-			if ( !OnGround || !SceneInitiator.IsInTransition() )
+			if ( SceneInitiator.IsInTransition() )
+				return;
+			if ( OnGround && Animator.GetBool( Fall ) )
+				Animator.SetBool( Fall, false );
+			if ( !OnGround )
 				if ( !Animator.GetBool( Fall ) && 0F > Rigidbody.linearVelocityY )
 					Animator.SetBool( Fall, true );
 				else if ( Animator.GetBool( Fall ) && 0F < Rigidbody.linearVelocityY )
@@ -83,7 +87,11 @@ namespace GwambaPrimeAdventure.Enemy
 		public void Receive( MessageData message )
 		{
 			if ( MessageFormat.State == message.Format && message.ToggleValue.HasValue )
-				_stopWorking = !message.ToggleValue.Value;
+				if ( _stopWorking = !message.ToggleValue.Value )
+				{
+					Animator.SetBool( Move, false );
+					Animator.SetBool( Dash, false );
+				}
 		}
 	};
 };
