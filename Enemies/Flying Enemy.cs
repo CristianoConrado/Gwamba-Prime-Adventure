@@ -1,10 +1,12 @@
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
+using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( PolygonCollider2D ) )]
-	internal sealed class FlyingEnemy : MovingEnemy, IConnector
+	internal sealed class FlyingEnemy : MovingEnemy, ILoader, IConnector
 	{
 		private
 			CircleCollider2D _selfCollider;
@@ -42,9 +44,12 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		private new void Start()
+		public async new UniTask Load()
 		{
-			base.Start();
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			GameObject detectionObject = new( "Detection Collider", typeof( CapsuleCollider2D ) )
 			{
 				layer = WorldBuild.ENEMY_LAYER,
@@ -118,7 +123,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned )
+			if ( IsStunned || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.DetectionStop && _stopWorking )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
@@ -127,9 +132,10 @@ namespace GwambaPrimeAdventure.Enemy
 					(_isDashing, _afterDash) = (!_afterDash, false);
 				}
 		}
-		private void FixedUpdate()
+		private new void FixedUpdate()
 		{
-			if ( _stopWorking || IsStunned || !_started )
+			base.FixedUpdate();
+			if ( _stopWorking || IsStunned || !_started || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.Target )
 			{
