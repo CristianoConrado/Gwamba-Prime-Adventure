@@ -7,6 +7,8 @@ namespace GwambaPrimeAdventure.Enemy
 	[DisallowMultipleComponent]
 	internal sealed class DefenderEnemy : EnemyProvider, ILoader, IConnector, IDestructible
 	{
+		private readonly int
+			Defend = Animator.StringToHash( nameof( Defend ) );
 		private bool
 			_invencible = false;
 		private float
@@ -41,20 +43,22 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( 0F >= ( _timeOperation -= Time.deltaTime ) )
 					if ( _invencible )
 					{
+						Animator.SetBool( Defend, _invencible = false );
 						_timeOperation = _statistics.UseAlternatedTime ? _statistics.TimeToInvencible : _statistics.TimeToDestructible;
-						_invencible = false;
 						if ( _statistics.InvencibleStop )
 						{
+							Animator.SetBool( Stop, false );
 							_sender.SetToggle( true );
 							_sender.Send( MessagePath.Enemy );
 						}
 					}
 					else
 					{
+						Animator.SetBool( Defend, _invencible = true );
 						_timeOperation = _statistics.TimeToDestructible;
-						_invencible = true;
 						if ( _statistics.InvencibleStop )
 						{
+							Animator.SetBool( Stop, true );
 							_sender.SetToggle( false );
 							_sender.Send( MessagePath.Enemy );
 						}
@@ -66,10 +70,11 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( !_invencible && _statistics.BiggerDamage <= damage )
 				if ( ( isHurted = base.Hurt( damage ) ) && _statistics.InvencibleHurted )
 				{
+					Animator.SetBool( Defend, _invencible = true );
 					_timeOperation = _statistics.TimeToInvencible;
-					_invencible = true;
 					if ( _statistics.InvencibleStop )
 					{
+						Animator.SetBool( Stop, false );
 						_sender.SetToggle( true );
 						_sender.Send( MessagePath.Enemy );
 					}
@@ -85,20 +90,20 @@ namespace GwambaPrimeAdventure.Enemy
 						if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage && message.ToggleValue.HasValue )
 							if ( _statistics.UseAlternatedTime && message.ToggleValue.Value )
 							{
-								_invencible = true;
+								Animator.SetBool( Defend, _invencible = true );
 								_timeOperation = _statistics.TimeToInvencible;
 							}
 							else
 							{
-								_invencible = message.ToggleValue.Value;
+								Animator.SetBool( Defend, _invencible = message.ToggleValue.Value );
 								_timeOperation = _statistics.TimeToDestructible;
 							}
 						if ( _statistics.InvencibleStop )
 						{
+							Animator.SetBool( Stop, _invencible );
 							_sender.SetToggle( !_invencible );
 							_sender.Send( MessagePath.Enemy );
 						}
-						return;
 					}
 		}
 	};
