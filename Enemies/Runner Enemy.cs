@@ -214,9 +214,6 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( SceneInitiator.IsInTransition() || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
 			_collider.GetContacts( _groundContacts );
-			//_originCast = (Vector2) transform.position + _collider.offset;
-			//_originCast.x += _collider.bounds.extents.x * ( transform.localScale.x.CompareTo( 0F ) ) * transform.right.x;
-			//_sizeCast.Set( WorldBuild.SNAP_LENGTH, _collider.bounds.size.y );
 			_wayBlocked = _groundContacts.Exists( contact =>
 			0F > contact.normal.x
 			? -_statistics.CheckGroundLimit >= contact.normal.x
