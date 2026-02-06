@@ -12,7 +12,8 @@ namespace GwambaPrimeAdventure.Enemy
 		private
 			EnemyProvider[] _selfEnemies;
 		private readonly int
-			IsOn = Animator.StringToHash( nameof( IsOn ) );
+			IsOn = Animator.StringToHash( nameof( IsOn ) ),
+			Stunned = Animator.StringToHash( nameof( Stunned ) );
 		[ field: SerializeField, Tooltip( "The control statitics of this enemy." ), Header( "Enemy Statistics" )]
 		internal EnemyStatistics ProvidenceStatistics
 		{
@@ -129,7 +130,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _stunned )
 				if ( 0F >= ( _stunTimer -= Time.deltaTime ) )
 				{
-					_stunned = false;
+					Animator.SetBool( Stunned, _stunned = false );
 					OnEnable();
 				}
 		}
