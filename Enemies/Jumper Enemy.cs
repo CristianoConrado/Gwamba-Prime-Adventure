@@ -65,7 +65,7 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			Sender.Exclude( this );
 		}
-		public async UniTask Load()
+		public async new UniTask Load()
 		{
 			_destroyToken = this.GetCancellationTokenOnDestroy();
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
@@ -136,7 +136,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned || _stopWorking )
+			if ( IsStunned || _stopWorking || SceneInitiator.IsInTransition() )
 				return;
 			if ( 0F < _stopTime )
 				if ( 0F >= ( _stopTime -= Time.deltaTime ) )
@@ -164,9 +164,10 @@ namespace GwambaPrimeAdventure.Enemy
 					for ( ushort i = 0; _timedJumpTime.Length > i; i++ )
 						TimedJump( i );
 		}
-		private void FixedUpdate()
+		private new void FixedUpdate()
 		{
-			if ( IsStunned )
+			base.FixedUpdate();
+			if ( IsStunned || SceneInitiator.IsInTransition() )
 				return;
 			if ( _onJump && OnGround )
 			{
