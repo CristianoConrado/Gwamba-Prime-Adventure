@@ -32,6 +32,8 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
+			if ( SceneInitiator.IsInTransition() )
+				return;
 			if ( 0F < _summonTime )
 				if ( 0F >= ( _summonTime -= Time.deltaTime ) )
 				{
