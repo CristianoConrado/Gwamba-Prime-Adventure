@@ -6,7 +6,7 @@ using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class ShooterEnemy : EnemyProvider, IConnector, IDestructible
+	internal sealed class ShooterEnemy : EnemyProvider, ILoader, IConnector, IDestructible
 	{
 		private Vector2
 			_originCast = Vector2.zero,
@@ -18,6 +18,8 @@ namespace GwambaPrimeAdventure.Enemy
 			InstantiateParameters _projectileParameters;
 		private readonly RaycastHit2D[]
 			_detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+		private readonly int
+			Shooted = Animator.StringToHash( nameof( Shooted ) );
 		private float
 			_shootInterval = 0F,
 			_timeStop = 0F;
@@ -40,8 +42,12 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		private void Start()
+		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			_projectileParameters = new InstantiateParameters()
 			{
 				parent = transform,
@@ -72,7 +78,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( _stopWorking || IsStunned )
+			if ( _stopWorking || IsStunned || SceneInitiator.IsInTransition() )
 				return;
 			if ( 0F < _shootInterval && !_isStopped )
 				_shootInterval -= Time.deltaTime;
@@ -96,6 +102,8 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void FixedUpdate()
 		{
+			if ( SceneInitiator.IsInTransition() )
+				return;
 			_hasTarget = false;
 			if ( 0F >= _shootInterval )
 				if ( _statistics.CircularUse &&
