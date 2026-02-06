@@ -19,6 +19,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_direction = Vector2.zero;
 		private readonly RaycastHit2D[]
 			_perceptionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+		private readonly int
+			Jump = Animator.StringToHash( nameof( Jump ) );
 		private ushort
 			_sequentialJumpIndex = 0;
 		private
@@ -39,6 +41,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_contunuosFollow = false,
 			_useTarget = false,
 			_turnFollow = false,
+			_isTimeout = false,
 			_waitResult = false;
 		[SerializeField, Tooltip( "The jumper statitics of this enemy." ), Header( "Jumper Enemy" )]
 		private
@@ -49,7 +52,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.UseInput )
 			{
 				_inputController = new InputController();
-				_inputController.Commands.Jump.started += Jump;
+				_inputController.Commands.Jump.started += Jumping;
 				_inputController.Commands.Jump.Enable();
 			}
 			Sender.Include( this );
@@ -59,7 +62,7 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			if ( _statistics.UseInput )
 			{
-				_inputController.Commands.Jump.started -= Jump;
+				_inputController.Commands.Jump.started -= Jumping;
 				_inputController.Commands.Jump.Disable();
 				_inputController.Dispose();
 			}
@@ -81,7 +84,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_jumpCount[ i ] = (short) _statistics.JumpPointStructures[ i ].JumpCount;
 			}
 		}
-		private void Jump( InputAction.CallbackContext jump )
+		private void Jumping( InputAction.CallbackContext jump )
 		{
 			if ( isActiveAndEnabled && !IsStunned && 0F >= _jumpTime )
 			{
@@ -95,13 +98,14 @@ namespace GwambaPrimeAdventure.Enemy
 			_detected = true;
 			if ( _statistics.DetectionStop )
 			{
+				Animator.SetBool( Stop, true );
 				_sender.SetFormat( MessageFormat.State );
 				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Enemy );
 				_stopTime = _statistics.StopTime;
 				return;
 			}
-			_isJumping = true;
+			Animator.SetBool( Jump, _isJumping = true );
 			Rigidbody.AddForceY( Rigidbody.mass * _statistics.JumpStrenght, ForceMode2D.Impulse );
 			if ( _follow = !_statistics.UnFollow )
 				transform.TurnScaleX( _movementSide = (short) ( _targetPosition.x < transform.position.x ? -1 : 1 ) );
@@ -112,11 +116,11 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( 0F >= ( _timedJumpTime[ jumpIndex ] -= Time.deltaTime ) )
 				{
 					Rigidbody.AddForceY( _statistics.TimedJumps[ jumpIndex ].Strength * Rigidbody.mass, ForceMode2D.Impulse );
-					( _, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
+					( _isTimeout, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
 						.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
-					if ( _destroyToken.IsCancellationRequested || !_waitResult )
+					if ( _destroyToken.IsCancellationRequested || _isTimeout && !_waitResult )
 						return;
-					_isJumping = true;
+					Animator.SetBool( Jump, _isJumping = true );
 					_contunuosFollow = _follow = _statistics.TimedJumps[ jumpIndex ].Follow;
 					_turnFollow = _statistics.TimedJumps[ jumpIndex ].TurnFollow;
 					_useTarget = _statistics.TimedJumps[ jumpIndex ].UseTarget;
@@ -141,7 +145,8 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0F < _stopTime )
 				if ( 0F >= ( _stopTime -= Time.deltaTime ) )
 				{
-					_isJumping = true;
+					Animator.SetBool( Stop, false );
+					Animator.SetBool( Jump, _isJumping = true );
 					Rigidbody.AddForceY( Rigidbody.mass * _statistics.JumpStrenght, ForceMode2D.Impulse );
 					if ( _follow = !_statistics.UnFollow )
 						transform.TurnScaleX( _movementSide = (short) ( _targetPosition.x < transform.position.x ? -1 : 1 ) );
@@ -169,12 +174,18 @@ namespace GwambaPrimeAdventure.Enemy
 			base.FixedUpdate();
 			if ( IsStunned || SceneInitiator.IsInTransition() )
 				return;
+			if ( _isJumping )
+				if ( !Animator.GetBool( Jump ) && 0F < Rigidbody.linearVelocityY )
+					Animator.SetBool( Jump, true );
+				else if ( Animator.GetBool( Jump ) && 0F > Rigidbody.linearVelocityY || OnGround )
+					Animator.SetBool( Jump, false );
 			if ( _onJump && OnGround )
 			{
 				if ( _follow )
 					Rigidbody.linearVelocityX = 0F;
+				Animator.SetBool( Jump, _onJump = _isJumping = _detected = _contunuosFollow = _follow = false );
 				_sender.SetFormat( MessageFormat.State );
-				_sender.SetToggle( !( _onJump = _isJumping = _detected = _contunuosFollow = _follow = false ) );
+				_sender.SetToggle( true );
 				_sender.Send( MessagePath.Enemy );
 			}
 			else if ( !_onJump && _isJumping && !OnGround )
@@ -222,20 +233,20 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public async void OnJump( ushort jumpIndex )
 		{
-			( _, _waitResult ) = await UniTask.WaitWhile( () => !OnGround || _detected || !isActiveAndEnabled || IsStunned, PlayerLoopTiming.Update, _destroyToken, true )
+			( _isTimeout, _waitResult ) = await UniTask.WaitWhile( () => !OnGround || _detected || !isActiveAndEnabled || IsStunned, PlayerLoopTiming.Update, _destroyToken, true )
 				.SuppressCancellationThrow().TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
-			if ( _destroyToken.IsCancellationRequested || !_waitResult )
+			if ( _destroyToken.IsCancellationRequested || _isTimeout && !_waitResult )
 				return;
 			if ( _stopJump || 0F < _jumpTime )
 				return;
 			if ( 0 >= _jumpCount[ jumpIndex ]-- )
 			{
 				Rigidbody.AddForceY( _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Strength * Rigidbody.mass, ForceMode2D.Impulse );
-				( _, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
+				( _isTimeout, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
 					.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
-				if ( _destroyToken.IsCancellationRequested || !_waitResult )
+				if ( _destroyToken.IsCancellationRequested || _isTimeout && !_waitResult )
 					return;
-				_isJumping = true;
+				Animator.SetBool( Jump, _isJumping = true );
 				_contunuosFollow = _follow = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.Follow;
 				_turnFollow = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.TurnFollow;
 				_useTarget = _statistics.JumpPointStructures[ jumpIndex ].JumpStats.UseTarget;
@@ -263,15 +274,15 @@ namespace GwambaPrimeAdventure.Enemy
 						else if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage )
 						{
 							Rigidbody.AddForceY( _statistics.StrenghtReact * Rigidbody.mass, ForceMode2D.Impulse );
-							( _, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
+							( _isTimeout, _waitResult ) = await UniTask.WaitWhile( () => OnGround, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow()
 								.TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
-							if ( _destroyToken.IsCancellationRequested || !_waitResult )
+							if ( _destroyToken.IsCancellationRequested || _isTimeout && !_waitResult )
 								return;
+							Animator.SetBool( Jump, _isJumping = true );
 							_otherTarget = _statistics.OtherTarget;
 							_contunuosFollow = _follow = _statistics.FollowReact;
 							_turnFollow = _statistics.TurnFollowReact;
 							_useTarget = _statistics.UseTarget;
-							_isJumping = true;
 							if ( _statistics.StopMoveReact )
 							{
 								_sender.SetFormat( MessageFormat.State );
@@ -279,7 +290,6 @@ namespace GwambaPrimeAdventure.Enemy
 								_sender.Send( MessagePath.Enemy );
 							}
 						}
-						return;
 					}
 		}
 	};
