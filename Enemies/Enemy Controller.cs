@@ -6,17 +6,21 @@ using Unity.Cinemachine;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
-	[RequireComponent( typeof( Rigidbody2D ), typeof( Collider2D ), typeof( CinemachineImpulseSource ) )]
+	[RequireComponent( typeof( Animator ), typeof( Rigidbody2D ), typeof( Collider2D ) ), RequireComponent( typeof( CinemachineImpulseSource ) )]
 	internal sealed class EnemyController : Control, IConnector, IOccludee, IDestructible
 	{
 		private
 			EnemyProvider[] _selfEnemies;
-		[field: SerializeField, Tooltip( "The control statitics of this enemy." ), Header( "Enemy Statistics" )]
+		private readonly int
+			IsOn = Animator.StringToHash( nameof( IsOn ) );
+		[ field: SerializeField, Tooltip( "The control statitics of this enemy." ), Header( "Enemy Statistics" )]
 		internal EnemyStatistics ProvidenceStatistics
 		{
 			get;
 			private set;
 		}
+		internal Animator Animator =>
+			_animator;
 		internal Rigidbody2D Rigidbody =>
 			_rigidbody;
 		public IDestructible Source => this;
@@ -50,6 +54,7 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			base.Awake();
 			_selfEnemies = GetComponents<EnemyProvider>();
+			_animator = GetComponent<Animator>();
 			_rigidbody = GetComponent<Rigidbody2D>();
 			_screenShaker = GetComponent<CinemachineImpulseSource>();
 			_destructibleEnemy = _selfEnemies[ 0 ];
@@ -76,6 +81,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		internal void OnEnable()
 		{
+			_animator.SetFloat( IsOn, 1F );
 			if ( RigidbodyType2D.Static != _rigidbody.bodyType )
 			{
 				_rigidbody.gravityScale = ProvidenceStatistics.GravityScale;
@@ -84,6 +90,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		internal void OnDisable()
 		{
+			_animator.SetFloat( IsOn, 0F );
 			if ( RigidbodyType2D.Static != _rigidbody.bodyType )
 			{
 				_rigidbody.gravityScale = 0F;
@@ -100,6 +107,7 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = false;
+			_animator.SetFloat( IsOn, 0F );
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			await UniTask.WaitWhile( () => SceneInitiator.IsInTransition(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
@@ -109,6 +117,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_fadeTime = ProvidenceStatistics.TimeToFadeAway;
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = true;
+			_animator.SetFloat( IsOn, 1F );
 		}
 		private void Update()
 		{
