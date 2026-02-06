@@ -19,7 +19,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private readonly RaycastHit2D[]
 			_detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
 		private readonly int
-			Shooted = Animator.StringToHash( nameof( Shooted ) );
+			Shoot = Animator.StringToHash( nameof( Shoot ) );
 		private float
 			_shootInterval = 0F,
 			_timeStop = 0F;
@@ -54,7 +54,7 @@ namespace GwambaPrimeAdventure.Enemy
 				worldSpace = false
 			};
 		}
-		private void Shoot()
+		private void Shooting()
 		{
 			if ( !_statistics.PureInstance )
 				_projectileRotation = _statistics.CircularUse
@@ -87,7 +87,7 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( _statistics.StopTime / 2F >= ( _timeStop -= Time.deltaTime ) && _statistics.Stop && _canShoot )
 				{
 					_canShoot = false;
-					Shoot();
+					Shooting();
 				}
 				if ( 0F >= _timeStop && _isStopped )
 				{
@@ -145,13 +145,13 @@ namespace GwambaPrimeAdventure.Enemy
 						_controller.OnDisable();
 				}
 				else
-					Shoot();
+					Shooting();
 			}
 		}
 		public new bool Hurt( ushort damage )
 		{
 			if ( _statistics.ShootDamaged )
-				Shoot();
+				Shooting();
 			return base.Hurt( damage );
 		}
 		public void Receive( MessageData message )
@@ -166,7 +166,7 @@ namespace GwambaPrimeAdventure.Enemy
 							transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
 							_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
 							_targetDirection.x *= transform.localScale.x.CompareTo( 0F );
-							Shoot();
+							Shooting();
 						}
 		}
 	};
