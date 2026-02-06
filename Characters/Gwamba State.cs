@@ -54,6 +54,23 @@ namespace GwambaPrimeAdventure.Character
 				useLayerMask = true,
 				useTriggers = true
 			};
+		protected readonly int
+			IsOn = Animator.StringToHash( nameof( IsOn ) ),
+			Idle = Animator.StringToHash( nameof( Idle ) ),
+			Walk = Animator.StringToHash( nameof( Walk ) ),
+			WalkSpeed = Animator.StringToHash( nameof( WalkSpeed ) ),
+			Jump = Animator.StringToHash( nameof( Jump ) ),
+			Fall = Animator.StringToHash( nameof( Fall ) ),
+			AirJump = Animator.StringToHash( nameof( AirJump ) ),
+			DashSlide = Animator.StringToHash( nameof( DashSlide ) ),
+			Attack = Animator.StringToHash( nameof( Attack ) ),
+			AttackCombo = Animator.StringToHash( nameof( AttackCombo ) ),
+			AttackJump = Animator.StringToHash( nameof( AttackJump ) ),
+			AttackSlide = Animator.StringToHash( nameof( AttackSlide ) ),
+			AttackAirJump = Animator.StringToHash( nameof( AttackAirJump ) ),
+			AttackDrop = Animator.StringToHash( nameof( AttackDrop ) ),
+			Stun = Animator.StringToHash( nameof( Stun ) ),
+			Death = Animator.StringToHash( nameof( Death ) );
 		protected short
 			_vitality = 0,
 			_stunResistance = 0,
@@ -90,23 +107,6 @@ namespace GwambaPrimeAdventure.Character
 			_invencibility = false,
 			_loadState = false,
 			_deathLoad = false;
-		protected readonly int
-			IsOn = Animator.StringToHash( nameof( IsOn ) ),
-			Idle = Animator.StringToHash( nameof( Idle ) ),
-			Walk = Animator.StringToHash( nameof( Walk ) ),
-			WalkSpeed = Animator.StringToHash( nameof( WalkSpeed ) ),
-			Jump = Animator.StringToHash( nameof( Jump ) ),
-			Fall = Animator.StringToHash( nameof( Fall ) ),
-			AirJump = Animator.StringToHash( nameof( AirJump ) ),
-			DashSlide = Animator.StringToHash( nameof( DashSlide ) ),
-			Attack = Animator.StringToHash( nameof( Attack ) ),
-			AttackCombo = Animator.StringToHash( nameof( AttackCombo ) ),
-			AttackJump = Animator.StringToHash( nameof( AttackJump ) ),
-			AttackSlide = Animator.StringToHash( nameof( AttackSlide ) ),
-			AttackAirJump = Animator.StringToHash( nameof( AttackAirJump ) ),
-			AttackDrop = Animator.StringToHash( nameof( AttackDrop ) ),
-			Stun = Animator.StringToHash( nameof( Stun ) ),
-			Death = Animator.StringToHash( nameof( Death ) );
 		[field: SerializeField, BoxGroup( "Control" ), Tooltip( "The scene of the hubby world." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
 		protected SceneField HubbyWorldScene
 		{
