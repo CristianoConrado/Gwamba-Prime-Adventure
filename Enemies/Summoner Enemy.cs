@@ -187,7 +187,6 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( message.AdditionalData is not null && message.AdditionalData is EnemyProvider[] enemies && 0 < enemies.Length )
 				foreach ( EnemyProvider enemy in enemies )
 					if ( enemy && this == enemy )
-					{
 						if ( MessageFormat.State == message.Format && message.ToggleValue.HasValue )
 							_stopWorking = !message.ToggleValue.Value;
 						else if ( MessageFormat.Event == message.Format && _statistics.HasEventSummon && 0 < _statistics.EventSummons.Length )
@@ -195,7 +194,6 @@ namespace GwambaPrimeAdventure.Enemy
 								Summon( _statistics.EventSummons[ UnityEngine.Random.Range( 0, _statistics.EventSummons.Length ) ] );
 							else if ( message.NumberValue.HasValue && message.NumberValue.Value < _statistics.EventSummons.Length && 0 >= message.NumberValue.Value )
 								Summon( _statistics.EventSummons[ message.NumberValue.Value ] );
-					}
 		}
 	};
 };
