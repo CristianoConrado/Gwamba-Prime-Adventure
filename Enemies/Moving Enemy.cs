@@ -6,13 +6,18 @@ using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
 {
-	internal abstract class MovingEnemy : EnemyProvider, IConnector
+	internal abstract class MovingEnemy : EnemyProvider, ILoader, IConnector
 	{
 		protected readonly List<ContactPoint2D>
 			_groundContacts = new List<ContactPoint2D>( (int) WorldBuild.PIXELS_PER_UNIT );
 		protected Vector2
 			_originCast = Vector2.zero,
 			_sizeCast = Vector2.zero;
+		protected const float
+			MINIMUM_VELOCITY = 1E-3F;
+		protected readonly int
+			Move = Animator.StringToHash( nameof( Move ) ),
+			Dash = Animator.StringToHash( nameof( Dash ) );
 		protected float
 			_stoppedTime = 0F;
 		protected short
@@ -39,26 +44,41 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		protected async void Start()
+		public async UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.WaitWhile( () => SceneInitiator.IsInTransition(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
 			_movementSide = (short) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) );
 			transform.TurnScaleX( _movementSide );
 		}
+		protected void FixedUpdate()
+		{
+			if ( !OnGround || !SceneInitiator.IsInTransition() )
+				if ( !Animator.GetBool( Fall ) && 0F > Rigidbody.linearVelocityY )
+					Animator.SetBool( Fall, true );
+				else if ( Animator.GetBool( Fall ) && 0F < Rigidbody.linearVelocityY )
+					Animator.SetBool( Fall, false );
+		}
 		protected void OnCollisionStay2D( Collision2D collision )
 		{
-			if ( WorldBuild.SCENE_LAYER != collision.gameObject.layer || ( OnGround && Mathf.Abs( Rigidbody.linearVelocityY ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT * 10F ) )
+			if ( SceneInitiator.IsInTransition() || WorldBuild.SCENE_LAYER != collision.gameObject.layer || OnGround && Mathf.Abs( Rigidbody.linearVelocityY ) <= MINIMUM_VELOCITY )
 				return;
 			_collider.GetContacts( _groundContacts );
 			OnGround = _groundContacts.Exists( contact => _moving.CheckGroundLimit <= contact.normal.y );
+			if ( OnGround && Animator.GetBool( Fall ) )
+				Animator.SetBool( Fall, false );
 		}
 		protected void OnCollisionExit2D( Collision2D collision )
 		{
 			if ( WorldBuild.SCENE_LAYER == collision.gameObject.layer )
+			{
+				_collider.GetContacts( _groundContacts );
+				if ( _groundContacts.Exists( contact => _moving.CheckGroundLimit <= contact.normal.y ) )
+					return;
 				OnGround = false;
+			}
 		}
 		public void Receive( MessageData message )
 		{
