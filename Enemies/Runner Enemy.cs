@@ -41,7 +41,7 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		public async UniTask Load()
+		public async new UniTask Load()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
@@ -61,7 +61,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned )
+			if ( IsStunned || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.DetectionStop && _stopRunning )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
@@ -116,9 +116,10 @@ namespace GwambaPrimeAdventure.Enemy
 					InvencibleDash();
 				}
 		}
-		private void FixedUpdate()
+		private new void FixedUpdate()
 		{
-			if ( IsStunned )
+			base.FixedUpdate();
+			if ( IsStunned || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.DetectionStop && _detected && !_isDashing && OnGround && !_retreat )
 				Rigidbody.linearVelocityX = 0F;
@@ -170,11 +171,11 @@ namespace GwambaPrimeAdventure.Enemy
 					InvencibleDash();
 				}
 			}
-			_originCast = (Vector2) transform.position + _collider.offset;
+			_originCast = Rigidbody.position + _collider.offset;
 			_originCast.x += _collider.bounds.extents.x * ( _retreat ? -1F : 1F ) * _movementSide * transform.right.x;
 			_originCast.y -= _collider.bounds.extents.y * transform.up.y;
 			_offEdge = !Physics2D.Raycast( _originCast, -transform.up, WorldBuild.SNAP_LENGTH, WorldBuild.SCENE_LAYER_MASK );
-			if ( OnGround && !_statistics.TurnOffEdge && _offEdge || _wayBlocked && Mathf.Abs( Rigidbody.linearVelocityX ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT * 10F )
+			if ( OnGround && !_statistics.TurnOffEdge && _offEdge || _wayBlocked && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
 				if ( _retreat )
 					RetreatUse();
 				else
@@ -210,13 +211,16 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void OnCollisionStay2D( Collision2D collision )
 		{
 			base.OnCollisionStay2D( collision );
-			if ( WorldBuild.SCENE_LAYER != collision.gameObject.layer )
+			if ( SceneInitiator.IsInTransition() || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
 				return;
 			_collider.GetContacts( _groundContacts );
-			_originCast = (Vector2) transform.position + _collider.offset;
-			_originCast.x += _collider.bounds.extents.x * ( transform.localScale.x.CompareTo( 0F ) ) * transform.right.x;
-			_sizeCast.Set( WorldBuild.SNAP_LENGTH, _collider.bounds.size.y );
-			_wayBlocked = _groundContacts.Exists( contact => contact.point.InsideRectangle( _originCast, _sizeCast ) );
+			//_originCast = (Vector2) transform.position + _collider.offset;
+			//_originCast.x += _collider.bounds.extents.x * ( transform.localScale.x.CompareTo( 0F ) ) * transform.right.x;
+			//_sizeCast.Set( WorldBuild.SNAP_LENGTH, _collider.bounds.size.y );
+			_wayBlocked = _groundContacts.Exists( contact =>
+			0F > contact.normal.x
+			? -_statistics.CheckGroundLimit >= contact.normal.x
+			: _statistics.CheckGroundLimit <= contact.normal.x );
 		}
 		public new bool Hurt( ushort damage )
 		{
