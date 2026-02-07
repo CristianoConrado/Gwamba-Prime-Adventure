@@ -27,7 +27,6 @@ namespace GwambaPrimeAdventure.Enemy
 			_castSize = 0;
 		private bool
 			_hasTarget = false,
-			_canShoot = false,
 			_isStopped = false;
 		[SerializeField, Tooltip( "The shooter statitics of this enemy." ), Header( "Shooter Enemy" )]
 		private
@@ -54,11 +53,20 @@ namespace GwambaPrimeAdventure.Enemy
 				worldSpace = false
 			};
 		}
-		private void Shooting()
+		private void Unstop()
+		{
+			Animator.SetBool( Stop, _isStopped = false );
+			_sender.SetFormat( MessageFormat.State );
+			_sender.SetToggle( true );
+			_sender.Send( MessagePath.Enemy );
+			if ( _statistics.Paralyze )
+				_controller.OnEnable();
+		}
+		private void Shooted()
 		{
 			if ( !_statistics.PureInstance )
 				_projectileRotation = _statistics.CircularUse
-					? Quaternion.AngleAxis( ( Mathf.Atan2( _targetDirection.y, _targetDirection.x ) * Mathf.Rad2Deg ) - 90F, Vector3.forward )
+					? Quaternion.AngleAxis( Mathf.Atan2( _targetDirection.y, _targetDirection.x ) * Mathf.Rad2Deg - 90F, Vector3.forward )
 					: Quaternion.AngleAxis( _statistics.DirectionAngle * ( _statistics.TurnRay ? transform.localScale.x.CompareTo( 0F ) : 1F ), Vector3.forward );
 			for ( ushort i = 0; _statistics.Projectiles.Length > i; i++ )
 				if ( _statistics.PureInstance )
@@ -83,22 +91,16 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0F < _shootInterval && !_isStopped )
 				_shootInterval -= Time.deltaTime;
 			if ( 0F < _timeStop )
-			{
-				if ( _statistics.StopTime / 2F >= ( _timeStop -= Time.deltaTime ) && _statistics.Stop && _canShoot )
+				if ( 0F >= ( _timeStop -= Time.deltaTime ) )
 				{
-					_canShoot = false;
-					Shooting();
+					Animator.SetTrigger( Shoot );
+					if ( _statistics.InvencibleShoot )
+					{
+						_sender.SetFormat( MessageFormat.Event );
+						_sender.SetToggle( false );
+						_sender.Send( MessagePath.Enemy );
+					}
 				}
-				if ( 0F >= _timeStop && _isStopped )
-				{
-					_isStopped = false;
-					_sender.SetFormat( MessageFormat.State );
-					_sender.SetToggle( true );
-					_sender.Send( MessagePath.Enemy );
-					if ( _statistics.Paralyze )
-						_controller.OnEnable();
-				}
-			}
 		}
 		private void FixedUpdate()
 		{
@@ -108,10 +110,10 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0F >= _shootInterval )
 				if ( _statistics.CircularUse &&
 					( _statistics.ShootInfinity ||
-					( _hasTarget = CharacterExporter.GwambaLocalization().InsideCircleCast( (Vector2) transform.position + _collider.offset, _statistics.PerceptionDistance ) ) ) )
+					( _hasTarget = CharacterExporter.GwambaLocalization().InsideCircleCast( Rigidbody.position + _collider.offset, _statistics.PerceptionDistance ) ) ) )
 				{
-					transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
-					_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
+					transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < Rigidbody.position.x ? -1F : 1F ) * transform.right.x );
+					_targetDirection = ( CharacterExporter.GwambaLocalization() - _statistics.SpawnPoint ).normalized;
 					_targetDirection.x *= transform.localScale.x.CompareTo( 0F );
 				}
 				else
@@ -129,29 +131,32 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( ( _hasTarget || _statistics.ShootInfinity ) && 0F >= _shootInterval )
 			{
 				_shootInterval = _statistics.IntervalToShoot;
-				if ( _statistics.InvencibleShoot )
-				{
-					_sender.SetFormat( MessageFormat.Event );
-					_sender.SetToggle( false );
-					_sender.Send( MessagePath.Enemy );
-				}
 				if ( _statistics.Stop )
 				{
+					Animator.SetBool( Stop, _isStopped = true );
 					_timeStop = _statistics.StopTime;
 					_sender.SetFormat( MessageFormat.State );
-					_sender.SetToggle( !( _isStopped = _canShoot = true ) );
+					_sender.SetToggle( false );
 					_sender.Send( MessagePath.Enemy );
 					if ( _statistics.Paralyze )
 						_controller.OnDisable();
 				}
 				else
-					Shooting();
+				{
+					Animator.SetTrigger( Shoot );
+					if ( _statistics.InvencibleShoot )
+					{
+						_sender.SetFormat( MessageFormat.Event );
+						_sender.SetToggle( false );
+						_sender.Send( MessagePath.Enemy );
+					}
+				}
 			}
 		}
 		public new bool Hurt( ushort damage )
 		{
 			if ( _statistics.ShootDamaged )
-				Shooting();
+				Animator.SetTrigger( Shoot );
 			return base.Hurt( damage );
 		}
 		public void Receive( MessageData message )
@@ -163,10 +168,16 @@ namespace GwambaPrimeAdventure.Enemy
 							_stopWorking = message.ToggleValue.Value;
 						else if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage )
 						{
-							transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
-							_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
+							transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < Rigidbody.position.x ? -1F : 1F ) * transform.right.x );
+							_targetDirection = ( CharacterExporter.GwambaLocalization() - _statistics.SpawnPoint ).normalized;
 							_targetDirection.x *= transform.localScale.x.CompareTo( 0F );
-							Shooting();
+							Animator.SetTrigger( Shoot );
+							if ( _statistics.InvencibleShoot )
+							{
+								_sender.SetFormat( MessageFormat.Event );
+								_sender.SetToggle( false );
+								_sender.Send( MessagePath.Enemy );
+							}
 						}
 		}
 	};
