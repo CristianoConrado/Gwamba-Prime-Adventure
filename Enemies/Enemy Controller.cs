@@ -13,7 +13,8 @@ namespace GwambaPrimeAdventure.Enemy
 			EnemyProvider[] _selfEnemies;
 		private readonly int
 			IsOn = Animator.StringToHash( nameof( IsOn ) ),
-			Stunned = Animator.StringToHash( nameof( Stunned ) );
+			Stunned = Animator.StringToHash( nameof( Stunned ) ),
+			Fade = Animator.StringToHash( nameof( Fade ) );
 		[ field: SerializeField, Tooltip( "The control statitics of this enemy." ), Header( "Enemy Statistics" )]
 		internal EnemyStatistics ProvidenceStatistics
 		{
@@ -120,13 +121,14 @@ namespace GwambaPrimeAdventure.Enemy
 				enemy.enabled = true;
 			_animator.SetFloat( IsOn, 1F );
 		}
+		private void DeathExecution() => Destroy( gameObject );
 		private void Update()
 		{
 			if ( SceneInitiator.IsInTransition() )
 				return;
 			if ( ProvidenceStatistics.FadeOverTime )
 				if ( 0F >= ( _fadeTime -= Time.deltaTime ) )
-					Destroy( gameObject );
+					Animator.SetTrigger( Fade );
 			if ( _stunned )
 				if ( 0F >= ( _stunTimer -= Time.deltaTime ) )
 				{
