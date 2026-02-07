@@ -106,6 +106,7 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			_destroyToken = this.GetCancellationTokenOnDestroy();
 			_beginingPosition = StartPosition;
+			_normalColliderSize = _collider.size;
 			_turnLeft = TurnToLeft;
 			_loadState = true;
 			await StartLoad().SuppressCancellationThrow();
@@ -587,8 +588,6 @@ namespace GwambaPrimeAdventure.Character
 				return;
 			_offGround = !_isOnGround;
 			_collider.GetContacts( _groundContacts );
-			_localAtStart.Set( Local.x, Local.y - _collider.bounds.extents.y );
-			_localAtEnd.Set( _collider.size.x, WorldBuild.SNAP_LENGTH );
 			if ( _isOnGround = _groundContacts.Exists( contact => CheckGroundLimit <= contact.normal.y ) )
 			{
 				if ( _offGround )
@@ -639,21 +638,30 @@ namespace GwambaPrimeAdventure.Character
 					return;
 				if ( MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
 				{
-					_localAtStart.Set( Local.x + _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F ), Local.y + WorldBuild.SNAP_LENGTH / 2F );
-					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, _collider.size.y + WorldBuild.SNAP_LENGTH );
-					_groundContacts.RemoveAll( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) );
+					_localAtStart.Set( Local.x + _normalColliderSize.x / 2F * transform.localScale.x.CompareTo( 0F ), Local.y + WorldBuild.SNAP_LENGTH / 2F );
+					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, _normalColliderSize.y + WorldBuild.SNAP_LENGTH );
+					_groundContacts.RemoveAll( contact =>
+					{
+						return contact.point.OutsideRectangle( _localAtStart, _localAtEnd )
+						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideRectangle( _localAtStart, _localAtEnd );
+					} );
 					if ( 0 >= _groundContacts.Count )
 						return;
-					_localAtStart.Set( Local.x + _collider.bounds.extents.x * transform.localScale.x.CompareTo( 0F ), Local.y - ( _collider.size.y - UpStairsLength ) / 2F );
+					_localAtStart.Set( Local.x + _normalColliderSize.x / 2F * transform.localScale.x.CompareTo( 0F ), Local.y - ( _normalColliderSize.y - UpStairsLength ) / 2F );
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, UpStairsLength );
-					if ( _groundContacts.Exists( contact => contact.point.OutsideRectangle( _localAtStart, _localAtEnd ) ) )
+					if ( _groundContacts.Exists( contact =>
+					{
+						return contact.point.OutsideRectangle( _localAtStart, _localAtEnd )
+						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideRectangle( _localAtStart, _localAtEnd );
+					} ) )
 						return;
-					_localAtEnd.y = _groundContacts[ 0 ].point.y;
+					_localAtStart.y += _localAtEnd.y;
+					_localAtEnd = _groundContacts[ 0 ].point;
 					for ( ushort i = 1; _groundContacts.Count > i; i++ )
-						if ( _groundContacts[ i ].point.y < _localAtEnd.y )
-							_localAtEnd.y = _groundContacts[ i ].point.y;
+						if ( Vector2.Distance( _localAtStart, _groundContacts[ i ].point ) < Vector2.Distance( _localAtStart, _localAtEnd ) )
+							_localAtEnd = _groundContacts[ i ].point;
 					_localAtSurface.x = transform.position.x + WorldBuild.SNAP_LENGTH * transform.localScale.x.CompareTo( 0F );
-					_localAtSurface.y = transform.position.y + Mathf.Abs( _localAtEnd.y - ( transform.position.y - _collider.bounds.extents.y ) );
+					_localAtSurface.y = transform.position.y + Mathf.Abs( _localAtEnd.y - ( Local.y - _normalColliderSize.y / 2F ) );
 					transform.position = _localAtSurface;
 					_rigidbody.linearVelocityX = MovementSpeed * _walkValue * ( AttackUsage ? AttackVelocityCut : 1F );
 				}
