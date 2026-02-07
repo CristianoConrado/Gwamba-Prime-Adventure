@@ -197,7 +197,7 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( !_detected && _statistics.LookPerception )
 					if ( _statistics.CircularDetection )
 					{
-						if ( CharacterExporter.GwambaLocalization().InsideCircle( (Vector2) transform.position + _collider.offset, _statistics.LookDistance ) )
+						if ( CharacterExporter.GwambaLocalization().InsideCircleCast( (Vector2) transform.position + _collider.offset, _statistics.LookDistance ) )
 						{
 							_targetPosition = CharacterExporter.GwambaLocalization();
 							BasicJump();
