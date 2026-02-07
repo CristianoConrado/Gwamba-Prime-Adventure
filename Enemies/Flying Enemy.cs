@@ -206,7 +206,7 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			else
 				_detected = false;
-			if ( _statistics.LookPerception && !_isDashing && CharacterExporter.GwambaLocalization().InsideCircle( _pointOrigin, _statistics.LookDistance ) )
+			if ( _statistics.LookPerception && !_isDashing && CharacterExporter.GwambaLocalization().InsideCircleCast( _pointOrigin, _statistics.LookDistance ) )
 			{
 				_movementDirection = ( CharacterExporter.GwambaLocalization() - ( Rigidbody.position + _selfCollider.offset ) ).normalized;
 				_detectionObject.rotation = Quaternion.AngleAxis( Mathf.Atan2( _movementDirection.y, _movementDirection.x ) * Mathf.Rad2Deg - 90F, Vector3.forward );
