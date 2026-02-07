@@ -232,7 +232,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void GroundSound( float stepPositionX )
 		{
-			_localAtSurface.Set( Local.x + stepPositionX, Local.y - _collider.bounds.extents.y );
+			_localAtSurface.Set( Local.x + stepPositionX * transform.localScale.x.CompareTo( 0F ), Local.y - _collider.bounds.extents.y );
 			EffectsController.SurfaceSound( _localAtSurface );
 		}
 		private void JumpInput( InputAction.CallbackContext jump )
