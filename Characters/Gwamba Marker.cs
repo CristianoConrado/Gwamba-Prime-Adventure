@@ -642,8 +642,8 @@ namespace GwambaPrimeAdventure.Character
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, _normalColliderSize.y + WorldBuild.SNAP_LENGTH );
 					_groundContacts.RemoveAll( contact =>
 					{
-						return contact.point.OutsideRectangle( _localAtStart, _localAtEnd )
-						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideRectangle( _localAtStart, _localAtEnd );
+						return contact.point.OutsideBoxCast( _localAtStart, _localAtEnd )
+						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideBoxCast( _localAtStart, _localAtEnd );
 					} );
 					if ( 0 >= _groundContacts.Count )
 						return;
@@ -651,8 +651,8 @@ namespace GwambaPrimeAdventure.Character
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH, UpStairsLength );
 					if ( _groundContacts.Exists( contact =>
 					{
-						return contact.point.OutsideRectangle( _localAtStart, _localAtEnd )
-						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideRectangle( _localAtStart, _localAtEnd );
+						return contact.point.OutsideBoxCast( _localAtStart, _localAtEnd )
+						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideBoxCast( _localAtStart, _localAtEnd );
 					} ) )
 						return;
 					_localAtStart.y += _localAtEnd.y;
@@ -672,8 +672,8 @@ namespace GwambaPrimeAdventure.Character
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH * DownStairsDistance + WorldBuild.SNAP_LENGTH, WorldBuild.SNAP_LENGTH );
 					if ( _groundContacts.Exists( contact =>
 					{
-						return contact.point.OutsideRectangle( _localAtStart, _localAtEnd )
-						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideRectangle( _localAtStart, _localAtEnd );
+						return contact.point.OutsideBoxCast( _localAtStart, _localAtEnd )
+						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideBoxCast( _localAtStart, _localAtEnd );
 					} ) )
 						return;
 					_localAtStart.x = Local.x - ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
