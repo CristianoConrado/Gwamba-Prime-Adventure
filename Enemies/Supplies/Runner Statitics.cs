@@ -11,7 +11,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, HideIf( nameof( TurnOffEdge ) ), Min( 1F ), Tooltip( "The size of the off-edge area." )]
+		[field: SerializeField, HideIf( nameof( TurnOffEdge ) ), Min( 2F ), Tooltip( "The size of the off-edge area." )]
 		public float OffEdgeSize
 		{
 			get;
