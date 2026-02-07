@@ -93,11 +93,13 @@ namespace GwambaPrimeAdventure.Enemy
 								Animator.SetBool( Defend, _invencible = true );
 								_timeOperation = _statistics.TimeToInvencible;
 							}
-							else
+							else if ( _statistics.TimedReact )
 							{
 								Animator.SetBool( Defend, _invencible = message.ToggleValue.Value );
 								_timeOperation = _statistics.TimeToDestructible;
 							}
+							else
+								Animator.SetBool( Defend, _invencible = message.ToggleValue.Value );
 						if ( _statistics.InvencibleStop )
 						{
 							Animator.SetBool( Stop, _invencible );
