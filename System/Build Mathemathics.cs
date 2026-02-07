@@ -33,11 +33,11 @@ namespace GwambaPrimeAdventure
 			transform.localScale = _scaleTurner;
 		}
 		public static void TurnScaleX( this Transform transform, bool conditionChanger ) => TurnScaleX( transform, conditionChanger ? -1F : 1F );
-		public static bool InsideRectangle( this Vector2 pointInside, Vector2 originPoint, Vector2 sizePoint ) =>
+		public static bool InsideBoxCast( this Vector2 pointInside, Vector2 originPoint, Vector2 sizePoint ) =>
 			pointInside.x.InsideRange(originPoint.x, sizePoint.x) && pointInside.y.InsideRange(originPoint.y, sizePoint.y);
-		public static bool OutsideRectangle( this Vector2 pointOutside, Vector2 originPoint, Vector2 sizePoint ) => !InsideRectangle( pointOutside, originPoint, sizePoint );
-		public static bool InsideCircle( this Vector2 pointInside, Vector2 originPoint, float radius ) => Vector2.Distance( originPoint, pointInside ) <= radius;
-		public static bool OutsideCircle( this Vector2 pointOutside, Vector2 originPoint, float radius ) => !InsideCircle( pointOutside, originPoint, radius );
+		public static bool OutsideBoxCast( this Vector2 pointOutside, Vector2 originPoint, Vector2 sizePoint ) => !InsideBoxCast( pointOutside, originPoint, sizePoint );
+		public static bool InsideCircleCast( this Vector2 pointInside, Vector2 originPoint, float radius ) => Vector2.Distance( originPoint, pointInside ) <= radius;
+		public static bool OutsideCircleCast( this Vector2 pointOutside, Vector2 originPoint, float radius ) => !InsideCircleCast( pointOutside, originPoint, radius );
 		public static bool MoreOrEqual( this Vector2 firstVector, Vector2 otherVector ) => firstVector.x >= otherVector.x && firstVector.y >= otherVector.y;
 		public static bool LessOrEqual( this Vector2 firstVector, Vector2 otherVector ) => firstVector.x <= otherVector.x && firstVector.y <= otherVector.y;
 		public static float Negative( this float input ) => -Mathf.Abs( input );
