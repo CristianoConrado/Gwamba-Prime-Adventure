@@ -42,7 +42,8 @@ namespace GwambaPrimeAdventure.Character
 			_localAtLinearVelocity = Vector2.zero,
 			_selfRelativeVelocity = Vector2.zero,
 			_otherRelativeVelocity = Vector2.zero,
-			_beginingPosition = Vector2.zero;
+			_beginingPosition = Vector2.zero,
+			_normalColliderSize = Vector2.zero;
 		protected Vector3
 			_localAtAny = Vector3.zero;
 		protected
