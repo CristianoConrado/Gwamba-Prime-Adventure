@@ -108,7 +108,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0F >= _shootInterval )
 				if ( _statistics.CircularUse &&
 					( _statistics.ShootInfinity ||
-					( _hasTarget = CharacterExporter.GwambaLocalization().InsideCircle( (Vector2) transform.position + _collider.offset, _statistics.PerceptionDistance ) ) ) )
+					( _hasTarget = CharacterExporter.GwambaLocalization().InsideCircleCast( (Vector2) transform.position + _collider.offset, _statistics.PerceptionDistance ) ) ) )
 				{
 					transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1F : 1F ) * transform.right.x );
 					_targetDirection = ( CharacterExporter.GwambaLocalization() - (Vector2) transform.position ).normalized;
