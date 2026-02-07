@@ -30,6 +30,12 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
+		[field: SerializeField, Tooltip( "If the react to a event will be timed." )]
+		public bool TimedReact
+		{
+			get;
+			private set;
+		}
 		[field: SerializeField, Tooltip( "If this enemy will use time to become invencible/destructible." )]
 		public bool UseAlternatedTime
 		{
