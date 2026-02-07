@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy.Supply
 {
@@ -30,18 +31,12 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, Tooltip( "If this enemy will only summon when the timer ends." )]
-		public bool OnlyTimer
+		public bool UseTimer
 		{
 			get;
 			private set;
 		}
-		[field: SerializeField, Tooltip( "The time to this enemy summon." )]
-		public float TimeToSummon
-		{
-			get;
-			private set;
-		}
-		[field: SerializeField, Tooltip( "The time to this enemy die." )]
+		[field: SerializeField, ShowIf( nameof( UseTimer ) ), Tooltip( "The time to this enemy die." )]
 		public float TimeToDie
 		{
 			get;
