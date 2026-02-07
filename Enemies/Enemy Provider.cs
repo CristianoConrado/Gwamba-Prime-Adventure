@@ -65,7 +65,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_sender.Send( MessagePath.Enemy );
 			}
 			if ( 0 >= ( _controller.Vitality -= (short) damage ) )
-				Destroy( gameObject );
+				Animator.SetTrigger( Death );
 			return true;
 		}
 		public void Stun( ushort stunStength, float stunTime )
