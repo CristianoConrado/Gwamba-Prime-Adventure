@@ -1,10 +1,10 @@
 using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Events;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
@@ -12,11 +12,10 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		private
 			GameObject _summonObject;
-		private readonly Queue<IEnumerator>
-			_queuedSummons = new Queue<IEnumerator>();
-		private IEnumerator
-			_summonEvent = null,
-			_temporarySummonEvent = null;
+		private readonly Queue<UnityAction>
+			_queuedSummons = new Queue<UnityAction>();
+		private UnityAction
+			_summonEvent = null;
 		private
 			CancellationToken _destroyToken;
 		private Vector2
@@ -25,19 +24,18 @@ namespace GwambaPrimeAdventure.Enemy
 			_summonIndex = Vector2Int.zero;
 		private InstantiateParameters
 			_instantiateParameters = new InstantiateParameters();
+		private readonly int
+			Summon = Animator.StringToHash( nameof( Summon ) );
 		private ushort
 			_randomSummonIndex = 0;
 		private float[]
 			_summonTime,
 			_structureTime;
 		private float
-			_fullStopTime = 0F,
-			_stopTime = 0F,
 			_gravityScale = 0F;
 		private bool[]
 			_isSummonTime;
 		private bool
-			_waitStop = false,
 			_isTimeout = false,
 			_waitResult = false;
 		[SerializeField, Tooltip( "The summoner statitics of this enemy." ), Header( "Summoner Enemy" )]
@@ -73,16 +71,22 @@ namespace GwambaPrimeAdventure.Enemy
 			for ( ushort i = 0; _statistics.SummonPointStructures.Length > i; i++ )
 				Instantiate( _statistics.SummonPointStructures[ i ].SummonPointObject, _statistics.SummonPointStructures[ i ].Point, Quaternion.identity ).GetTouch( this, i );
 		}
-		private async void Summon( SummonObject summon )
+		private void Unstop()
 		{
-			_temporarySummonEvent = StopToSummon();
-			_queuedSummons.Enqueue( _temporarySummonEvent );
+			_sender.SetToggle( true );
+			_sender.Send( MessagePath.Enemy );
+			Rigidbody.gravityScale = _gravityScale;
+		}
+		private void SummonEvent() => _summonEvent?.Invoke();
+		private async void Summoning( SummonObject summon )
+		{
+			_queuedSummons.Enqueue( StopToSummon );
 			(_isTimeout, _waitResult) = await UniTask.WaitWhile(
 				predicate: () =>
 				{
 					if ( _summonEvent is not null )
 						return true;
-					foreach ( IEnumerator queuedSummon in _queuedSummons )
+					foreach ( UnityAction queuedSummon in _queuedSummons )
 						if ( queuedSummon != _queuedSummons.Peek() )
 							return true;
 					return false;
@@ -91,27 +95,22 @@ namespace GwambaPrimeAdventure.Enemy
 				cancellationToken: _destroyToken,
 				cancelImmediately: true )
 				.SuppressCancellationThrow().TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
-			if ( _destroyToken.IsCancellationRequested || ( _isTimeout && !_waitResult ) )
+			if ( _destroyToken.IsCancellationRequested || _isTimeout && !_waitResult )
 			{
 				_queuedSummons.Clear();
 				return;
 			}
 			_summonEvent = _queuedSummons.Peek();
-			_summonEvent?.MoveNext();
-			if ( summon.InstantlySummon )
-				_summonEvent?.MoveNext();
-			IEnumerator StopToSummon()
+			Animator.SetTrigger( Summon );
+			if ( summon.StopToSummon )
 			{
-				if ( summon.StopToSummon )
-				{
-					_sender.SetToggle( false );
-					_sender.Send( MessagePath.Enemy );
-					if ( summon.ParalyzeToSummon )
-						Rigidbody.gravityScale = 0F;
-					_fullStopTime = _stopTime = summon.TimeToStop;
-					_waitStop = summon.WaitStop;
-					yield return null;
-				}
+				_sender.SetToggle( false );
+				_sender.Send( MessagePath.Enemy );
+				if ( summon.ParalyzeToSummon )
+					Rigidbody.gravityScale = 0F;
+			}
+			void StopToSummon()
+			{
 				_summonIndex.Set( 0, 0 );
 				_instantiateParameters.parent = summon.LocalPoints ? transform : null;
 				_instantiateParameters.worldSpace = !summon.LocalPoints;
@@ -137,7 +136,7 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					if ( _isSummonTime[ summonIndex ] )
 					{
-						Summon( _statistics.TimedSummons[ summonIndex ] );
+						Summoning( _statistics.TimedSummons[ summonIndex ] );
 						_summonTime[ summonIndex ] = _statistics.TimedSummons[ summonIndex ].SkipPostSummon 
 							?  _statistics.TimedSummons[ summonIndex ].SummonTime 
 							:  _statistics.TimedSummons[ summonIndex ].PostSummonTime;
@@ -156,19 +155,6 @@ namespace GwambaPrimeAdventure.Enemy
 			for ( ushort i = 0; _structureTime.Length > i; i++ )
 				if ( 0F < _structureTime[ i ] )
 					_structureTime[ i ] -= Time.deltaTime;
-			if ( 0F < _stopTime )
-			{
-				if ( _fullStopTime / 2F >= ( _stopTime -= Time.deltaTime ) && !_waitStop && _summonEvent is not null )
-					_summonEvent?.MoveNext();
-				if ( 0F >= _stopTime )
-				{
-					_sender.SetToggle( true );
-					_sender.Send( MessagePath.Enemy );
-					Rigidbody.gravityScale = _gravityScale;
-					if ( _waitStop )
-						_summonEvent?.MoveNext();
-				}
-			}
 			if ( _statistics.RandomTimedSummons && 0 < _statistics.TimedSummons.Length )
 				IndexedSummon( _randomSummonIndex );
 			else
@@ -180,7 +166,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0F < _structureTime[ summonIndex ] || _stopWorking )
 				return;
 			_structureTime[ summonIndex ] = _statistics.SummonPointStructures[ summonIndex ].TimeToUse;
-			Summon( _statistics.SummonPointStructures[ summonIndex ].Summon );
+			Summoning( _statistics.SummonPointStructures[ summonIndex ].Summon );
 		}
 		public void Receive( MessageData message )
 		{
@@ -191,9 +177,9 @@ namespace GwambaPrimeAdventure.Enemy
 							_stopWorking = !message.ToggleValue.Value;
 						else if ( MessageFormat.Event == message.Format && _statistics.HasEventSummon && 0 < _statistics.EventSummons.Length )
 							if ( _statistics.RandomReactSummons )
-								Summon( _statistics.EventSummons[ UnityEngine.Random.Range( 0, _statistics.EventSummons.Length ) ] );
+								Summoning( _statistics.EventSummons[ UnityEngine.Random.Range( 0, _statistics.EventSummons.Length ) ] );
 							else if ( message.NumberValue.HasValue && message.NumberValue.Value < _statistics.EventSummons.Length && 0 >= message.NumberValue.Value )
-								Summon( _statistics.EventSummons[ message.NumberValue.Value ] );
+								Summoning( _statistics.EventSummons[ message.NumberValue.Value ] );
 		}
 	};
 };
