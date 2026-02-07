@@ -1,14 +1,17 @@
-using UnityEngine;
+using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
+using System.Threading;
+using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class DeathEnemy : EnemyProvider, IDestructible
+	internal sealed class DeathEnemy : EnemyProvider, ILoader, IDestructible
 	{
 		private
 			InstantiateParameters _deathParameters;
+		private readonly int
+			Dying = Animator.StringToHash( nameof( Dying ) );
 		private float
-			_summonTime = 0F,
 			_deathTime = 0F;
 		private bool
 			_isDead = false;
@@ -18,8 +21,12 @@ namespace GwambaPrimeAdventure.Enemy
 		[SerializeField, Tooltip( "The death statitics of this enemy." )]
 		private
 			DeathStatistics _statistics;
-		private void Start()
+		public async UniTask Load()
 		{
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 			_deathParameters = new InstantiateParameters()
 			{
 				parent = transform,
@@ -27,34 +34,33 @@ namespace GwambaPrimeAdventure.Enemy
 			};
 			_sender.SetFormat( MessageFormat.State );
 			_sender.SetToggle( false );
-			_summonTime = _statistics.TimeToSummon;
 			_deathTime = _statistics.TimeToDie;
+		}
+		private void SummonDeathExecution()
+		{
+			if ( _statistics.ChildEnemy )
+				Instantiate( _statistics.ChildEnemy, _statistics.SpawnPoint, Quaternion.identity, _deathParameters ).transform.SetParent( null );
+			if ( _statistics.ChildProjectile )
+				Instantiate( _statistics.ChildProjectile, _statistics.SpawnPoint, Quaternion.identity, _deathParameters ).transform.SetParent( null );
+			Destroy( _enemyToDie ? _enemyToDie.gameObject : gameObject );
 		}
 		private void Update()
 		{
-			if ( SceneInitiator.IsInTransition() )
+			if ( SceneInitiator.IsInTransition() || _isDead )
 				return;
-			if ( 0F < _summonTime )
-				if ( 0F >= ( _summonTime -= Time.deltaTime ) )
-				{
-					_sender.Send( MessagePath.Enemy );
-					_isDead = true;
-				}
-			if ( _isDead )
+			if ( 0F < _deathTime )
 				if ( 0F >= ( _deathTime -= Time.deltaTime ) )
 				{
-					_isDead = false;
-					if ( _statistics.ChildEnemy )
-						Instantiate( _statistics.ChildEnemy, _statistics.SpawnPoint, Quaternion.identity, _deathParameters ).transform.SetParent( null );
-					if ( _statistics.ChildProjectile )
-						Instantiate( _statistics.ChildProjectile, _statistics.SpawnPoint, Quaternion.identity, _deathParameters ).transform.SetParent( null );
-					Destroy( _enemyToDie ? _enemyToDie.gameObject : gameObject );
+					Animator.SetTrigger( Dying );
+					_sender.Send( MessagePath.Enemy );
+					_isDead = true;
 				}
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
 			if ( !_isDead && _statistics.OnTouch && other.TryGetComponent<IDestructible>( out _ ) )
 			{
+				Animator.SetTrigger( Dying );
 				_sender.Send( MessagePath.Enemy );
 				_isDead = true;
 			}
@@ -63,8 +69,9 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( _isDead )
 				return false;
-			if ( 0 >= Health - (short) damage && !_statistics.OnlyTimer )
+			if ( 0 >= Health - (short) damage && !_statistics.UseTimer )
 			{
+				Animator.SetTrigger( Dying );
 				_sender.Send( MessagePath.Enemy );
 				return _isDead = true;
 			}
