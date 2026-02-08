@@ -128,7 +128,11 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			if ( ProvidenceStatistics.FadeOverTime )
 				if ( 0F >= ( _fadeTime -= Time.deltaTime ) )
+				{
+					foreach ( EnemyProvider enemy in _selfEnemies )
+						enemy.enabled = false;
 					Animator.SetTrigger( Fade );
+				}
 			if ( _stunned )
 				if ( 0F >= ( _stunTimer -= Time.deltaTime ) )
 				{
