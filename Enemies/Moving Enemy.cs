@@ -57,8 +57,8 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( SceneInitiator.IsInTransition() )
 				return;
-			if ( OnGround && Animator.GetBool( Fall ) )
-				Animator.SetBool( Fall, false );
+			if ( Animator.GetBool( Move ) && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
+				Animator.SetBool( Move, false );
 			if ( !OnGround )
 				if ( !Animator.GetBool( Fall ) && 0F > Rigidbody.linearVelocityY )
 					Animator.SetBool( Fall, true );
@@ -70,9 +70,15 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( SceneInitiator.IsInTransition() || WorldBuild.SCENE_LAYER != collision.gameObject.layer || OnGround && Mathf.Abs( Rigidbody.linearVelocityY ) <= MINIMUM_VELOCITY )
 				return;
 			_collider.GetContacts( _groundContacts );
-			OnGround = _groundContacts.Exists( contact => _moving.CheckGroundLimit <= contact.normal.y );
-			if ( OnGround && Animator.GetBool( Fall ) )
-				Animator.SetBool( Fall, false );
+			if ( OnGround = _groundContacts.Exists( contact => _moving.CheckGroundLimit <= contact.normal.y ) )
+			{
+				if (!Animator.GetBool(Idle) && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
+					Animator.SetBool( Idle, true );
+				 else if ( Animator.GetBool( Idle ) && Mathf.Abs( Rigidbody.linearVelocityX ) > MINIMUM_VELOCITY )
+					Animator.SetBool( Idle, false );
+				if ( Animator.GetBool( Fall ) )
+					Animator.SetBool( Fall, false );
+			}
 		}
 		protected void OnCollisionExit2D( Collision2D collision )
 		{
