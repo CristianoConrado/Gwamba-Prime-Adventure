@@ -53,7 +53,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, ShowIf( nameof( RunFromTarget ) ), Tooltip( "If this enemy will run toward the target after the run." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
+		[field: SerializeField, ShowIf( nameof( RunFromTarget ) ), Tooltip( "If this enemy will run toward the target after the run." )]
 		public bool RunTowardsAfter
 		{
 			get;
@@ -71,7 +71,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, ShowIf( nameof( ReactToDamage ) ), Min( 0F ), Tooltip( "The amount of speed to run in the retreat." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
+		[field: SerializeField, ShowIf( nameof( ReactToDamage ) ), Min( 0F ), Tooltip( "The amount of speed to run in the retreat." )]
 		public float RetreatSpeed
 		{
 			get;
