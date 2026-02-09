@@ -67,7 +67,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_invencibility = _retreat = false;
 			if ( _statistics.DetectionStop )
 			{
-				Animator.SetBool( Stop, _stopWorking = _stopRunning = true );
+				Animator.SetBool( Stop, _stopRunning = true );
 				_stoppedTime = _statistics.StopTime;
 				Rigidbody.linearVelocityX = 0F;
 			}
@@ -83,7 +83,7 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			else
 			{
-				Animator.SetBool( Stop, _stopWorking = _stopRunning = false );
+				Animator.SetBool( Stop, _stopRunning = false );
 				Animator.SetBool( Move, false );
 				Animator.SetBool( Dash, _isDashing = true );
 				_retreatTime = _statistics.TimeToRetreat;
@@ -101,7 +101,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.DetectionStop && _stopRunning )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
 				{
-					Animator.SetBool( Stop, _stopWorking = _stopRunning = false );
+					Animator.SetBool( Stop, _stopRunning = false );
 					Animator.SetBool( Move, false );
 					Animator.SetBool( Dash, _isDashing = true );
 					_retreatTime = _statistics.TimeToRetreat;
@@ -111,7 +111,7 @@ namespace GwambaPrimeAdventure.Enemy
 					_sender.Send( MessagePath.Enemy );
 					InvencibleDash();
 				}
-			if ( _stopWorking )
+			if ( Animator.GetBool( Stop ) )
 				return;
 			if ( _statistics.TimedDash && !_isDashing )
 				if ( 0F >= ( _dashTime -= Time.deltaTime ) )
@@ -164,7 +164,7 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			if ( _statistics.DetectionStop && _detected && !_isDashing && OnGround && !_retreat )
 				Rigidbody.linearVelocityX = 0F;
-			if ( _stopWorking )
+			if ( Animator.GetBool( Stop ) )
 				return;
 			if ( _statistics.LookPerception && !_detected )
 			{
@@ -194,7 +194,7 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					Animator.SetBool( Move, false );
 					Animator.SetBool( Dash, false );
-					Animator.SetBool( Stop, _stopWorking = _stopRunning = true );
+					Animator.SetBool( Stop, _stopRunning = true );
 					_stoppedTime = _statistics.StopTime;
 					_sender.SetFormat( MessageFormat.State );
 					_sender.SetToggle( false );
@@ -203,7 +203,7 @@ namespace GwambaPrimeAdventure.Enemy
 				}
 				else
 				{
-					Animator.SetBool( Stop, _stopWorking = _stopRunning = false );
+					Animator.SetBool( Stop, _stopRunning = false );
 					Animator.SetBool( Move, false );
 					Animator.SetBool( Dash, _isDashing = true );
 					_dashedTime = _statistics.TimeDashing;
@@ -256,10 +256,10 @@ namespace GwambaPrimeAdventure.Enemy
 				return false;
 			if ( _statistics.ReactToDamage && _canRetreat )
 			{
+				Animator.SetBool( Stop, _stopRunning = _canRetreat = !( _invencibility = _retreat = true ) );
 				Animator.SetBool( Move, false );
 				Animator.SetBool( Retreat, true );
 				_stoppedTime = 0F;
-				_stopWorking = _stopRunning = _canRetreat = !( _invencibility = _retreat = true );
 				_retreatLocation = transform.position.x;
 				transform.TurnScaleX( _movementSide = (short) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
 				_sender.SetFormat( MessageFormat.State );
@@ -280,10 +280,10 @@ namespace GwambaPrimeAdventure.Enemy
 							Rigidbody.linearVelocityX = 0F;
 						if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage && _canRetreat )
 						{
+							Animator.SetBool( Stop, _stopRunning = _canRetreat = !( _invencibility = _retreat = true ) );
 							Animator.SetBool( Move, false );
 							Animator.SetBool( Retreat, true );
 							_stoppedTime = 0F;
-							_stopWorking = _stopRunning = _canRetreat = !( _invencibility = _retreat = true );
 							_retreatLocation = transform.position.x;
 							transform.TurnScaleX( _movementSide = (short) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
 							_sender.SetFormat( MessageFormat.State );
