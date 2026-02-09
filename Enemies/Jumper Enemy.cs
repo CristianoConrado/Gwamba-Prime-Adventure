@@ -140,7 +140,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned || _stopWorking || SceneInitiator.IsInTransition() )
+			if ( IsStunned || Animator.GetBool( Stop ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( 0F < _stopTime )
 				if ( 0F >= ( _stopTime -= Time.deltaTime ) )
@@ -190,7 +190,7 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			else if ( !_onJump && _isJumping && !OnGround )
 				_onJump = true;
-			if ( _stopWorking )
+			if ( Animator.GetBool( Stop ) )
 				return;
 			if ( OnGround )
 			{
