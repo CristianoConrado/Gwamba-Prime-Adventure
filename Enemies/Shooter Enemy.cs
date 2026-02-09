@@ -86,7 +86,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( _stopWorking || IsStunned || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stop ) || IsStunned || SceneInitiator.IsInTransition() )
 				return;
 			if ( 0F < _shootInterval && !_isStopped )
 				_shootInterval -= Time.deltaTime;
@@ -165,7 +165,7 @@ namespace GwambaPrimeAdventure.Enemy
 				foreach ( EnemyProvider enemy in enemies )
 					if ( enemy && this == enemy )
 						if ( MessageFormat.State == message.Format && message.ToggleValue.HasValue )
-							_stopWorking = message.ToggleValue.Value;
+							Animator.SetBool( Stop, !message.ToggleValue.Value );
 						else if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage )
 						{
 							transform.TurnScaleX( ( CharacterExporter.GwambaLocalization().x < Rigidbody.position.x ? -1F : 1F ) * transform.right.x );
