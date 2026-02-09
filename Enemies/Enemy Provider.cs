@@ -12,13 +12,10 @@ namespace GwambaPrimeAdventure.Enemy
 		protected readonly Sender
 			_sender = Sender.Create();
 		protected readonly int
-			Idle = Animator.StringToHash( nameof( Idle ) ),
 			Fall = Animator.StringToHash( nameof( Fall ) ),
 			Stop = Animator.StringToHash( nameof( Stop ) ),
 			Stunned = Animator.StringToHash( nameof( Stunned ) ),
 			Death = Animator.StringToHash( nameof( Death ) );
-		protected bool
-			_stopWorking = false;
 		[SerializeField, Tooltip( "The enemies to send messages." ), Header( "Enemy Provider" )]
 		private
 			EnemyProvider[] _enemiesToSend;
