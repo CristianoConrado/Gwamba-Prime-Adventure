@@ -93,7 +93,7 @@ namespace GwambaPrimeAdventure.Enemy
 					Animator.SetBool( Move, false );
 					Animator.SetBool( Chase, false );
 					Animator.SetBool( Dash, false );
-					Animator.SetBool( Stop, _stopWorking = true );
+					Animator.SetBool( Stop, true );
 					_stoppedTime = _statistics.StopTime;
 					return;
 				}
@@ -116,7 +116,7 @@ namespace GwambaPrimeAdventure.Enemy
 					Animator.SetBool( Move, false );
 					Animator.SetBool( Chase, false );
 					Animator.SetBool( Dash, false );
-					Animator.SetBool( Stop, _stopWorking = _returnDash = _afterDash = true );
+					Animator.SetBool( Stop, _returnDash = _afterDash = true );
 					_stoppedTime = _statistics.AfterTime;
 				}
 				else
@@ -150,13 +150,13 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			if ( IsStunned || SceneInitiator.IsInTransition() )
 				return;
-			if ( _statistics.DetectionStop && _stopWorking )
+			if ( _statistics.DetectionStop && Animator.GetBool( Stop ) )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
 				{
 					Animator.SetBool( Move, false );
 					Animator.SetBool( Chase, false );
 					Animator.SetBool( Dash, false );
-					Animator.SetBool( Stop, _stopWorking = false );
+					Animator.SetBool( Stop, false );
 					(_isDashing, _afterDash) = (!_afterDash, false);
 					Animator.SetBool( Dash, _isDashing );
 				}
@@ -164,7 +164,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void FixedUpdate()
 		{
 			base.FixedUpdate();
-			if ( _stopWorking || IsStunned || !_started || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stop ) || IsStunned || !_started || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.Target )
 			{
@@ -195,7 +195,7 @@ namespace GwambaPrimeAdventure.Enemy
 						Animator.SetBool( Move, false );
 						Animator.SetBool( Chase, false );
 						Animator.SetBool( Dash, false );
-						Animator.SetBool( Stop, _stopWorking = _returnDash = _afterDash = true );
+						Animator.SetBool( Stop, _returnDash = _afterDash = true );
 						_stoppedTime = _statistics.AfterTime;
 					}
 					else
