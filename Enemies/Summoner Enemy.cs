@@ -150,7 +150,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( _stopWorking || IsStunned || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stop ) || IsStunned || SceneInitiator.IsInTransition() )
 				return;
 			for ( ushort i = 0; _structureTime.Length > i; i++ )
 				if ( 0F < _structureTime[ i ] )
@@ -163,7 +163,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public void OnSummon( ushort summonIndex )
 		{
-			if ( 0F < _structureTime[ summonIndex ] || _stopWorking )
+			if ( 0F < _structureTime[ summonIndex ] || Animator.GetBool( Stop ) )
 				return;
 			_structureTime[ summonIndex ] = _statistics.SummonPointStructures[ summonIndex ].TimeToUse;
 			Summoning( _statistics.SummonPointStructures[ summonIndex ].Summon );
@@ -174,7 +174,7 @@ namespace GwambaPrimeAdventure.Enemy
 				foreach ( EnemyProvider enemy in enemies )
 					if ( enemy && this == enemy )
 						if ( MessageFormat.State == message.Format && message.ToggleValue.HasValue )
-							_stopWorking = !message.ToggleValue.Value;
+							Animator.SetBool( Stop, !message.ToggleValue.Value );
 						else if ( MessageFormat.Event == message.Format && _statistics.HasEventSummon && 0 < _statistics.EventSummons.Length )
 							if ( _statistics.RandomReactSummons )
 								Summoning( _statistics.EventSummons[ UnityEngine.Random.Range( 0, _statistics.EventSummons.Length ) ] );
