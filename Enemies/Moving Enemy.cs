@@ -16,6 +16,7 @@ namespace GwambaPrimeAdventure.Enemy
 		protected const float
 			MINIMUM_VELOCITY = 1E-3F;
 		protected readonly int
+			Idle = Animator.StringToHash( nameof( Idle ) ),
 			Move = Animator.StringToHash( nameof( Move ) ),
 			Dash = Animator.StringToHash( nameof( Dash ) );
 		protected float
@@ -72,9 +73,9 @@ namespace GwambaPrimeAdventure.Enemy
 			_collider.GetContacts( _groundContacts );
 			if ( OnGround = _groundContacts.Exists( contact => _moving.CheckGroundLimit <= contact.normal.y ) )
 			{
-				if (!Animator.GetBool(Idle) && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
+				if ( !Animator.GetBool( Idle ) && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
 					Animator.SetBool( Idle, true );
-				 else if ( Animator.GetBool( Idle ) && Mathf.Abs( Rigidbody.linearVelocityX ) > MINIMUM_VELOCITY )
+				else if ( Animator.GetBool( Idle ) && Mathf.Abs( Rigidbody.linearVelocityX ) > MINIMUM_VELOCITY )
 					Animator.SetBool( Idle, false );
 				if ( Animator.GetBool( Fall ) )
 					Animator.SetBool( Fall, false );
@@ -93,11 +94,13 @@ namespace GwambaPrimeAdventure.Enemy
 		public void Receive( MessageData message )
 		{
 			if ( MessageFormat.State == message.Format && message.ToggleValue.HasValue )
-				if ( _stopWorking = !message.ToggleValue.Value )
-				{
+			{
+				Animator.SetBool( Stop, !message.ToggleValue.Value );
+				if ( Animator.GetBool( Stop ) && Animator.GetBool( Move ) )
 					Animator.SetBool( Move, false );
+				if ( Animator.GetBool( Stop ) && Animator.GetBool( Dash ) )
 					Animator.SetBool( Dash, false );
-				}
+			}
 		}
 	};
 };
