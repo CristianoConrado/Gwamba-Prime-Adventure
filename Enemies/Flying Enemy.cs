@@ -14,8 +14,12 @@ namespace GwambaPrimeAdventure.Enemy
 			Transform _detectionObject;
 		private
 			CapsuleCollider2D _detectionCollider;
+		private readonly RaycastHit2D[]
+			_dashGroundCheck = new RaycastHit2D[ (ushort) WorldBuild.PIXELS_PER_UNIT ];
 		private
 			Vector2[] _trail;
+		private
+			ContactFilter2D _dashCheckFilter;
 		private Vector2
 			_movementDirection = Vector2.zero,
 			_pointOrigin = Vector2.zero,
@@ -23,7 +27,8 @@ namespace GwambaPrimeAdventure.Enemy
 		private readonly int
 			Chase = Animator.StringToHash( nameof( Chase ) );
 		private ushort
-			_pointIndex = 0;
+			_pointIndex = 0,
+			_dashCheckSize = 0;
 		private bool
 			_started = false,
 			_returnOrigin = false,
@@ -72,6 +77,12 @@ namespace GwambaPrimeAdventure.Enemy
 			_trail = new Vector2[ trail.points.Length ];
 			for ( ushort i = 0; trail.points.Length > i; i++ )
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
+			_dashCheckFilter = new ContactFilter2D()
+			{
+				layerMask = WorldBuild.SCENE_LAYER_MASK,
+				useLayerMask = true,
+				useTriggers = false
+			};
 			_movementDirection = Vector2.right * _movementSide;
 			_pointOrigin = Rigidbody.position;
 			_started = true;
@@ -189,7 +200,8 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _isDashing )
 			{
 				_originCast = Rigidbody.position + _selfCollider.offset + ( _targetPoint - _originCast ).normalized;
-				if ( Physics2D.CircleCast( _originCast, _selfCollider.radius, ( _targetPoint - _originCast ).normalized, _selfCollider.radius / 2f, WorldBuild.SCENE_LAYER_MASK ) )
+				_dashCheckSize = (ushort) Physics2D.CircleCast( _originCast, _selfCollider.radius, ( _targetPoint - _originCast ).normalized, _dashCheckFilter, _dashGroundCheck );
+				if ( 0 < _dashCheckSize )
 					if ( _statistics.DetectionStop )
 					{
 						Animator.SetBool( Move, false );
