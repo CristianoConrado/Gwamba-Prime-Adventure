@@ -24,7 +24,6 @@ namespace GwambaPrimeAdventure.Enemy
 			_retreatLocation = 0F;
 		private bool
 			_stopRunning = false,
-			_offEdge = false,
 			_wayBlocked = false,
 			_invencibility = false,
 			_canRetreat = true,
@@ -244,7 +243,7 @@ namespace GwambaPrimeAdventure.Enemy
 				return contact.point.OutsideBoxCast( _originCast, _sizeCast )
 				&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideBoxCast( _originCast, _sizeCast );
 			} );
-			if ( !_statistics.TurnOffEdge && ( _offEdge = OnGround && 0 >= _groundContacts.Count ) || _wayBlocked && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
+			if ( !_statistics.TurnOffEdge && OnGround && 0 >= _groundContacts.Count || _wayBlocked && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
 				if ( _retreat )
 					RetreatUse();
 				else
