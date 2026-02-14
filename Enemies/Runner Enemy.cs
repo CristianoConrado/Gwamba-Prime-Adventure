@@ -235,7 +235,9 @@ namespace GwambaPrimeAdventure.Enemy
 				: _statistics.CheckGroundLimit <= contact.normal.x;
 			} );
 			_originCast = Rigidbody.position + _collider.offset;
-			_originCast.x += _collider.bounds.extents.x * ( _retreat ? -1F : 1F ) * _movementSide * transform.right.x;
+			_originCast.x +=
+				( _collider.bounds.extents.x - ( WorldBuild.SNAP_LENGTH * _statistics.OffEdgeSize - WorldBuild.SNAP_LENGTH ) / 2F )
+				* ( _retreat ? -1F : 1F ) * _movementSide * transform.right.x;
 			_originCast.y -= _collider.bounds.extents.y * transform.up.y;
 			_sizeCast.Set( WorldBuild.SNAP_LENGTH * _statistics.OffEdgeSize, WorldBuild.SNAP_LENGTH );
 			_groundContacts.RemoveAll( contact =>
