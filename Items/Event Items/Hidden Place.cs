@@ -175,7 +175,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				if ( _instantly )
 				{
 					Color color = _tilemap.color;
-					color.a = 1F;
+					color.a = 0F;
 					_tilemap.color = color;
 				}
 				else
