@@ -245,8 +245,8 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			_groundContacts.RemoveAll( contact =>
 			{
-				return _statistics.TurnOffEdge
-				|| contact.point.OutsideBoxCast( _originCast, _sizeCast )
+				return !_statistics.TurnOffEdge
+				&& contact.point.OutsideBoxCast( _originCast, _sizeCast )
 				&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideBoxCast( _originCast, _sizeCast );
 			} );
 			if ( 0 >= _groundContacts.Count && OnGround || _wayBlocked && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
