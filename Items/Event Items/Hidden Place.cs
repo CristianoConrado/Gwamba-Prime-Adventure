@@ -27,7 +27,9 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			CancellationToken _destroyToken;
 		private bool
 			_activation = false,
-			_follow = false;
+			_follow = false,
+			_taskOnGoing = false,
+			_cancelTask = false;
 		[SerializeField, Tooltip( "Other hidden place to activate." ), Header( "Hidden Place" )]
 		private
 			HiddenPlace _otherPlace;
@@ -97,14 +99,26 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		}
 		private async UniTask Fade( bool appear )
 		{
+			if ( _taskOnGoing )
+			{
+				_cancelTask = true;
+				await UniTask.WaitWhile( () => _taskOnGoing, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
+				if ( _destroyToken.IsCancellationRequested )
+					return;
+				_cancelTask = false;
+			}
 			bool onFirst = false;
+			_taskOnGoing = true;
 			if ( _otherPlace )
 				if ( onFirst = _otherPlace._appearFirst && _otherPlace._activation )
 					await _otherPlace.Fade( true ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 				else if ( onFirst = _otherPlace._fadeFirst && !_otherPlace._activation )
 					await _otherPlace.Fade( false ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
-			if ( _destroyToken.IsCancellationRequested )
+			if ( _destroyToken.IsCancellationRequested || _cancelTask )
+			{
+				_taskOnGoing = false;
 				return;
+			}
 			if ( _isReceptor )
 				_activation = !_activation;
 			if ( appear )
@@ -126,6 +140,11 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
 					return;
+				if ( _cancelTask )
+				{
+					_taskOnGoing = false;
+					return;
+				}
 				Color color = _tilemap.color;
 				color.a = alpha;
 				_tilemap.color = color;
@@ -144,8 +163,11 @@ namespace GwambaPrimeAdventure.Item.EventItem
 					for ( float i = 0F; 1F > _tilemap.color.a; i += 1E-1F )
 					{
 						await OpacityLevel( i ).SuppressCancellationThrow();
-						if ( _destroyToken.IsCancellationRequested )
+						if ( _destroyToken.IsCancellationRequested || _cancelTask )
+						{
+							_taskOnGoing = false;
 							return;
+						}
 					}
 			}
 			else
@@ -160,8 +182,11 @@ namespace GwambaPrimeAdventure.Item.EventItem
 					for ( float i = 1F; 0F < _tilemap.color.a; i -= 1E-1F )
 					{
 						await OpacityLevel( i ).SuppressCancellationThrow();
-						if ( _destroyToken.IsCancellationRequested )
+						if ( _destroyToken.IsCancellationRequested || _cancelTask )
+						{
+							_taskOnGoing = false;
 							return;
+						}
 					}
 				_tilemapRenderer.enabled = false;
 				Occlusion();
@@ -173,6 +198,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 					_otherPlace.Fade( true ).Forget();
 				else if ( !_otherPlace._fadeFirst && !_otherPlace._activation )
 					_otherPlace.Fade( false ).Forget();
+			_taskOnGoing = false;
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
@@ -187,10 +213,10 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		public void Execute()
 		{
 			if ( 0F < _timeToFadeAppearAgain )
-				FadeTimed( _activation ).Forget();
+				FadeTimed( _activation );
 			else
 				Fade( _activation ).Forget();
-			async UniTask FadeTimed( bool appear )
+			async void FadeTimed( bool appear )
 			{
 				await Fade( appear ).SuppressCancellationThrow();
 				if ( _destroyToken.IsCancellationRequested )
