@@ -83,7 +83,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		protected void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( WorldBuild.SCENE_LAYER == collision.gameObject.layer )
+			if ( SceneInitiator.IsInTransition() || WorldBuild.SCENE_LAYER == collision.gameObject.layer )
 			{
 				_collider.GetContacts( _groundContacts );
 				if ( _groundContacts.Exists( contact => _moving.CheckGroundLimit <= contact.normal.y ) )
