@@ -392,7 +392,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void Update()
 		{
-			if ( !_instance || _instance != this || !_didStart || _animator.GetBool( Death ) )
+			if ( !_instance || _instance != this || !_didStart || _animator.GetBool( Death ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( _invencibility )
 			{
@@ -432,7 +432,7 @@ namespace GwambaPrimeAdventure.Character
 		private float BunnyHop( float callBackValue ) => 0 < _bunnyHopBoost ? _bunnyHopBoost * callBackValue : 0F;
 		private void FixedUpdate()
 		{
-			if ( !_instance || _instance != this || !_didStart || _animator.GetBool( Stun ) || _animator.GetBool( Death ) )
+			if ( !_instance || _instance != this || !_didStart || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( _animator.GetBool( DashSlide ) )
 				if ( Mathf.Abs( transform.position.x - _localAtAny.x ) > DashDistance || _offGround || _isJumping )
@@ -570,7 +570,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionStay2D( Collision2D collision )
 		{
-			if ( !_instance || this != _instance || !isActiveAndEnabled || !_didStart || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
+			if ( !_instance || this != _instance || !isActiveAndEnabled || !_didStart || WorldBuild.SCENE_LAYER != collision.gameObject.layer || SceneInitiator.IsInTransition() )
 				return;
 			if ( ( _animator.GetBool( AirJump ) || _animator.GetBool( DashSlide ) ) && ( !_animator.GetBool( Stun ) || !_animator.GetBool( Death ) ) )
 			{
@@ -688,7 +688,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( _instance && this == _instance && _didStart && WorldBuild.SCENE_LAYER == collision.gameObject.layer )
+			if ( _instance && this == _instance && _didStart && WorldBuild.SCENE_LAYER == collision.gameObject.layer || SceneInitiator.IsInTransition() )
 			{
 				_collider.GetContacts( _groundContacts );
 				if ( _groundContacts.Exists( contact => CheckGroundLimit <= contact.normal.y ) )
