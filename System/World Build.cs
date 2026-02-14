@@ -23,6 +23,7 @@ namespace GwambaPrimeAdventure
 		public const ushort MAXIMUM_PIXEL_PERFECT_SCALE = 12;
 		public const ushort PIXEL_PERFECT_WIDTH = 320;
 		public const ushort PIXEL_PERFECT_HEIGHT = (ushort) ( PIXEL_PERFECT_WIDTH * WIDTH_HEIGHT_PROPORTION );
+		public const ushort DESIRED_PIXEL_PERFECT_SCALE = 2;
 		public const ushort UI_SCALE_WIDTH = 1920;
 		public const ushort UI_SCALE_HEIGHt = (ushort) ( UI_SCALE_WIDTH * WIDTH_HEIGHT_PROPORTION );
 		public const ushort LEVELS_COUNT = 10;
