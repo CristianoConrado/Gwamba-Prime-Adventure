@@ -225,9 +225,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void OnCollisionStay2D( Collision2D collision )
 		{
 			base.OnCollisionStay2D( collision );
-			if ( SceneInitiator.IsInTransition() || WorldBuild.SCENE_LAYER != collision.gameObject.layer )
-				return;
-			if ( Animator.GetBool( Stop ) || Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
+			if ( SceneInitiator.IsInTransition() || WorldBuild.SCENE_LAYER != collision.gameObject.layer || Animator.GetBool( Stop ) || Animator.GetBool( Stunned ) )
 				return;
 			_collider.GetContacts( _groundContacts );
 			_wayBlocked = _groundContacts.Exists( contact =>
