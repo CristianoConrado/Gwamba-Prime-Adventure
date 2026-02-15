@@ -20,7 +20,7 @@ namespace GwambaPrimeAdventure.Character
 			bool _turnToLeft;
 		[SerializeField, Tooltip( "Which point setter is setted when scene is the hubby world." )]
 		private
-			ushort _selfIndex;
+			byte _selfIndex;
 		internal static Vector2 CheckedPoint =>
 			Instance ? Instance.transform.position : Vector2.zero;
 		internal static bool TurnToLeft =>
