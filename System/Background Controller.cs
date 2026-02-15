@@ -61,7 +61,7 @@ namespace GwambaPrimeAdventure
 			SpriteRenderer childRenderer;
 			Vector3 childOffset = Vector3.zero;
 			ushort childIndex;
-			for ( ushort i = 0; _backgroundImages.Length > i; i++ )
+			for ( byte i = 0; _backgroundImages.Length > i; i++ )
 			{
 				_childrenTransforms[ i ] = Instantiate( _backgroundObject, transform );
 				_startPosition[ i ] = _childrenTransforms[ i ].transform.position = (Vector2) _childrenTransforms[ i ].transform.position;
@@ -70,8 +70,8 @@ namespace GwambaPrimeAdventure
 				_childrenRederers[ i ].sortingOrder = _backgroundImages.Length - 1 - i;
 				_childrenTransforms[ i ].GetComponent<SortingGroup>().sortingOrder = _childrenRederers[ i ].sortingOrder;
 				childIndex = 0;
-				for ( short x = -1; 1 >= x; x++ )
-					for ( short y = -1; 1 >= y; y++ )
+				for ( sbyte x = -1; 1 >= x; x++ )
+					for ( sbyte y = -1; 1 >= y; y++ )
 						if ( 0 != x || 0 != y )
 						{
 							child = _childrenTransforms[ i ].transform.GetChild( childIndex++ );
@@ -90,7 +90,7 @@ namespace GwambaPrimeAdventure
 		{
 			if ( SceneInitiator.IsInTransition() )
 				return;
-			for ( ushort i = 0; _childrenTransforms.Length > i; i++ )
+			for ( byte i = 0; _childrenTransforms.Length > i; i++ )
 			{
 				_speed = _backgroundSpeed - ( i * _slowSpeed );
 				_movement.Set( ( transform.position.x + _positionOffset.x ) * ( 1F - _speed.x ), ( transform.position.y + _positionOffset.y ) * ( 1F - _speed.y ) );
