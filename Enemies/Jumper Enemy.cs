@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class JumperEnemy : MovingEnemy, ILoader, IJumper, IConnector
+	internal sealed class JumperEnemy : MovingEnemy, IEnemyLoader, IJumper, IConnector
 	{
 		private
 			InputController _inputController;
@@ -68,12 +68,9 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			Sender.Exclude( this );
 		}
-		public async new UniTask Load()
+		public void Load()
 		{
 			_destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
-			if ( _destroyToken.IsCancellationRequested )
-				return;
 			_timedJumpTime = new float[ _statistics.TimedJumps.Length ];
 			_jumpCount = new sbyte[ _statistics.JumpPointStructures.Length ];
 			for ( byte i = 0; _statistics.TimedJumps.Length > i; i++ )
