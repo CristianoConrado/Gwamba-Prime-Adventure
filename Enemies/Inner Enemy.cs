@@ -17,7 +17,7 @@ namespace GwambaPrimeAdventure.Enemy
 			get;
 			private set;
 		}
-		public short Health =>
+		public byte Health =>
 			Source is not null ? Source.Health : default;
 		internal void Deliver( IDestructible destructibleEnemy, UnityAction<Collider2D> hitEvent )
 		{
@@ -26,8 +26,8 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			Source = destructibleEnemy;
 		}
-		public bool Hurt( ushort damage ) => Source is not null && ( _hurtCondition = Source?.Hurt( damage ) ).HasValue && _hurtCondition.Value;
-		public void Stun( ushort stunStrenght, float stunTime ) => Source?.Stun( stunStrenght, stunTime );
+		public bool Hurt( byte damage ) => Source is not null && ( _hurtCondition = Source?.Hurt( damage ) ).HasValue && _hurtCondition.Value;
+		public void Stun( byte stunStrenght, float stunTime ) => Source?.Stun( stunStrenght, stunTime );
 		private void OnTriggerEnter2D( Collider2D other ) => _hitEvent?.Invoke( other );
 	};
 };
