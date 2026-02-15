@@ -227,7 +227,7 @@ namespace GwambaPrimeAdventure.Hud
 			EffectsVolumeToggle.value = settings.EffectsVolumeToggle;
 			MusicVolumeToggle.value = settings.MusicVolumeToggle;
 			InfinityFPS.value = settings.InfinityFPS;
-			SpeachDelay.value = (ushort) ( settings.SpeachDelay * 1000F );
+			SpeachDelay.value = (byte) ( settings.SpeachDelay * 1000F );
 			ScreenBrightness.value = settings.ScreenBrightness;
 			GeneralVolume.value = settings.GeneralVolume;
 			EffectsVolume.value = settings.EffectsVolume;
