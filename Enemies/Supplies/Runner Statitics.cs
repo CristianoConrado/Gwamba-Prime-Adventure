@@ -11,12 +11,6 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			get;
 			private set;
 		}
-		[field: SerializeField, HideIf( nameof( TurnOffEdge ) ), Min( 1F ), Tooltip( "The size of the off-edge area." )]
-		public float OffEdgeSize
-		{
-			get;
-			private set;
-		}
 		[field: SerializeField, Tooltip( "If the boss can jump while dashing.\nRequires: Jumper Enemy." )]
 		public bool JumpDash
 		{
