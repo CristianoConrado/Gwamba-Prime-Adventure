@@ -26,7 +26,7 @@ namespace GwambaPrimeAdventure
 		{
 			get;
 		}
-		public sbyte Health
+		public byte Health
 		{
 			get;
 		}
