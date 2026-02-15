@@ -222,6 +222,8 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void Update()
 		{
+			if ( SceneInitiator.IsInTransition() )
+				return;
 			_frameCount++;
 			_totalTime += Time.unscaledDeltaTime;
 			if ( _totalTime >= _intervalFPS )
