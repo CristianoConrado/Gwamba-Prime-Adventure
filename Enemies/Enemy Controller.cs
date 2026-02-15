@@ -7,7 +7,7 @@ using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[RequireComponent( typeof( Animator ), typeof( Rigidbody2D ), typeof( Collider2D ) ), RequireComponent( typeof( CinemachineImpulseSource ) )]
-	internal sealed class EnemyController : Control, IConnector, IOccludee, IDestructible
+	internal sealed class EnemyController : Control, ILoader, IConnector, IOccludee, IDestructible
 	{
 		private
 			EnemyProvider[] _selfEnemies;
@@ -120,6 +120,16 @@ namespace GwambaPrimeAdventure.Enemy
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = true;
 			_animator.SetFloat( IsOn, 1F );
+		}
+		public async UniTask Load()
+		{
+			foreach ( EnemyProvider enemy in _selfEnemies )
+				if (enemy.TryGetComponent<IEnemyLoader>( out var enemyLoader ) )
+					enemyLoader.Load();
+			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
+			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
+			if ( destroyToken.IsCancellationRequested )
+				return;
 		}
 		private void DeathExecution() => Destroy( gameObject );
 		private void Update()
