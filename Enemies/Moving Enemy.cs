@@ -1,12 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
 namespace GwambaPrimeAdventure.Enemy
 {
-	internal abstract class MovingEnemy : EnemyProvider, ILoader, IConnector
+	internal abstract class MovingEnemy : EnemyProvider, IConnector
 	{
 		protected readonly List<ContactPoint2D>
 			_groundContacts = new List<ContactPoint2D>( (int) WorldBuild.PIXELS_PER_UNIT );
@@ -25,7 +23,8 @@ namespace GwambaPrimeAdventure.Enemy
 			_movementSide = 1;
 		protected bool
 			_detected = false,
-			_isDashing = false;
+			_isDashing = false,
+			_begining = false;
 		[SerializeField, Tooltip( "The moving statitics of this enemy." ), Header( "Moving Enemy" )]
 		private
 			MovingStatistics _moving;
@@ -45,19 +44,16 @@ namespace GwambaPrimeAdventure.Enemy
 			base.OnDestroy();
 			Sender.Exclude( this );
 		}
-		public async UniTask Load()
-		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
-			_movementSide = (sbyte) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) );
-			transform.TurnScaleX( _movementSide );
-		}
 		protected void FixedUpdate()
 		{
 			if ( SceneInitiator.IsInTransition() )
 				return;
+			if ( !_begining )
+			{
+				_begining = true;
+				_movementSide = (sbyte) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) );
+				transform.TurnScaleX( _movementSide );
+			}
 			if ( Animator.GetBool( Move ) && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
 				Animator.SetBool( Move, false );
 			if ( !OnGround )
