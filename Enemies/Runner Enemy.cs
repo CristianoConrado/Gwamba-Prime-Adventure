@@ -12,9 +12,9 @@ namespace GwambaPrimeAdventure.Enemy
 			_detections = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
 		private readonly int
 			Retreat = Animator.StringToHash( nameof( Retreat ) );
-		private ushort
+		private byte
 			_runnedTimes = 0;
-		private int
+		private ushort
 			_castSize = 0;
 		private float
 			_timeRun = 0F,
@@ -168,7 +168,8 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.LookPerception && !_detected )
 			{
 				_originCast.Set( transform.position.x + _collider.offset.x + _collider.bounds.extents.x * _movementSide, transform.position.y + _collider.offset.y );
-				_castSize = Physics2D.RaycastNonAlloc( _originCast, transform.right * _movementSide, _detections, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
+				_castSize = (ushort)
+					Physics2D.RaycastNonAlloc( _originCast, transform.right * _movementSide, _detections, _statistics.LookDistance, WorldBuild.CHARACTER_LAYER_MASK );
 				for ( int i = 0; _castSize > i; i++ )
 					if ( _detected = _detections[ i ].collider.TryGetComponent<IDestructible>( out _ ) )
 						break;
@@ -239,7 +240,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_originCast = Rigidbody.position + _collider.offset;
 				_originCast.x += _collider.bounds.extents.x * ( _retreat ? -1F : 1F ) * _movementSide * transform.right.x;
 				_originCast.y -= _collider.bounds.extents.y * transform.up.y;
-				_castSize = Physics2D.RaycastNonAlloc( _originCast, -transform.up, _detections, WorldBuild.SNAP_LENGTH, WorldBuild.SCENE_LAYER_MASK );
+				_castSize = (ushort) Physics2D.RaycastNonAlloc( _originCast, -transform.up, _detections, WorldBuild.SNAP_LENGTH, WorldBuild.SCENE_LAYER_MASK );
 			}
 			else
 				_castSize = 1;
@@ -249,7 +250,7 @@ namespace GwambaPrimeAdventure.Enemy
 				else
 					_movementSide *= -1;
 		}
-		public new bool Hurt( ushort damage )
+		public new bool Hurt( byte damage )
 		{
 			if ( _invencibility )
 				return false;
@@ -260,7 +261,7 @@ namespace GwambaPrimeAdventure.Enemy
 				Animator.SetBool( Retreat, true );
 				_stoppedTime = 0F;
 				_retreatLocation = transform.position.x;
-				transform.TurnScaleX( _movementSide = (short) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
+				transform.TurnScaleX( _movementSide = (sbyte) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
 				_sender.SetFormat( MessageFormat.State );
 				_sender.SetToggle( false );
 				_sender.Send( MessagePath.Enemy );
@@ -284,7 +285,7 @@ namespace GwambaPrimeAdventure.Enemy
 							Animator.SetBool( Retreat, true );
 							_stoppedTime = 0F;
 							_retreatLocation = transform.position.x;
-							transform.TurnScaleX( _movementSide = (short) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
+							transform.TurnScaleX( _movementSide = (sbyte) ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) );
 							_sender.SetFormat( MessageFormat.State );
 							_sender.SetToggle( false );
 							_sender.Send( MessagePath.Enemy );
