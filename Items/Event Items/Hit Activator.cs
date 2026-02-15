@@ -8,7 +8,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private
 			byte _biggerDamage;
 		public IDestructible Source => this;
-		public sbyte Health => 0;
+		public byte Health => 0;
 		public bool Hurt( byte damage )
 		{
 			if ( damage >= _biggerDamage && Usable )
