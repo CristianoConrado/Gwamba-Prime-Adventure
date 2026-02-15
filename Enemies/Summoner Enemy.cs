@@ -26,7 +26,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_instantiateParameters = new InstantiateParameters();
 		private readonly int
 			Summon = Animator.StringToHash( nameof( Summon ) );
-		private ushort
+		private byte
 			_randomSummonIndex = 0;
 		private float[]
 			_summonTime,
@@ -63,12 +63,12 @@ namespace GwambaPrimeAdventure.Enemy
 			_summonTime = new float[ _statistics.TimedSummons.Length ];
 			_isSummonTime = new bool[ _statistics.TimedSummons.Length ];
 			_gravityScale = Rigidbody.gravityScale;
-			_randomSummonIndex = (ushort) UnityEngine.Random.Range( 0, _statistics.TimedSummons.Length );
-			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
+			_randomSummonIndex = (byte) UnityEngine.Random.Range( 0, _statistics.TimedSummons.Length );
+			for ( byte i = 0; _statistics.TimedSummons.Length > i; i++ )
 				_isSummonTime[ i ] = true;
-			for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
+			for ( byte i = 0; _statistics.TimedSummons.Length > i; i++ )
 				_summonTime[ i ] = _statistics.TimedSummons[ i ].SummonTime;
-			for ( ushort i = 0; _statistics.SummonPointStructures.Length > i; i++ )
+			for ( byte i = 0; _statistics.SummonPointStructures.Length > i; i++ )
 				Instantiate( _statistics.SummonPointStructures[ i ].SummonPointObject, _statistics.SummonPointStructures[ i ].Point, Quaternion.identity ).GetTouch( this, i );
 		}
 		private void Unstop()
@@ -145,23 +145,23 @@ namespace GwambaPrimeAdventure.Enemy
 						_summonTime[ summonIndex ] = _statistics.TimedSummons[ summonIndex ].SummonTime;
 					_isSummonTime[ summonIndex ] = !_isSummonTime[ summonIndex ];
 					if ( _statistics.RandomTimedSummons && _isSummonTime[ summonIndex ] )
-						_randomSummonIndex = (ushort) UnityEngine.Random.Range( 0, _statistics.TimedSummons.Length );
+						_randomSummonIndex = (byte) UnityEngine.Random.Range( 0, _statistics.TimedSummons.Length );
 				}
 		}
 		private void Update()
 		{
 			if ( Animator.GetBool( Stop ) || IsStunned || SceneInitiator.IsInTransition() )
 				return;
-			for ( ushort i = 0; _structureTime.Length > i; i++ )
+			for ( byte i = 0; _structureTime.Length > i; i++ )
 				if ( 0F < _structureTime[ i ] )
 					_structureTime[ i ] -= Time.deltaTime;
 			if ( _statistics.RandomTimedSummons && 0 < _statistics.TimedSummons.Length )
 				IndexedSummon( _randomSummonIndex );
 			else
-				for ( ushort i = 0; _statistics.TimedSummons.Length > i; i++ )
+				for ( byte i = 0; _statistics.TimedSummons.Length > i; i++ )
 					IndexedSummon( i );
 		}
-		public void OnSummon( ushort summonIndex )
+		public void OnSummon( byte summonIndex )
 		{
 			if ( 0F < _structureTime[ summonIndex ] || Animator.GetBool( Stop ) )
 				return;
