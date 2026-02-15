@@ -20,7 +20,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private
 			EnemyProvider[] _enemiesToSend;
 		[field: SerializeField, Tooltip( "The level of priority to use the destructible side." )]
-		internal ushort DestructilbePriority
+		internal byte DestructilbePriority
 		{
 			get;
 			private set;
@@ -34,7 +34,7 @@ namespace GwambaPrimeAdventure.Enemy
 			MessagePath.Enemy;
 		protected bool IsStunned =>
 			_controller.IsStunned;
-		public short Health =>
+		public byte Health =>
 			_controller.Health;
 		protected new void Awake()
 		{
@@ -53,7 +53,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( !saveFile.DeafetedBosses[ bossIndex ] )
 				saveFile.DeafetedBosses[ bossIndex ] = true;
 		}
-		public bool Hurt( ushort damage )
+		public bool Hurt( byte damage )
 		{
 			if ( _controller.ProvidenceStatistics.ReactToDamage )
 			{
@@ -62,11 +62,11 @@ namespace GwambaPrimeAdventure.Enemy
 				_sender.SetFormat( MessageFormat.Event );
 				_sender.Send( MessagePath.Enemy );
 			}
-			if ( 0 >= ( _controller.Vitality -= (short) damage ) )
+			if ( 0 >= ( _controller.Vitality = (byte) ( 0 <= _controller.Vitality - damage ? _controller.Vitality - damage : 0 ) ) )
 				Animator.SetTrigger( Death );
 			return true;
 		}
-		public void Stun( ushort stunStength, float stunTime )
+		public void Stun( byte stunStength, float stunTime )
 		{
 			if ( _controller.IsStunned = !_controller.ProvidenceStatistics.NoHitStun )
 			{
@@ -74,11 +74,11 @@ namespace GwambaPrimeAdventure.Enemy
 				_controller.OnDisable();
 				_controller.StunTimer = stunTime;
 			}
-			if ( 0 >= ( _controller.ArmorResistance -= (short) stunStength ) )
+			if ( 0 >= ( _controller.ArmorResistance = (byte) ( 0 <= _controller.ArmorResistance - stunStength ? _controller.ArmorResistance - stunStength : 0 ) ) )
 			{
 				_controller.OnDisable();
 				_controller.StunTimer = _controller.ProvidenceStatistics.StunnedTime;
-				_controller.ArmorResistance = (short) _controller.ProvidenceStatistics.HitResistance;
+				_controller.ArmorResistance = (byte) _controller.ProvidenceStatistics.HitResistance;
 			}
 		}
 	};
