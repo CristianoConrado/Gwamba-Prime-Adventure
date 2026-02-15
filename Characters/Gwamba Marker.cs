@@ -428,8 +428,6 @@ namespace GwambaPrimeAdventure.Character
 				if ( 0F >= ( _attackDelay -= Time.deltaTime ) )
 					for ( byte i = 0; _gwambaDamagers.Length > i; i++ )
 						_gwambaDamagers[ i ].damagedes.Clear();
-			_deltaTimeFPS += ( Time.unscaledDeltaTime - _deltaTimeFPS ) * 1E-1F;
-			_gwambaCanvas.ShowFPS.text = $"{1F / _deltaTimeFPS:F0} FPS";
 		}
 		private float BunnyHop( float callBackValue ) => 0 < _bunnyHopBoost ? _bunnyHopBoost * callBackValue : 0F;
 		private void FixedUpdate()
