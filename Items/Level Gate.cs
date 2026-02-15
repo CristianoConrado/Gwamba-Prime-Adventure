@@ -24,8 +24,8 @@ namespace GwambaPrimeAdventure.Item
 			_transitionSize = Vector2.zero,
 			_worldSpaceSize = Vector2.zero,
 			_activeSize = Vector2.zero;
-		private
-			short _defaultPriority = 0;
+		private sbyte
+			_defaultPriority = 0;
 		private bool
 			_isOnInteraction = false,
 			_isOnTransicion = false;
@@ -86,11 +86,11 @@ namespace GwambaPrimeAdventure.Item
 			_activeSize = BuildMathemathics.OrthographicToScreenSize( _gateCamera.Lens.OrthographicSize );
 			SaveController.Load( out SaveFile saveFile );
 			_levelGateScreen.Level.clicked += EnterLevel;
-			if ( saveFile.LevelsCompleted[ ushort.Parse( $"{_levelScene.SceneName[ ^1 ]}" ) - 1 ] )
+			if ( saveFile.LevelsCompleted[ byte.Parse( $"{_levelScene.SceneName[ ^1 ]}" ) - 1 ] )
 				_levelGateScreen.Boss.clicked += EnterBoss;
-			if ( saveFile.DeafetedBosses[ ushort.Parse( $"{_levelScene.SceneName[ ^1 ]}" ) - 1 ] )
+			if ( saveFile.DeafetedBosses[ byte.Parse( $"{_levelScene.SceneName[ ^1 ]}" ) - 1 ] )
 				_levelGateScreen.Scenes.clicked += ShowScenes;
-			_defaultPriority = (short) _gateCamera.Priority.Value;
+			_defaultPriority = (sbyte) _gateCamera.Priority.Value;
 		}
 		private void EnterLevel() => GetComponent<Transitioner>().Transicion( _levelScene );
 		private void EnterBoss() => GetComponent<Transitioner>().Transicion( _bossScene );
