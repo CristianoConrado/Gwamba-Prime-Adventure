@@ -8,6 +8,10 @@ namespace GwambaPrimeAdventure.Character
 	{
 		private static
 			GwambaCanvas _instance;
+		private ushort
+			_frameCount = 0;
+		private float
+			_totalTime = 0F;
 		[field: SerializeField, ColorUsage( true, true ), Tooltip( "The color of Gwamba's vitality bar background." ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F )]
 		internal Color BackgroundColor
 		{
@@ -56,6 +60,9 @@ namespace GwambaPrimeAdventure.Character
 		[SerializeField, Min( 0F ), Tooltip( "The border width of Gwamba's vitality bar." )]
 		private
 			float _borderWidth;
+		[SerializeField, Min( 0F ), Tooltip( "The time interval to show FPS." )]
+		private
+			float _intervalFPS;
 		internal VisualElement RootElement
 		{
 			get;
@@ -96,10 +103,10 @@ namespace GwambaPrimeAdventure.Character
 			get;
 			private set;
 		}
-		internal Label ShowFPS
+		private Label ShowFPS
 		{
 			get;
-			private set;
+			set;
 		}
 		private void Awake()
 		{
@@ -212,6 +219,16 @@ namespace GwambaPrimeAdventure.Character
 			Icons[ 0 ].style.height = _totalWidth / 2 * .375F;
 			Icons[ 1 ].style.width = _totalWidth / 2;
 			Icons[ 1 ].style.height = _totalWidth / 2 * .375F;
+		}
+		private void Update()
+		{
+			_frameCount++;
+			_totalTime += Time.unscaledDeltaTime;
+			if ( _totalTime >= _intervalFPS )
+			{
+				ShowFPS.text = $"{_frameCount / _totalTime:F0} FPS";
+				_totalTime = _frameCount = 0;
+			}
 		}
 	};
 };
