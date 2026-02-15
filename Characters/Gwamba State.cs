@@ -49,12 +49,6 @@ namespace GwambaPrimeAdventure.Character
 		protected Vector3
 			_localAtAny = Vector3.zero;
 		protected readonly ContactFilter2D
-			_castFilter = new ContactFilter2D()
-			{
-				layerMask = WorldBuild.SCENE_LAYER_MASK,
-				useLayerMask = true,
-				useTriggers = false
-			},
 			_interactionFilter = new ContactFilter2D()
 			{
 				layerMask = WorldBuild.SYSTEM_LAYER_MASK + WorldBuild.CHARACTER_LAYER_MASK + WorldBuild.SCENE_LAYER_MASK + WorldBuild.ITEM_LAYER_MASK,
