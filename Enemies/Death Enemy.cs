@@ -1,11 +1,9 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class DeathEnemy : EnemyProvider, ILoader, IDestructible
+	internal sealed class DeathEnemy : EnemyProvider, IDestructible
 	{
 		private
 			InstantiateParameters _deathParameters;
@@ -21,12 +19,9 @@ namespace GwambaPrimeAdventure.Enemy
 		[SerializeField, Tooltip( "The death statitics of this enemy." )]
 		private
 			DeathStatistics _statistics;
-		public async UniTask Load()
+		private new void Awake()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
+			base.Awake();
 			_deathParameters = new InstantiateParameters()
 			{
 				parent = transform,
