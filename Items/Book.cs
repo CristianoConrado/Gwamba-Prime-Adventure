@@ -1,27 +1,20 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Item
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( BoxCollider2D ) )]
-	internal sealed class Book : StateController, ILoader, ICollectable
+	internal sealed class Book : StateController, ICollectable
 	{
 		[SerializeField, Tooltip( "The sprite to show when the book gor cacthed." ), Header( "Conditions" )]
 		private
 			Sprite _bookCacthed;
-		public async UniTask Load()
+		private void Start()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
 			SaveController.Load( out SaveFile saveFile );
 			if ( saveFile.Books.ContainsKey( name ) )
 			{
 				if ( saveFile.Books[ name ] )
 					GetComponent<SpriteRenderer>().sprite = _bookCacthed;
-				await UniTask.Yield( PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 				return;
 			}
 			saveFile.Books.Add( name, false );
