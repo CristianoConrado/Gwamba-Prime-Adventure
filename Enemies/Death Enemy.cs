@@ -65,11 +65,11 @@ namespace GwambaPrimeAdventure.Enemy
 				_isDead = true;
 			}
 		}
-		public new bool Hurt( ushort damage )
+		public new bool Hurt( byte damage )
 		{
 			if ( _isDead )
 				return false;
-			if ( 0 >= Health - (short) damage && !_statistics.UseTimer )
+			if ( 0 >= Health - damage && !_statistics.UseTimer )
 			{
 				Animator.SetTrigger( Dying );
 				_sender.Send( MessagePath.Enemy );
