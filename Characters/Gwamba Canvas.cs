@@ -8,7 +8,7 @@ namespace GwambaPrimeAdventure.Character
 	{
 		private static
 			GwambaCanvas _instance;
-		private ushort
+		private byte
 			_frameCount = 0;
 		private float
 			_totalTime = 0F;
