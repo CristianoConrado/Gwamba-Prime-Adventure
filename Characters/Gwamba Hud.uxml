@@ -1,33 +1,37 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Characters/Designs/Gwamba%20Hud.uss?fileID=7433441132597879392&amp;guid=09c1d2f441fe8624d8a5be5bba1f7864&amp;type=3#Gwamba Hud" />
     <ui:VisualElement name="RootElement">
-        <ui:GroupBox name="Icons">
-            <ui:GroupBox name="SubIcon">
-                <ui:VisualElement name="LifeIcon" style="background-image: url(&quot;project://database/Assets/Characters/Designs/Gwamba.png?fileID=-837235628&amp;guid=6e5aacc0b23644643bd2658681a0951e&amp;type=3#Gwamba_Heart&quot;);" />
-                <ui:Label text="X 0" name="LifeText" />
+        <ui:GroupBox name="LeftBox">
+            <ui:GroupBox name="Icons">
+                <ui:GroupBox name="SubIcon">
+                    <ui:VisualElement name="LifeIcon" style="background-image: url(&quot;project://database/Assets/Characters/Designs/Gwamba.png?fileID=-837235628&amp;guid=6e5aacc0b23644643bd2658681a0951e&amp;type=3#Gwamba_Heart&quot;);" />
+                    <ui:Label text="X 0" name="LifeText" />
+                </ui:GroupBox>
+                <ui:GroupBox name="SubIcon">
+                    <ui:VisualElement name="CoinIcon" />
+                    <ui:Label text="X 0" name="CoinText" />
+                </ui:GroupBox>
             </ui:GroupBox>
-            <ui:GroupBox name="SubIcon">
-                <ui:VisualElement name="CoinIcon" />
-                <ui:Label text="X 0" name="CoinText" />
+            <ui:GroupBox name="BarShow">
+                <ui:GroupBox name="BarGroup">
+                    <ui:GroupBox name="Vitality">
+                        <ui:VisualElement name="VitalityPiece" />
+                    </ui:GroupBox>
+                    <ui:GroupBox name="RecoverVitality">
+                        <ui:VisualElement name="RecoverVitalityPiece" />
+                    </ui:GroupBox>
+                    <ui:GroupBox name="StunResistance">
+                        <ui:VisualElement name="StunResistancePiece" />
+                    </ui:GroupBox>
+                    <ui:GroupBox name="BunnyHop">
+                        <ui:VisualElement name="BunnyHopPiece" />
+                    </ui:GroupBox>
+                </ui:GroupBox>
+                <ui:Label text="X 0" name="FallDamageText" />
             </ui:GroupBox>
         </ui:GroupBox>
-        <ui:GroupBox name="BarShow">
-            <ui:GroupBox name="BarGroup">
-                <ui:GroupBox name="Vitality">
-                    <ui:VisualElement name="VitalityPiece" />
-                </ui:GroupBox>
-                <ui:GroupBox name="RecoverVitality">
-                    <ui:VisualElement name="RecoverVitalityPiece" />
-                </ui:GroupBox>
-                <ui:GroupBox name="StunResistance">
-                    <ui:VisualElement name="StunResistancePiece" />
-                </ui:GroupBox>
-                <ui:GroupBox name="BunnyHop">
-                    <ui:VisualElement name="BunnyHopPiece" />
-                </ui:GroupBox>
-            </ui:GroupBox>
-            <ui:Label text="X 0" name="FallDamageText" />
+        <ui:GroupBox name="BoxShowFPS">
+            <ui:Label name="ShowFPS" text="0 FPS"/>
         </ui:GroupBox>
-        <ui:Label name="ShowFPS" text="0 FPS" />
     </ui:VisualElement>
 </ui:UXML>
