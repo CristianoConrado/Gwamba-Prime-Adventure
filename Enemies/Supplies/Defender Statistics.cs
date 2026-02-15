@@ -7,7 +7,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	{
 		[field: SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )]
 		[field: Header( "Defender Enemy", order = 0 ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F, order = 1 )]
-		public short BiggerDamage
+		public byte BiggerDamage
 		{
 			get;
 			private set;
