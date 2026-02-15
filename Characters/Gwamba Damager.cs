@@ -63,7 +63,7 @@ namespace GwambaPrimeAdventure.Character
 				_spriteRenderer.color = _alphaChanger;
 			}
 		}
-		public sbyte Health => 0;
+		public byte Health => 0;
 		private async void Start()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
