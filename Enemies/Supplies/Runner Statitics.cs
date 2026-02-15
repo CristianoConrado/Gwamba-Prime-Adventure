@@ -90,7 +90,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, ShowIf( nameof( ReactToDamage ) ), Tooltip( "The index of the event executed in the retreat." )]
-		public ushort EventIndex
+		public byte EventIndex
 		{
 			get;
 			private set;
