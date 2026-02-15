@@ -16,14 +16,14 @@ namespace GwambaPrimeAdventure
 			Vector2Int
 				maximumResolution = new(),
 				indeedResolution = new();
-			for ( int i = Screen.resolutions.Length - 1; 0 < i; i-- )
+			for ( byte i = (byte) ( Screen.resolutions.Length - 1 ); 0 < i; i-- )
 				if ( 0 == Screen.resolutions[ i ].width % ( WorldBuild.PIXEL_PERFECT_WIDTH * WorldBuild.DESIRED_PIXEL_PERFECT_SCALE )
 					&& 0 == Screen.resolutions[ i ].height % ( WorldBuild.PIXEL_PERFECT_HEIGHT * WorldBuild.DESIRED_PIXEL_PERFECT_SCALE ) )
 				{
 					maximumResolution.Set( Screen.resolutions[ i ].width, Screen.resolutions[ i ].height );
 					break;
 				}
-			for ( ushort i = WorldBuild.DESIRED_PIXEL_PERFECT_SCALE; WorldBuild.MAXIMUM_PIXEL_PERFECT_SCALE > i; i += WorldBuild.DESIRED_PIXEL_PERFECT_SCALE )
+			for ( byte i = WorldBuild.DESIRED_PIXEL_PERFECT_SCALE; WorldBuild.MAXIMUM_PIXEL_PERFECT_SCALE > i; i += WorldBuild.DESIRED_PIXEL_PERFECT_SCALE )
 			{
 				indeedResolution.Set( WorldBuild.PIXEL_PERFECT_WIDTH * i, WorldBuild.PIXEL_PERFECT_HEIGHT * i );
 				resolutions.Add( indeedResolution );
@@ -48,12 +48,12 @@ namespace GwambaPrimeAdventure
 		public static bool MoreOrEqual( this Vector2 firstVector, Vector2 otherVector ) => firstVector.x >= otherVector.x && firstVector.y >= otherVector.y;
 		public static bool LessOrEqual( this Vector2 firstVector, Vector2 otherVector ) => firstVector.x <= otherVector.x && firstVector.y <= otherVector.y;
 		public static float Negative( this float input ) => -Mathf.Abs( input );
-		public static short RangeNormalize( this float input, float maxDelimiter, float minDelimiter ) =>
-			(short) ( input.CompareTo( Mathf.Abs( maxDelimiter ) ) + input.CompareTo( minDelimiter.Negative() ) ).CompareTo( 0 );
-		public static short RangeNormalize( this float input, float rangeDelimiter ) => RangeNormalize( input, rangeDelimiter, rangeDelimiter );
-		public static short RangeNormalizeWithoutZero( this float input, float maxDelimiter, float minDelimiter, bool negativePriority = false ) =>
-			(short) ( ( _outpuNormalized = RangeNormalize( input, maxDelimiter, minDelimiter ) ) + ( 0F == _outpuNormalized ? ( negativePriority ? -1F : 1F ) : 0F ) );
-		public static short RangeNormalizeWithoutZero( this float input, float rangeDelimiter, bool negativePriority = false ) =>
+		public static sbyte RangeNormalize( this float input, float maxDelimiter, float minDelimiter ) =>
+			(sbyte) ( input.CompareTo( Mathf.Abs( maxDelimiter ) ) + input.CompareTo( minDelimiter.Negative() ) ).CompareTo( 0 );
+		public static sbyte RangeNormalize( this float input, float rangeDelimiter ) => RangeNormalize( input, rangeDelimiter, rangeDelimiter );
+		public static sbyte RangeNormalizeWithoutZero( this float input, float maxDelimiter, float minDelimiter, bool negativePriority = false ) =>
+			(sbyte) ( ( _outpuNormalized = RangeNormalize( input, maxDelimiter, minDelimiter ) ) + ( 0F == _outpuNormalized ? ( negativePriority ? -1F : 1F ) : 0F ) );
+		public static sbyte RangeNormalizeWithoutZero( this float input, float rangeDelimiter, bool negativePriority = false ) =>
 			RangeNormalizeWithoutZero(input, rangeDelimiter, rangeDelimiter, negativePriority);
 		public static bool InsideRange( this float valueInside, float originValue, float sizeValue ) =>
 			originValue + sizeValue / 2F >= valueInside && originValue - sizeValue / 2F <= valueInside;
