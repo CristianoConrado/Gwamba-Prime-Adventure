@@ -10,7 +10,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Tilemap ), typeof( TilemapRenderer ), typeof( TilemapCollider2D ) )]
 	[RequireComponent( typeof( CompositeCollider2D ), typeof( Light2DBase ), typeof( Receptor ) )]
-	internal sealed class HiddenPlace : StateController, ILoader, ISignalReceptor
+	internal sealed class HiddenPlace : StateController, ISignalReceptor
 	{
 		private
 			Tilemap _tilemap;
@@ -79,12 +79,9 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			base.OnDestroy();
 			EffectsController.OffGlobalLight( _selfLight );
 		}
-		public async UniTask Load()
+		private void Start()
 		{
 			_destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
-			if ( _destroyToken.IsCancellationRequested )
-				return;
 			_activation = !_fadeActivation;
 			if ( _isReceptor )
 			{
