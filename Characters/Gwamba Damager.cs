@@ -15,9 +15,9 @@ namespace GwambaPrimeAdventure.Character
 		internal readonly HashSet<IDestructible>
 			damagedes = new HashSet<IDestructible>();
 		internal event
-			Predicate<ushort> DamagerHurt;
+			Predicate<byte> DamagerHurt;
 		internal event
-			UnityAction<ushort, float> DamagerStun;
+			UnityAction<byte, float> DamagerStun;
 		internal event
 			UnityAction<GwambaDamager, IDestructible> DamagerAttack;
 		private Color
@@ -34,7 +34,7 @@ namespace GwambaPrimeAdventure.Character
 			private set;
 		}
 		[field: SerializeField, HideIf( nameof( _takeDamage ) ), Tooltip( "The amount of damage that the attack of Gwamba hits." )]
-		internal ushort AttackDamage
+		internal byte AttackDamage
 		{
 			get;
 			private set;
@@ -63,7 +63,7 @@ namespace GwambaPrimeAdventure.Character
 				_spriteRenderer.color = _alphaChanger;
 			}
 		}
-		public short Health => 0;
+		public sbyte Health => 0;
 		private async void Start()
 		{
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
@@ -78,8 +78,8 @@ namespace GwambaPrimeAdventure.Character
 			if ( !_takeDamage && other.TryGetComponent<IDestructible>( out var destructible ) && destructible is not null && !damagedes.Contains( destructible.Source ) )
 				DamagerAttack?.Invoke( this, destructible );
 		}
-		public bool Hurt( ushort damage ) => _takeDamage && ( _hurtCondition = DamagerHurt?.Invoke( damage ) ).HasValue && _hurtCondition.Value;
-		public void Stun( ushort stunStength, float stunTime )
+		public bool Hurt( byte damage ) => _takeDamage && ( _hurtCondition = DamagerHurt?.Invoke( damage ) ).HasValue && _hurtCondition.Value;
+		public void Stun( byte stunStength, float stunTime )
 		{
 			if ( _takeDamage )
 				DamagerStun?.Invoke( stunStength, stunTime );
