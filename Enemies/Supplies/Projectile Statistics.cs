@@ -115,7 +115,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, ShowIf( EConditionOperator.Or, nameof( InDeath ), nameof( UseQuantity ) ), Tooltip( "The amount of second projectiles to instantiate." )]
-		public ushort QuantityToSummon
+		public byte QuantityToSummon
 		{
 			get;
 			private set;
@@ -127,7 +127,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, HideIf( nameof( NoDamage ) ), Tooltip( "The vitality of this projectile." )]
-		public ushort Vitality
+		public byte Vitality
 		{
 			get;
 			private set;
@@ -163,7 +163,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, HideIf( nameof( NoHit ) ), Tooltip( "The amount of damage this projectile will cause to a target." )]
-		public ushort Damage
+		public byte Damage
 		{
 			get;
 			private set;
@@ -224,25 +224,25 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, ShowIf( nameof( InCell ) ), Tooltip( "The amount of cell points to jump the instantiation." )]
-		public ushort JumpPoints
+		public byte JumpPoints
 		{
 			get;
 			private set;
 		}
 		[field: SerializeField, ShowIf( nameof( InCell ) ), Tooltip( "The exact point where the break of the instantiantion start." )]
-		public ushort BreakPoint
+		public byte BreakPoint
 		{
 			get;
 			private set;
 		}
 		[field: SerializeField, ShowIf( nameof( InCell ) ), Tooltip( "The exact point where the instantiation returns." )]
-		public ushort ReturnPoint
+		public byte ReturnPoint
 		{
 			get;
 			private set;
 		}
 		[field: SerializeField, ShowIf( nameof( InCell ) ), Tooltip( "The minimum value the break point can break." )]
-		public ushort MinimumRandomValue
+		public byte MinimumRandomValue
 		{
 			get;
 			private set;
