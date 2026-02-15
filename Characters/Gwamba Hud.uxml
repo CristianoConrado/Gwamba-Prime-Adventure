@@ -3,7 +3,7 @@
     <ui:VisualElement name="RootElement">
         <ui:GroupBox name="Icons">
             <ui:GroupBox name="SubIcon">
-                <ui:VisualElement name="LifeIcon" style="background-image: url(&quot;project://database/Assets/Characters/Designs/Gwamba.png?fileID=-837235628&amp;guid=6e5aacc0b23644643bd2658681a0951e&amp;type=3#Gwamba_8&quot;);" />
+                <ui:VisualElement name="LifeIcon" style="background-image: url(&quot;project://database/Assets/Characters/Designs/Gwamba.png?fileID=-837235628&amp;guid=6e5aacc0b23644643bd2658681a0951e&amp;type=3#Gwamba_Heart&quot;);" />
                 <ui:Label text="X 0" name="LifeText" />
             </ui:GroupBox>
             <ui:GroupBox name="SubIcon">
@@ -28,5 +28,6 @@
             </ui:GroupBox>
             <ui:Label text="X 0" name="FallDamageText" />
         </ui:GroupBox>
+        <ui:Label name="ShowFPS" text="0 FPS" />
     </ui:VisualElement>
 </ui:UXML>
