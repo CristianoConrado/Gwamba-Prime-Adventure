@@ -26,12 +26,12 @@ namespace GwambaPrimeAdventure
 		{
 			get;
 		}
-		public short Health
+		public sbyte Health
 		{
 			get;
 		}
-		public bool Hurt( ushort damage );
-		public void Stun( ushort stunStength, float stunTime );
+		public bool Hurt( byte damage );
+		public void Stun( byte stunStength, float stunTime );
 	};
 	public interface IInteractable
 	{
