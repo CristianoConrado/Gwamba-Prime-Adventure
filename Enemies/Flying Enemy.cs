@@ -1,12 +1,10 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( PolygonCollider2D ) )]
-	internal sealed class FlyingEnemy : MovingEnemy, ILoader, IConnector
+	internal sealed class FlyingEnemy : MovingEnemy, IEnemyLoader, IConnector
 	{
 		private
 			CircleCollider2D _selfCollider;
@@ -21,7 +19,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private
 			ContactFilter2D _dashFilter;
 		private Vector2
-			_movementDirection = Vector2.zero,
+			_movementDirection = Vector2.up,
 			_pointOrigin = Vector2.zero,
 			_targetPoint = Vector2.zero;
 		private readonly int
@@ -31,7 +29,6 @@ namespace GwambaPrimeAdventure.Enemy
 		private ushort
 			_dashSize = 0;
 		private bool
-			_started = false,
 			_returnOrigin = false,
 			_afterDash = false,
 			_returnDash = false;
@@ -45,35 +42,6 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			base.Awake();
 			_selfCollider = _collider as CircleCollider2D;
-			Sender.Include( this );
-		}
-		private new void OnDestroy()
-		{
-			base.OnDestroy();
-			Sender.Exclude( this );
-		}
-		public async new UniTask Load()
-		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
-			GameObject detectionObject = new( "Detection Collider", typeof( CapsuleCollider2D ) )
-			{
-				layer = WorldBuild.ENEMY_LAYER,
-				tag = tag
-			};
-			( _detectionObject = detectionObject.transform ).SetParent( transform );
-			_detectionObject.localPosition = Vector3.zero;
-			_detectionCollider = detectionObject.GetComponent<CapsuleCollider2D>();
-			_detectionCollider.size = new Vector2( 2F * _selfCollider.radius, 4F * _selfCollider.radius );
-			_detectionCollider.direction = CapsuleDirection2D.Vertical;
-			_detectionCollider.isTrigger = true;
-			_detectionCollider.contactCaptureLayers = WorldBuild.SCENE_LAYER_MASK;
-			_detectionCollider.callbackLayers = WorldBuild.SCENE_LAYER_MASK;
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
 			PolygonCollider2D trail = GetComponent<PolygonCollider2D>();
 			_trail = new Vector2[ trail.points.Length ];
 			for ( byte i = 0; trail.points.Length > i; i++ )
@@ -84,9 +52,29 @@ namespace GwambaPrimeAdventure.Enemy
 				useLayerMask = true,
 				useTriggers = false
 			};
-			_movementDirection = Vector2.right * _movementSide;
 			_pointOrigin = Rigidbody.position;
-			_started = true;
+			Sender.Include( this );
+		}
+		private new void OnDestroy()
+		{
+			base.OnDestroy();
+			Sender.Exclude( this );
+		}
+		public void Load()
+		{
+			GameObject detectionObject = new( "Detection Collider", typeof( CapsuleCollider2D ) )
+			{
+				layer = gameObject.layer,
+				tag = tag
+			};
+			( _detectionObject = detectionObject.transform ).SetParent( transform );
+			_detectionObject.localPosition = Vector3.zero;
+			_detectionCollider = detectionObject.GetComponent<CapsuleCollider2D>();
+			_detectionCollider.size = new Vector2( 2F * _selfCollider.radius, 4F * _selfCollider.radius );
+			_detectionCollider.direction = CapsuleDirection2D.Vertical;
+			_detectionCollider.isTrigger = true;
+			_detectionCollider.contactCaptureLayers = WorldBuild.SCENE_LAYER_MASK;
+			_detectionCollider.callbackLayers = WorldBuild.SCENE_LAYER_MASK;
 		}
 		private void Chasing()
 		{
@@ -147,6 +135,7 @@ namespace GwambaPrimeAdventure.Enemy
 					Animator.SetBool( Move, true );
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _pointOrigin, Time.fixedDeltaTime * _statistics.ReturnSpeed ) );
 				transform.TurnScaleX( _pointOrigin.x < Rigidbody.position.x );
+				_movementDirection = ( _pointOrigin - Rigidbody.position ).normalized;
 				_returnOrigin = Vector2.Distance( Rigidbody.position, _pointOrigin ) > WorldBuild.MINIMUM_TIME_SPACE_LIMIT;
 			}
 			else if ( 0 < _trail.Length )
@@ -157,6 +146,7 @@ namespace GwambaPrimeAdventure.Enemy
 					_pointIndex = (byte) ( _pointIndex < _trail.Length - 1 ? _pointIndex + 1 : 0 );
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _trail[ _pointIndex ], Time.fixedDeltaTime * _statistics.MovementSpeed ) );
 				transform.TurnScaleX( _trail[ _pointIndex ].x < Rigidbody.position.x );
+				_movementDirection = ( _trail[ _pointIndex ] - Rigidbody.position ).normalized;
 				_pointOrigin = Rigidbody.position;
 			}
 		}
@@ -178,7 +168,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void FixedUpdate()
 		{
 			base.FixedUpdate();
-			if ( Animator.GetBool( Stop ) || IsStunned || !_started || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stop ) || IsStunned || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.Target )
 			{
