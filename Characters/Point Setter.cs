@@ -1,11 +1,9 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Connection;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Character
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( BoxCollider2D ) )]
-	internal sealed class PointSetter : StateController, ILoader
+	internal sealed class PointSetter : StateController
 	{
 		private static
 			PointSetter Instance;
@@ -25,12 +23,8 @@ namespace GwambaPrimeAdventure.Character
 			Instance ? Instance.transform.position : Vector2.zero;
 		internal static bool TurnToLeft =>
 			Instance ? Instance._turnToLeft : false;
-		public async UniTask Load()
+		private void Start()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
 			SaveController.Load( out SaveFile saveFile );
 			if ( gameObject.scene.name == _hubbyWorldScene && !string.IsNullOrEmpty( saveFile.LastLevelEntered ) && saveFile.LastLevelEntered.Contains( $"{_selfIndex}" ) )
 				Instance = this;
