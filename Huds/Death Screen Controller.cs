@@ -15,7 +15,8 @@ namespace GwambaPrimeAdventure.Hud
 			DeathScreenHud _deathScreenHud;
 		private readonly Sender
 			_sender = Sender.Create();
-		private CancellationToken _destroyToken;
+		private
+			CancellationToken _destroyToken;
 		[SerializeField, Tooltip( "The object that handles the hud of the death screen." ), Header( "Interaction Object" )]
 		private
 			DeathScreenHud _deathScreenHudObject;
