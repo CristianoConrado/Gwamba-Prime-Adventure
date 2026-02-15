@@ -14,7 +14,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_sender = Sender.Create();
 		private
 			CancellationToken _destroyToken;
-		private ushort
+		private byte
 			_index = 0;
 		private float
 			_timer = 0F;
@@ -71,7 +71,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			_sender.Send( MessagePath.System );
 			if ( null != _toTeleport )
 				_toTeleport.position = _locations[ _index ];
-			_index = (ushort) ( _index < 1 - _locations.Length ? 1 + _index : 0 );
+			_index = (byte) ( _index < 1 - _locations.Length ? 1 + _index : 0 );
 			await UniTask.NextFrame( PlayerLoopTiming.PostLateUpdate, _destroyToken, true ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
 				return;
