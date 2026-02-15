@@ -1,4 +1,4 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/System/Huds/Designs/Interaction%20Hud.uss?fileID=7433441132597879392&amp;guid=5a7020bab54fd114088641f7e15e805f&amp;type=3#Interaction Hud" />
+    <Style src="project://database/Assets/Huds/Designs/Interaction%20Hud.uss?fileID=7433441132597879392&amp;guid=5a7020bab54fd114088641f7e15e805f&amp;type=3#Interaction Hud" />
     <ui:VisualElement name="ExclamationSignal" />
 </ui:UXML>
