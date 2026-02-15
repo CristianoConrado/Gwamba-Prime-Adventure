@@ -9,7 +9,7 @@ namespace GwambaPrimeAdventure.Item
 	{
 		[SerializeField, Tooltip( "The index that this object will check if theres anything completed." ), Header( "Progress Interactions" )]
 		private
-			ushort _progressIndex;
+			byte _progressIndex;
 		[SerializeField, Tooltip( "If the index is about the boss." )]
 		private
 			bool _isBossProgress;
