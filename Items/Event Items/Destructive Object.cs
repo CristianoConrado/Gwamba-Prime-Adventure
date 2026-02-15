@@ -18,7 +18,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		private
 			bool _destroyOnCollision;
 		[field: SerializeField, Tooltip( "The vitality of this object before it destruction." )]
-		public sbyte Health
+		public byte Health
 		{
 			get;
 			private set;
@@ -51,7 +51,7 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		{
 			if ( damage < _biggerDamage || 0 >= Health )
 				return false;
-			if ( 0 >= ( Health -= (sbyte) damage ) )
+			if ( 0 >= ( Health = (byte) ( 0 <= Health - damage ? Health - damage : 0 ) ) )
 				Execute();
 			return true;
 		}
