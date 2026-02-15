@@ -17,7 +17,7 @@ namespace GwambaPrimeAdventure.Item
 			GameObject _generatedItem;
 		[SerializeField, Tooltip( "The amount of items that have to be generated." )]
 		private
-			ushort _quantityToGenerate;
+			byte _quantityToGenerate;
 		[SerializeField, Tooltip( "The amount of time to waits to generation." )]
 		private
 			float _generationTime;
