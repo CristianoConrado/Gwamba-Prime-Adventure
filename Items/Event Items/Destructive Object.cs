@@ -13,12 +13,12 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			OcclusionObject _occlusionObject;
 		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." )]
 		private
-			short _biggerDamage;
+			byte _biggerDamage;
 		[SerializeField, Tooltip( "If this object will be destructed on collision with another object." )]
 		private
 			bool _destroyOnCollision;
 		[field: SerializeField, Tooltip( "The vitality of this object before it destruction." )]
-		public short Health
+		public sbyte Health
 		{
 			get;
 			private set;
@@ -47,14 +47,14 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		}
 		private void OnCollisionEnter2D( Collision2D collision ) => DestroyOnCollision();
 		private void OnTriggerEnter2D( Collider2D collision ) => DestroyOnCollision();
-		public bool Hurt( ushort damage )
+		public bool Hurt( byte damage )
 		{
 			if ( damage < _biggerDamage || 0 >= Health )
 				return false;
-			if ( 0 >= ( Health -= (short) damage ) )
+			if ( 0 >= ( Health -= (sbyte) damage ) )
 				Execute();
 			return true;
 		}
-		public void Stun( ushort stunStrength, float stunTime ) { }
+		public void Stun( byte stunStrength, float stunTime ) { }
 	};
 };
