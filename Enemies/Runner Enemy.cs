@@ -1,12 +1,10 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class RunnerEnemy : MovingEnemy, ILoader, IConnector, IDestructible
+	internal sealed class RunnerEnemy : MovingEnemy, IConnector, IDestructible
 	{
 		private readonly RaycastHit2D[]
 			_detections = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
@@ -35,21 +33,14 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void Awake()
 		{
 			base.Awake();
+			_timeRun = _statistics.RunOfTime;
+			_dashTime = _statistics.TimeToDash;
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
 			Sender.Exclude( this );
-		}
-		public async new UniTask Load()
-		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
-			_timeRun = _statistics.RunOfTime;
-			_dashTime = _statistics.TimeToDash;
 		}
 		private void InvencibleDash()
 		{
