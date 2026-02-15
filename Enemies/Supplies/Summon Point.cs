@@ -8,14 +8,14 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		private
 			ISummoner _summoner;
 		private
-			ushort _summonIndex;
+			byte _summonIndex;
 		[SerializeField, Tooltip( "If this point will destroy itself after use." ), Header( "Interactions" )]
 		private
 			bool _destroyAfter;
 		[SerializeField, Tooltip( "If this point will trigger with other object." )]
 		private
 			bool _hasTarget;
-		public void GetTouch( ISummoner summoner, ushort summonIndex )
+		public void GetTouch( ISummoner summoner, byte summonIndex )
 		{
 			_summoner = summoner;
 			_summonIndex = summonIndex;
