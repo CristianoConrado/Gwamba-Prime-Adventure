@@ -15,7 +15,7 @@ namespace GwambaPrimeAdventure
 		[SerializeField, Tooltip( "The objects to be loaded." )]
 		private
 			ObjectLoader[] _objectLoaders;
-		internal static ushort
+		internal static byte
 			ProgressIndex = 0;
 		private void Awake()
 		{
