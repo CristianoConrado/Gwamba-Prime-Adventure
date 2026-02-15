@@ -28,14 +28,14 @@ namespace GwambaPrimeAdventure.Enemy
 		public IDestructible Source => this;
 		public MessagePath Path =>
 			MessagePath.Enemy;
-		public short Health =>
+		public byte Health =>
 			_vitality;
-		internal short Vitality
+		internal byte Vitality
 		{
 			get => _vitality;
 			set => _vitality = value;
 		}
-		internal short ArmorResistance
+		internal byte ArmorResistance
 		{
 			get => _armorResistance;
 			set => _armorResistance = value;
@@ -60,7 +60,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_rigidbody = GetComponent<Rigidbody2D>();
 			_screenShaker = GetComponent<CinemachineImpulseSource>();
 			_destructibleEnemy = _selfEnemies[ 0 ];
-			for ( ushort i = 1; _selfEnemies.Length > i; i++ )
+			for ( byte i = 1; _selfEnemies.Length > i; i++ )
 				if ( _selfEnemies[ i ].DestructilbePriority > _destructiblePriority )
 				{
 					_destructiblePriority = _selfEnemies[ i ].DestructilbePriority;
@@ -114,8 +114,8 @@ namespace GwambaPrimeAdventure.Enemy
 			await UniTask.WaitWhile( () => SceneInitiator.IsInTransition(), PlayerLoopTiming.Update, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
-			_vitality = (short) ProvidenceStatistics.Vitality;
-			_armorResistance = (short) ProvidenceStatistics.HitResistance;
+			_vitality = (byte) ProvidenceStatistics.Vitality;
+			_armorResistance = (byte) ProvidenceStatistics.HitResistance;
 			_fadeTime = ProvidenceStatistics.TimeToFadeAway;
 			foreach ( EnemyProvider enemy in _selfEnemies )
 				enemy.enabled = true;
@@ -149,8 +149,8 @@ namespace GwambaPrimeAdventure.Enemy
 				EffectsController.HitStop( ProvidenceStatistics.HitStopTime, ProvidenceStatistics.HitSlowTime );
 			}
 		}
-		public bool Hurt( ushort damage ) => !ProvidenceStatistics.NoDamage && 0 < damage && _destructibleEnemy.Hurt( damage );
-		public void Stun( ushort stunStength, float stunTime )
+		public bool Hurt( byte damage ) => !ProvidenceStatistics.NoDamage && 0 < damage && _destructibleEnemy.Hurt( damage );
+		public void Stun( byte stunStength, float stunTime )
 		{
 			if ( ProvidenceStatistics.NoStun || _stunned )
 				return;
@@ -161,7 +161,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( MessageFormat.None == message.Format && message.ToggleValue.HasValue )
 			{
 				OnDisable();
-				for ( ushort i = 0; _selfEnemies.Length > i; i++ )
+				for ( byte i = 0; _selfEnemies.Length > i; i++ )
 					_selfEnemies[ i ].enabled = message.ToggleValue.Value;
 			}
 		}
