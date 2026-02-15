@@ -6,15 +6,15 @@ namespace GwambaPrimeAdventure.Item.EventItem
 	{
 		[SerializeField, Tooltip( "The amount of damage that this object have to receive real damage." ), Header( "Hit Activator" )]
 		private
-			ushort _biggerDamage;
+			byte _biggerDamage;
 		public IDestructible Source => this;
-		public short Health => 0;
-		public bool Hurt( ushort damage )
+		public sbyte Health => 0;
+		public bool Hurt( byte damage )
 		{
 			if ( damage >= _biggerDamage && Usable )
 				Activation();
 			return damage >= _biggerDamage && Usable;
 		}
-		public void Stun( ushort stunStrength, float stunTime ) { }
+		public void Stun( byte stunStrength, float stunTime ) { }
 	};
 };
