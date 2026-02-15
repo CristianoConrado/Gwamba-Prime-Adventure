@@ -677,7 +677,7 @@ namespace GwambaPrimeAdventure.Character
 					} ) )
 						return;
 					_localAtStart.x = Local.x - ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
-					if ( _downStairs = 0 < Physics2D.Raycast( _localAtStart, -transform.up, _castFilter, _castHits, WorldBuild.SNAP_LENGTH + 1F ) )
+					if ( _downStairs = 0 < Physics2D.RaycastNonAlloc( _localAtStart, -transform.up, _castHits, WorldBuild.SNAP_LENGTH + 1F, WorldBuild.SCENE_LAYER_MASK ) )
 					{
 						_localAtSurface.x = transform.position.x + WorldBuild.SNAP_LENGTH * DownStairsDistance * _localAtAny.x;
 						_localAtSurface.y = transform.position.y - _castHits[ 0 ].distance;
