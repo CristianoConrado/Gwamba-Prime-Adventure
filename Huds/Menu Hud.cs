@@ -73,16 +73,16 @@ namespace GwambaPrimeAdventure.Hud
 			Quit = root.Q<Button>( nameof( Quit ) );
 			Back = root.Q<Button>( nameof( Back ) );
 			SaveName = new TextField[ 4 ];
-			for ( ushort i = 0; SaveName.Length > i; i++ )
+			for ( byte i = 0; SaveName.Length > i; i++ )
 				SaveName[ i ] = root.Q<TextField>( $"{nameof( SaveName )}{1 + i}" );
 			RenameFile = new Button[ 4 ];
-			for ( ushort i = 0; SaveName.Length > i; i++ )
+			for ( byte i = 0; SaveName.Length > i; i++ )
 				RenameFile[ i ] = root.Q<Button>( $"{nameof( RenameFile )}{1 + i}" );
 			Load = new Button[ 4 ];
-			for ( ushort i = 0; Load.Length > i; i++ )
+			for ( byte i = 0; Load.Length > i; i++ )
 				Load[ i ] = root.Q<Button>( $"{nameof( Load )}{1 + i}" );
 			Delete = new Button[ 4 ];
-			for ( ushort i = 0; SaveName.Length > i; i++ )
+			for ( byte i = 0; SaveName.Length > i; i++ )
 				Delete[ i ] = root.Q<Button>( $"{nameof( Delete )}{1 + i}" );
 		}
 	};
