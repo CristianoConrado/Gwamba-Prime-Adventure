@@ -144,8 +144,8 @@ namespace GwambaPrimeAdventure.Character
 			SaveController.Load( out SaveFile saveFile );
 			_gwambaCanvas.LifeText.text = $"X {saveFile.Lifes}";
 			_gwambaCanvas.CoinText.text = $"X {saveFile.Coins}";
-			_vitality = (sbyte) _gwambaCanvas.Vitality.Length;
-			_stunResistance = (sbyte) _gwambaCanvas.StunResistance.Length;
+			_vitality = (byte) _gwambaCanvas.Vitality.Length;
+			_stunResistance = (byte) _gwambaCanvas.StunResistance.Length;
 			for ( byte i = 0; _gwambaDamagers.Length > i; i++ )
 			{
 				_gwambaDamagers[ i ].DamagerHurt += DamagerHurt;
@@ -178,7 +178,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void RestartState()
 		{
-			for ( byte i = 0; ( _vitality = (sbyte) _gwambaCanvas.Vitality.Length ) > i; i++ )
+			for ( byte i = 0; ( _vitality = (byte) _gwambaCanvas.Vitality.Length ) > i; i++ )
 			{
 				_gwambaCanvas.Vitality[ i ].style.backgroundColor = _gwambaCanvas.BackgroundColor;
 				_gwambaCanvas.Vitality[ i ].style.borderBottomColor = _gwambaCanvas.BorderColor;
@@ -188,7 +188,7 @@ namespace GwambaPrimeAdventure.Character
 			}
 			for ( byte i = _recoverVitality = 0; _gwambaCanvas.RecoverVitality.Length > i; i++ )
 				_gwambaCanvas.RecoverVitality[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
-			for ( byte i = 0; ( _stunResistance = (sbyte) _gwambaCanvas.StunResistance.Length ) > i; i++ )
+			for ( byte i = 0; ( _stunResistance = (byte) _gwambaCanvas.StunResistance.Length ) > i; i++ )
 				_gwambaCanvas.StunResistance[ i ].style.backgroundColor = _gwambaCanvas.StunResistanceColor;
 			for ( byte i = _bunnyHopBoost = 0; _gwambaCanvas.BunnyHop.Length > i; i++ )
 				_gwambaCanvas.BunnyHop[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
@@ -283,10 +283,10 @@ namespace GwambaPrimeAdventure.Character
 			if ( _invencibility || 0 >= damage || _animator.GetBool( Death ) )
 				return false;
 			EffectsController.SoundEffect( HurtSound, transform.position );
-			_vitality -= (sbyte) damage;
+			_vitality = (byte) ( 0 <= _vitality - damage ? _vitality - damage : 0 );
 			_timerOfInvencibility = InvencibilityTime;
 			_invencibility = true;
-			for ( byte i = (byte) _gwambaCanvas.Vitality.Length; ( 0 <= _vitality ? _vitality : 0 ) < i; i-- )
+			for ( byte i = (byte) _gwambaCanvas.Vitality.Length; _vitality < i; i-- )
 			{
 				_gwambaCanvas.Vitality[ i - 1 ].style.backgroundColor = _gwambaCanvas.MissingColor;
 				_gwambaCanvas.Vitality[ i - 1 ].style.borderBottomColor = _gwambaCanvas.MissingColor;
@@ -330,8 +330,8 @@ namespace GwambaPrimeAdventure.Character
 		}
 		public void DamagerStun( byte stunStrength, float stunTime )
 		{
-			_stunResistance -= (sbyte) stunStrength;
-			for ( byte i = (byte) _gwambaCanvas.StunResistance.Length; ( 0 <= _stunResistance ? _stunResistance : 0 ) < i; i-- )
+			_stunResistance = (byte) ( 0 <= _stunResistance - stunStrength ? _stunResistance - stunStrength : 0 );
+			for ( byte i = (byte) _gwambaCanvas.StunResistance.Length; _stunResistance < i; i-- )
 				_gwambaCanvas.StunResistance[ i - 1 ].style.backgroundColor = _gwambaCanvas.MissingColor;
 			if ( 0 >= _stunResistance && !_animator.GetBool( Death ) )
 			{
@@ -348,7 +348,7 @@ namespace GwambaPrimeAdventure.Character
 				_animator.SetBool( Stun, !( _invencibility = false ) );
 				for ( byte i = 0; _gwambaDamagers.Length > i; i++ )
 					_gwambaDamagers[ i ].Alpha = 1F;
-				for ( byte i = 0; ( _stunResistance = (sbyte) _gwambaCanvas.StunResistance.Length ) > i; i++ )
+				for ( byte i = 0; ( _stunResistance = (byte) _gwambaCanvas.StunResistance.Length ) > i; i++ )
 					_gwambaCanvas.StunResistance[ i ].style.backgroundColor = _gwambaCanvas.StunResistanceColor;
 				EffectsController.SoundEffect( StunSound, transform.position );
 			}
@@ -378,7 +378,7 @@ namespace GwambaPrimeAdventure.Character
 						}
 						for ( byte i = _recoverVitality = 0; _gwambaCanvas.RecoverVitality.Length > i; i++ )
 							_gwambaCanvas.RecoverVitality[ i ].style.backgroundColor = _gwambaCanvas.MissingColor;
-						_stunResistance = (sbyte) ( _stunResistance < _gwambaCanvas.StunResistance.Length ? _stunResistance + 1 : _stunResistance );
+						_stunResistance = (byte) ( _stunResistance < _gwambaCanvas.StunResistance.Length ? _stunResistance + 1 : _stunResistance );
 						for ( byte i = 0; _stunResistance > i; i++ )
 							_gwambaCanvas.StunResistance[ i ].style.backgroundColor = _gwambaCanvas.StunResistanceColor;
 					}
