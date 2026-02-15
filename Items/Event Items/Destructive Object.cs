@@ -1,10 +1,8 @@
-using Cysharp.Threading.Tasks;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( Receptor ) )]
-	internal sealed class DestructiveObject : StateController, ILoader, ISignalReceptor, IDestructible
+	internal sealed class DestructiveObject : StateController, ISignalReceptor, IDestructible
 	{
 		private readonly Sender
 			_sender = Sender.Create();
@@ -24,12 +22,8 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			private set;
 		}
 		public IDestructible Source => this;
-		public async UniTask Load()
+		private void Start()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
 			_sender.SetFormat( MessageFormat.State );
 			_sender.SetAdditionalData( _occlusionObject );
 			_sender.SetToggle( true );
