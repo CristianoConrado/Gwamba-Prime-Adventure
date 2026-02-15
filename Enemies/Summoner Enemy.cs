@@ -8,7 +8,7 @@ using UnityEngine.Events;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class SummonerEnemy : EnemyProvider, ILoader, ISummoner, IConnector
+	internal sealed class SummonerEnemy : EnemyProvider, IEnemyLoader, ISummoner, IConnector
 	{
 		private
 			GameObject _summonObject;
@@ -53,12 +53,9 @@ namespace GwambaPrimeAdventure.Enemy
 			_queuedSummons.Clear();
 			Sender.Exclude( this );
 		}
-		public async UniTask Load()
+		public void Load()
 		{
 			_destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
-			if ( _destroyToken.IsCancellationRequested )
-				return;
 			_structureTime = new float[ _statistics.SummonPointStructures.Length ];
 			_summonTime = new float[ _statistics.TimedSummons.Length ];
 			_isSummonTime = new bool[ _statistics.TimedSummons.Length ];
