@@ -64,7 +64,7 @@ namespace GwambaPrimeAdventure.Enemy
 						}
 					}
 		}
-		public new bool Hurt( ushort damage )
+		public new bool Hurt( byte damage )
 		{
 			bool isHurted = false;
 			if ( !_invencible && _statistics.BiggerDamage <= damage )
