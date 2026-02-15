@@ -90,8 +90,7 @@ namespace GwambaPrimeAdventure.Character
 			_lastJumpTime = 0F,
 			_startOfFall = 0F,
 			_fallDamage = 0F,
-			_attackDelay = 0F,
-			_deltaTimeFPS = 0F;
+			_attackDelay = 0F;
 		protected bool
 			_isHubbyWorld = false,
 			_turnLeft = false,
