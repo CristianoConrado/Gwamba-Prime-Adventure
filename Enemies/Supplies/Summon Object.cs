@@ -25,7 +25,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, Tooltip( "The amount of instance to be instantiate." )]
-		public ushort QuantityToSummon
+		public byte QuantityToSummon
 		{
 			get;
 			private set;
