@@ -21,7 +21,7 @@ namespace GwambaPrimeAdventure.Enemy
 			Dash = Animator.StringToHash( nameof( Dash ) );
 		protected float
 			_stoppedTime = 0F;
-		protected short
+		protected sbyte
 			_movementSide = 1;
 		protected bool
 			_detected = false,
@@ -51,7 +51,7 @@ namespace GwambaPrimeAdventure.Enemy
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
 				return;
-			_movementSide = (short) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) );
+			_movementSide = (sbyte) ( ( CharacterExporter.GwambaLocalization().x < transform.position.x ? -1 : 1 ) * ( _moving.InvertMovementSide ? -1 : 1 ) );
 			transform.TurnScaleX( _movementSide );
 		}
 		protected void FixedUpdate()
