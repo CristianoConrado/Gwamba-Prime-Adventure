@@ -237,19 +237,13 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( !_statistics.TurnOffEdge )
 			{
 				_originCast = Rigidbody.position + _collider.offset;
-				_originCast.x +=
-					( _collider.bounds.extents.x - ( WorldBuild.SNAP_LENGTH * _statistics.OffEdgeSize - WorldBuild.SNAP_LENGTH ) / 2F )
-					* ( _retreat ? -1F : 1F ) * _movementSide * transform.right.x;
+				_originCast.x += _collider.bounds.extents.x * ( _retreat ? -1F : 1F ) * _movementSide * transform.right.x;
 				_originCast.y -= _collider.bounds.extents.y * transform.up.y;
-				_sizeCast.Set( WorldBuild.SNAP_LENGTH * _statistics.OffEdgeSize, WorldBuild.SNAP_LENGTH );
+				_castSize = Physics2D.RaycastNonAlloc( _originCast, -transform.up, _detections, WorldBuild.SNAP_LENGTH, WorldBuild.SCENE_LAYER_MASK );
 			}
-			_groundContacts.RemoveAll( contact =>
-			{
-				return !_statistics.TurnOffEdge
-				&& contact.point.OutsideBoxCast( _originCast, _sizeCast )
-				&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideBoxCast( _originCast, _sizeCast );
-			} );
-			if ( 0 >= _groundContacts.Count && OnGround || _wayBlocked && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
+			else
+				_castSize = 1;
+			if ( 0 >= _castSize && OnGround || _wayBlocked && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
 				if ( _retreat )
 					RetreatUse();
 				else
