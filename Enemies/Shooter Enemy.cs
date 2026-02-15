@@ -1,12 +1,10 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Character;
 using GwambaPrimeAdventure.Enemy.Supply;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class ShooterEnemy : EnemyProvider, ILoader, IConnector, IDestructible
+	internal sealed class ShooterEnemy : EnemyProvider, IConnector, IDestructible
 	{
 		private Vector2
 			_originCast = Vector2.zero,
@@ -34,24 +32,17 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void Awake()
 		{
 			base.Awake();
+			_projectileParameters = new InstantiateParameters()
+			{
+				parent = transform,
+				worldSpace = false
+			};
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
 			Sender.Exclude( this );
-		}
-		public async UniTask Load()
-		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
-			_projectileParameters = new InstantiateParameters()
-			{
-				parent = transform,
-				worldSpace = false
-			};
 		}
 		private void Unstop()
 		{
