@@ -56,6 +56,10 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		protected bool
 			_breakInUse = false;
 	};
+	public interface IEnemyLoader
+	{
+		public void Load();
+	};
 	public interface IJumper
 	{
 		public void OnJump( byte jumpIndex );
