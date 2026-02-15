@@ -11,7 +11,7 @@ namespace GwambaPrimeAdventure.Enemy
 	{
 		private float
 			_teleportTime = 0F;
-		private ushort
+		private byte
 			_teleportIndex = 0;
 		private bool
 			_canTeleport = true;
@@ -29,7 +29,7 @@ namespace GwambaPrimeAdventure.Enemy
 			foreach ( TeleportPointStructure pointStructure in pointStructures )
 			{
 				teleportPoint = Instantiate( pointStructure.TeleportPointObject, pointStructure.InstancePoint, Quaternion.identity );
-				teleportPoint.GetTouch( this, (ushort) pointStructures.IndexOf( pointStructure ) );
+				teleportPoint.GetTouch( this, (byte) pointStructures.IndexOf( pointStructure ) );
 			}
 		}
 		private void Update()
@@ -39,15 +39,15 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( 0F < _teleportTime )
 				_canTeleport = 0F >= ( _teleportTime -= Time.deltaTime );
 		}
-		public void OnTeleport( ushort teleportIndex )
+		public void OnTeleport( byte teleportIndex )
 		{
 			if ( _canTeleport )
 			{
 				if ( _statistics.TeleportPointStructures[ teleportIndex ].RandomTeleports )
-					_teleportIndex = (ushort) Random.Range( 0, _statistics.TeleportPointStructures[ teleportIndex ].TeleportPoints.Length );
+					_teleportIndex = (byte) Random.Range( 0, _statistics.TeleportPointStructures[ teleportIndex ].TeleportPoints.Length );
 				transform.position = _statistics.TeleportPointStructures[ teleportIndex ].TeleportPoints[ _teleportIndex ];
 				if ( !_statistics.TeleportPointStructures[ teleportIndex ].RandomTeleports )
-					_teleportIndex = (ushort) ( _teleportIndex < _statistics.TeleportPointStructures[ teleportIndex ].TeleportPoints.Length - 1 ? _teleportIndex + 1 : 0 );
+					_teleportIndex = (byte) ( _teleportIndex < _statistics.TeleportPointStructures[ teleportIndex ].TeleportPoints.Length - 1 ? _teleportIndex + 1 : 0 );
 				_canTeleport = false;
 				_teleportTime = _statistics.TimeToUse;
 			}
