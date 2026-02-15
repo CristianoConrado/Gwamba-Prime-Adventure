@@ -96,6 +96,11 @@ namespace GwambaPrimeAdventure.Character
 			get;
 			private set;
 		}
+		internal Label ShowFPS
+		{
+			get;
+			private set;
+		}
 		private void Awake()
 		{
 			if ( _instance )
@@ -112,6 +117,7 @@ namespace GwambaPrimeAdventure.Character
 			FallDamageText = RootElement.Q<Label>( nameof( FallDamageText ) );
 			LifeText = RootElement.Q<Label>( nameof( LifeText ) );
 			CoinText = RootElement.Q<Label>( nameof( CoinText ) );
+			ShowFPS = RootElement.Q<Label>( nameof( ShowFPS ) );
 		}
 		internal async UniTask LoadCanvas()
 		{
