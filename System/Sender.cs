@@ -40,7 +40,7 @@ namespace GwambaPrimeAdventure
 		public void SetFormat( MessageFormat format ) => _messageData.Format = format;
 		public void SetAdditionalData( object additionalData ) => _messageData.AdditionalData = additionalData;
 		public void SetToggle( bool toggle ) => _messageData.ToggleValue = toggle;
-		public void SetNumber( ushort number ) => _messageData.NumberValue = number;
+		public void SetNumber( byte number ) => _messageData.NumberValue = number;
 		public void Send( MessagePath path )
 		{
 			if ( _connectors.TryGetValue( path, out HashSet<IConnector> connectors ) )
