@@ -177,7 +177,7 @@ namespace GwambaPrimeAdventure.Hud
 		private void SimulationHertz( ChangeEvent<string> simulationHertz )
 		{
 			SettingsController.Load( out Settings settings );
-			Time.fixedDeltaTime = 1F / ( settings.SimulationHertz = ushort.Parse( simulationHertz.newValue.Split( ' ' )[ 0 ] ) );
+			Time.fixedDeltaTime = 1F / ( settings.SimulationHertz = byte.Parse( simulationHertz.newValue.Split( ' ' )[ 0 ] ) );
 			SettingsController.WriteSave( settings );
 		}
 		private void DialogToggle( ChangeEvent<bool> toggle )
@@ -256,14 +256,14 @@ namespace GwambaPrimeAdventure.Hud
 		private void FrameRate( ChangeEvent<int> frameRate )
 		{
 			SettingsController.Load( out Settings settings );
-			_configurationHud.FrameRateText.text = $"{settings.FrameRate = (ushort) frameRate.newValue}";
+			_configurationHud.FrameRateText.text = $"{settings.FrameRate = (byte) frameRate.newValue}";
 			Application.targetFrameRate = settings.InfinityFPS ? -1 : settings.FrameRate;
 			SettingsController.WriteSave( settings );
 		}
 		private void VSync( ChangeEvent<int> vsync )
 		{
 			SettingsController.Load( out Settings settings );
-			_configurationHud.VSyncText.text = $"{QualitySettings.vSyncCount = settings.VSync = (ushort) vsync.newValue}";
+			_configurationHud.VSyncText.text = $"{QualitySettings.vSyncCount = settings.VSync = (byte) vsync.newValue}";
 			SettingsController.WriteSave( settings );
 		}
 		private void DialogSpeed( ChangeEvent<int> speed )
