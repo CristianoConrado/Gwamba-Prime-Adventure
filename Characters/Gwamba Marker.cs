@@ -136,7 +136,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		public async UniTask Load()
 		{
-			if ( !_instance || _instance != this )
+			if ( !_instance || this != _instance )
 				return;
 			await _gwambaCanvas.LoadCanvas().AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 			if ( _destroyToken.IsCancellationRequested )
@@ -392,7 +392,7 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void Update()
 		{
-			if ( !_instance || _instance != this || !_didStart || _animator.GetBool( Death ) || SceneInitiator.IsInTransition() )
+			if ( !_instance || this != _instance || !_didStart || _animator.GetBool( Death ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( _invencibility )
 			{
@@ -434,7 +434,7 @@ namespace GwambaPrimeAdventure.Character
 		private float BunnyHop( float callBackValue ) => 0 < _bunnyHopBoost ? _bunnyHopBoost * callBackValue : 0F;
 		private void FixedUpdate()
 		{
-			if ( !_instance || _instance != this || !_didStart || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || SceneInitiator.IsInTransition() )
+			if ( !_instance || this != _instance || !_didStart || _animator.GetBool( Stun ) || _animator.GetBool( Death ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( _animator.GetBool( DashSlide ) )
 				if ( Mathf.Abs( transform.position.x - _localAtAny.x ) > DashDistance || _offGround || _isJumping )
@@ -690,13 +690,12 @@ namespace GwambaPrimeAdventure.Character
 		}
 		private void OnCollisionExit2D( Collision2D collision )
 		{
-			if ( _instance && this == _instance && _didStart && WorldBuild.SCENE_LAYER == collision.gameObject.layer || SceneInitiator.IsInTransition() )
-			{
-				_collider.GetContacts( _groundContacts );
-				if ( _groundContacts.Exists( contact => CheckGroundLimit <= contact.normal.y ) )
-					return;
-				_offGround = !( _isOnGround = false );
-			}
+			if ( !_instance || this != _instance || !_didStart || WorldBuild.SCENE_LAYER != collision.gameObject.layer || SceneInitiator.IsInTransition() )
+				return;
+			_collider.GetContacts( _groundContacts );
+			if ( _groundContacts.Exists( contact => CheckGroundLimit <= contact.normal.y ) )
+				return;
+			_offGround = !( _isOnGround = false );
 		}
 		private void OnTriggerEnter2D( Collider2D other )
 		{
