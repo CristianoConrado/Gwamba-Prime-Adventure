@@ -28,11 +28,13 @@ namespace GwambaPrimeAdventure.Character
 		protected readonly Sender
 			_sender = Sender.Create();
 		protected readonly Collider2D[]
-			_interactions = new Collider2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+			_interactions = new Collider2D[ (byte) WorldBuild.PIXELS_PER_UNIT ];
 		protected readonly List<ContactPoint2D>
-			_groundContacts = new List<ContactPoint2D>( (int) WorldBuild.PIXELS_PER_UNIT );
+			_groundContacts = new List<ContactPoint2D>( (byte) WorldBuild.PIXELS_PER_UNIT );
 		protected
 			IInteractable[] _interactionsPerObject;
+		protected readonly RaycastHit2D[]
+			_castHits = new RaycastHit2D[ (byte) WorldBuild.PIXELS_PER_UNIT ];
 		protected
 			CancellationToken _destroyToken;
 		protected Vector2
@@ -46,9 +48,13 @@ namespace GwambaPrimeAdventure.Character
 			_normalColliderSize = Vector2.zero;
 		protected Vector3
 			_localAtAny = Vector3.zero;
-		protected
-			RaycastHit2D _castHit;
 		protected readonly ContactFilter2D
+			_castFilter = new ContactFilter2D()
+			{
+				layerMask = WorldBuild.SCENE_LAYER_MASK,
+				useLayerMask = true,
+				useTriggers = false
+			},
 			_interactionFilter = new ContactFilter2D()
 			{
 				layerMask = WorldBuild.SYSTEM_LAYER_MASK + WorldBuild.CHARACTER_LAYER_MASK + WorldBuild.SCENE_LAYER_MASK + WorldBuild.ITEM_LAYER_MASK,
@@ -72,11 +78,11 @@ namespace GwambaPrimeAdventure.Character
 			AttackDrop = Animator.StringToHash( nameof( AttackDrop ) ),
 			Stun = Animator.StringToHash( nameof( Stun ) ),
 			Death = Animator.StringToHash( nameof( Death ) );
-		protected short
+		protected sbyte
 			_vitality = 0,
 			_stunResistance = 0,
 			_walkValue = 0;
-		protected ushort
+		protected byte
 			_recoverVitality = 0,
 			_bunnyHopBoost = 0;
 		protected const float
@@ -151,7 +157,7 @@ namespace GwambaPrimeAdventure.Character
 			private set;
 		}
 		[field: SerializeField, BoxGroup( "Control" ), Tooltip( "The amount of distance to get down stairs." )]
-		protected ushort DownStairsDistance
+		protected byte DownStairsDistance
 		{
 			get;
 			private set;
