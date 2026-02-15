@@ -98,7 +98,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		}
 		[field: SerializeField, ShowIf( nameof( ReactToDamage ) ), Tooltip( "The strenght of the jump on the react." )]
 		[field: Header( "Reaction", order = 0 ), Space( WorldBuild.FIELD_SPACE_LENGTH * 2F, order = 1 )]
-		public ushort StrenghtReact
+		public byte StrenghtReact
 		{
 			get;
 			private set;
@@ -144,13 +144,13 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[SerializeField, Tooltip( "The minimal amount of times the boss have to pass by to activate the jump." )]
-		private
-			  ushort _minJumpCount;
+		private 
+			byte _minJumpCount;
 		[SerializeField, Tooltip( "The maximum amount of times the boss have to pass by to activate the jump." )]
 		private
-			ushort _maxJumpCount;
-		public readonly ushort JumpCount =>
-			(ushort) Random.Range( _minJumpCount, _maxJumpCount + 1 );
+			byte _maxJumpCount;
+		public readonly byte JumpCount =>
+			(byte) Random.Range( _minJumpCount, _maxJumpCount + 1 );
 	};
 	[System.Serializable]
 	public struct JumpStats
