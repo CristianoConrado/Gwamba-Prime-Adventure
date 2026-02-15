@@ -17,13 +17,13 @@ namespace GwambaPrimeAdventure
 			get;
 			internal set;
 		}
-		public ushort? NumberValue
+		public byte? NumberValue
 		{
 			get;
 			internal set;
 		}
 	};
-	public enum MessagePath
+	public enum MessagePath : byte
 	{
 		None,
 		System,
@@ -34,7 +34,7 @@ namespace GwambaPrimeAdventure
 		EventItem,
 		Story
 	};
-	public enum MessageFormat
+	public enum MessageFormat : byte
 	{
 		None,
 		State,
