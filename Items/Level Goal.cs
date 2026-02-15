@@ -35,9 +35,9 @@ namespace GwambaPrimeAdventure.Item
 				return;
 			_blocked = true;
 			SaveController.Load( out SaveFile saveFile );
-			if ( 0 <= short.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 && !saveFile.LevelsCompleted[ ushort.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 ] )
+			if ( 0 <= byte.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 && !saveFile.LevelsCompleted[ byte.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 ] )
 			{
-				saveFile.LevelsCompleted[ ushort.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 ] = true;
+				saveFile.LevelsCompleted[ byte.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 ] = true;
 				SaveController.WriteSave( saveFile );
 			}
 			if ( _saveOnSpecifics && !saveFile.GeneralObjects.Contains( name ) )
@@ -48,7 +48,7 @@ namespace GwambaPrimeAdventure.Item
 			SettingsController.Load( out Settings settings );
 			if ( _enterInDialog && settings.DialogToggle )
 				GetComponent<IInteractable>().Interaction();
-			else if ( 0 <= short.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 && !saveFile.DeafetedBosses[ ushort.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 ] )
+			else if ( 0 <= byte.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 && !saveFile.DeafetedBosses[ byte.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 ] )
 				GetComponent<Transitioner>().Transicion( _goToBoss );
 			else
 				GetComponent<Transitioner>().Transicion();
