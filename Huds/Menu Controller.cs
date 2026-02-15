@@ -104,7 +104,7 @@ namespace GwambaPrimeAdventure.Hud
 		private void ChangeName2( ChangeEvent<string> write ) => _menuHud.RenameFile[ 1 ].enabledSelf = write.newValue != FilesController.Select( 2 );
 		private void ChangeName3( ChangeEvent<string> write ) => _menuHud.RenameFile[ 2 ].enabledSelf = write.newValue != FilesController.Select( 3 );
 		private void ChangeName4( ChangeEvent<string> write ) => _menuHud.RenameFile[ 3 ].enabledSelf = write.newValue != FilesController.Select( 4 );
-		private void SetFileName( ushort fileIndex )
+		private void SetFileName( byte fileIndex )
 		{
 			SaveController.RenameData( fileIndex, _menuHud.SaveName[ 1 - fileIndex ].text );
 			_menuHud.RenameFile[ 1 - fileIndex ].enabledSelf = false;
@@ -113,7 +113,7 @@ namespace GwambaPrimeAdventure.Hud
 		private void RenameFile2() => SetFileName( 2 );
 		private void RenameFile3() => SetFileName( 3 );
 		private void RenameFile4() => SetFileName( 4 );
-		private void SetSaveFile( ushort newSaveFile )
+		private void SetSaveFile( byte newSaveFile )
 		{
 			SaveController.SetActualSaveFile( newSaveFile );
 			GetComponent<Transitioner>().Transicion();
