@@ -1,13 +1,11 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class TeleporterEnemy : EnemyProvider, ILoader, ITeleporter
+	internal sealed class TeleporterEnemy : EnemyProvider, IEnemyLoader, ITeleporter
 	{
 		private float
 			_teleportTime = 0F;
@@ -18,12 +16,8 @@ namespace GwambaPrimeAdventure.Enemy
 		[SerializeField, Tooltip( "The teleporter statitics of this enemy." ), Header( "Teleporter Enemy" )]
 		private
 			TeleporterStatistics _statistics;
-		public async UniTask Load()
+		public void Load()
 		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
 			TeleportPoint teleportPoint;
 			List<TeleportPointStructure> pointStructures = _statistics.TeleportPointStructures.ToList();
 			foreach ( TeleportPointStructure pointStructure in pointStructures )
