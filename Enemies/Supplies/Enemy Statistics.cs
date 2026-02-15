@@ -19,7 +19,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, HideIf( nameof( NoDamage ) ), Tooltip( "The vitality of the enemy." )]
-		public ushort Vitality
+		public byte Vitality
 		{
 			get;
 			private set;
@@ -31,7 +31,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, HideIf( nameof( NoStun ) ), Tooltip( "The amount of stun that this enemy can resists." )]
-		public ushort HitResistance
+		public byte HitResistance
 		{
 			get;
 			private set;
@@ -61,7 +61,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, HideIf( nameof( NoHit ) ), Tooltip( "The amount of damage that the enemy hit." )]
-		public ushort Damage
+		public byte Damage
 		{
 			get;
 			private set;
@@ -109,7 +109,7 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			private set;
 		}
 		[field: SerializeField, ShowIf( nameof( HasIndex ) ), Tooltip( "The index to a event to a enemy make." )]
-		public ushort IndexEvent
+		public byte IndexEvent
 		{
 			get;
 			private set;
