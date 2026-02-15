@@ -26,8 +26,9 @@ namespace GwambaPrimeAdventure.Enemy
 			_targetPoint = Vector2.zero;
 		private readonly int
 			Chase = Animator.StringToHash( nameof( Chase ) );
+		private byte
+			_pointIndex = 0;
 		private ushort
-			_pointIndex = 0,
 			_dashSize = 0;
 		private bool
 			_started = false,
@@ -75,7 +76,7 @@ namespace GwambaPrimeAdventure.Enemy
 				return;
 			PolygonCollider2D trail = GetComponent<PolygonCollider2D>();
 			_trail = new Vector2[ trail.points.Length ];
-			for ( ushort i = 0; trail.points.Length > i; i++ )
+			for ( byte i = 0; trail.points.Length > i; i++ )
 				_trail[ i ] = transform.parent ? trail.offset + trail.points[ i ] + (Vector2) transform.position : trail.points[ i ];
 			_dashFilter = new ContactFilter2D()
 			{
@@ -153,7 +154,7 @@ namespace GwambaPrimeAdventure.Enemy
 				if ( !Animator.GetBool( Move ) )
 					Animator.SetBool( Move, true );
 				if ( Vector2.Distance( Rigidbody.position, _trail[ _pointIndex ] ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT )
-					_pointIndex = (ushort) ( _pointIndex < _trail.Length - 1 ? _pointIndex + 1 : 0 );
+					_pointIndex = (byte) ( _pointIndex < _trail.Length - 1 ? _pointIndex + 1 : 0 );
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _trail[ _pointIndex ], Time.fixedDeltaTime * _statistics.MovementSpeed ) );
 				transform.TurnScaleX( _trail[ _pointIndex ].x < Rigidbody.position.x );
 				_pointOrigin = Rigidbody.position;
