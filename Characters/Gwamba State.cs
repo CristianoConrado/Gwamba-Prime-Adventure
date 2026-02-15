@@ -73,11 +73,11 @@ namespace GwambaPrimeAdventure.Character
 			Stun = Animator.StringToHash( nameof( Stun ) ),
 			Death = Animator.StringToHash( nameof( Death ) );
 		protected sbyte
-			_vitality = 0,
-			_stunResistance = 0,
 			_walkValue = 0;
 		protected byte
+			_vitality = 0,
 			_recoverVitality = 0,
+			_stunResistance = 0,
 			_bunnyHopBoost = 0;
 		protected const float
 			MINIMUM_VELOCITY = 1E-3F;
