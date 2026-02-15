@@ -16,9 +16,8 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 			IDestructible _destructibleEnemy;
 		protected Vector2
 			_guardedLinearVelocity = Vector2.zero;
-		protected ushort
-			_destructiblePriority = 0;
-		protected short
+		protected byte
+			_destructiblePriority = 0,
 			_vitality = 0,
 			_armorResistance = 0;
 		protected float
@@ -43,9 +42,8 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		protected Vector2Int
 			_oldCellPosition = Vector2Int.zero,
 			_cellPosition = Vector2Int.zero;
-		protected short
-			_vitality = 0;
-		protected ushort
+		protected byte
+			_vitality = 0,
 			_angleMulti = 0,
 			_pointToJump = 0,
 			_pointToBreak = 0,
@@ -60,14 +58,14 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 	};
 	public interface IJumper
 	{
-		public void OnJump( ushort jumpIndex );
+		public void OnJump( byte jumpIndex );
 	};
 	public interface ISummoner
 	{
-		public void OnSummon( ushort summonIndex );
+		public void OnSummon( byte summonIndex );
 	};
 	public interface ITeleporter
 	{
-		public void OnTeleport( ushort teleportIndex );
+		public void OnTeleport( byte teleportIndex );
 	};
 };
