@@ -1,11 +1,9 @@
-using Cysharp.Threading.Tasks;
 using GwambaPrimeAdventure.Enemy.Supply;
-using System.Threading;
 using UnityEngine;
 namespace GwambaPrimeAdventure.Enemy
 {
 	[DisallowMultipleComponent]
-	internal sealed class DefenderEnemy : EnemyProvider, ILoader, IConnector, IDestructible
+	internal sealed class DefenderEnemy : EnemyProvider, IConnector, IDestructible
 	{
 		private readonly int
 			Defend = Animator.StringToHash( nameof( Defend ) );
@@ -20,20 +18,13 @@ namespace GwambaPrimeAdventure.Enemy
 		{
 			base.Awake();
 			_sender.SetFormat( MessageFormat.State );
+			_timeOperation = _statistics.TimeToInvencible;
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
 		{
 			base.OnDestroy();
 			Sender.Exclude( this );
-		}
-		public async UniTask Load()
-		{
-			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
-			if ( destroyToken.IsCancellationRequested )
-				return;
-			_timeOperation = _statistics.TimeToInvencible;
 		}
 		private void Update()
 		{
