@@ -6,8 +6,8 @@ using UnityEngine;
 namespace GwambaPrimeAdventure.Item.EventItem
 {
 	[DisallowMultipleComponent, RequireComponent( typeof( Collider2D ), typeof( Receptor ) )]
-	internal sealed class Teleporter : StateController, ILoader, ISignalReceptor, IInteractable
-    {
+	internal sealed class Teleporter : StateController, ISignalReceptor, IInteractable
+	{
 		private
 			Transform _toTeleport;
 		private readonly Sender
@@ -40,12 +40,9 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		[SerializeField, ShowIf( nameof( _useTimer ) ), Tooltip( "The amount of time it have to waits to teleport." )]
 		private
 			float _timeToUse;
-		public async UniTask Load()
+		private void Start()
 		{
 			_destroyToken = this.GetCancellationTokenOnDestroy();
-			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, _destroyToken, true ).SuppressCancellationThrow();
-			if ( _destroyToken.IsCancellationRequested )
-				return;
 			_active = !_isReceptor;
 		}
 		private void Update()
