@@ -147,7 +147,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( Animator.GetBool( Stop ) || IsStunned || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stop ) || Animator.GetBool( Stunned ) || SceneInitiator.IsInTransition() )
 				return;
 			for ( byte i = 0; _structureTime.Length > i; i++ )
 				if ( 0F < _structureTime[ i ] )
