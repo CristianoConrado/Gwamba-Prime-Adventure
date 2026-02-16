@@ -23,7 +23,6 @@ namespace GwambaPrimeAdventure.Enemy
 			_movementSide = 1;
 		protected bool
 			_detected = false,
-			_isDashing = false,
 			_begining = false;
 		[SerializeField, Tooltip( "The moving statitics of this enemy." ), Header( "Moving Enemy" )]
 		private
