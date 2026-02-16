@@ -25,7 +25,7 @@ namespace GwambaPrimeAdventure.Enemy
 			base.Awake();
 			_tilemap = GetComponent<Tilemap>();
 			_tilemapCollider = GetComponent<TilemapCollider2D>();
-			_waitActive = new WaitUntil( () => isActiveAndEnabled && !IsStunned );
+			_waitActive = new WaitUntil( () => isActiveAndEnabled && !Animator.GetBool( Stunned ) );
 			Sender.Include( this );
 		}
 		private new void OnDestroy()
