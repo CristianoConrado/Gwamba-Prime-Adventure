@@ -28,7 +28,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( Animator.GetBool( Stop ) || IsStunned || !_statistics.UseAlternatedTime && !_invencible || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stop ) || Animator.GetBool( Stunned ) || !_statistics.UseAlternatedTime && !_invencible || SceneInitiator.IsInTransition() )
 				return;
 			if ( 0F < _timeOperation )
 				if ( 0F >= ( _timeOperation -= Time.deltaTime ) )
