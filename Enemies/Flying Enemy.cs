@@ -87,7 +87,7 @@ namespace GwambaPrimeAdventure.Enemy
 				_returnDash = Vector2.Distance( Rigidbody.position, _targetPoint ) <= _statistics.TargetDistance;
 				return;
 			}
-			else if ( !_isDashing && Vector2.Distance( Rigidbody.position, _targetPoint ) <= _statistics.TargetDistance )
+			else if ( !Animator.GetBool( Dash ) && Vector2.Distance( Rigidbody.position, _targetPoint ) <= _statistics.TargetDistance )
 				if ( _statistics.DetectionStop )
 				{
 					Animator.SetBool( Move, false );
@@ -101,9 +101,9 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					Animator.SetBool( Move, false );
 					Animator.SetBool( Chase, false );
-					Animator.SetBool( Dash, _isDashing = true );
+					Animator.SetBool( Dash, true );
 				}
-			if ( _isDashing )
+			if ( Animator.GetBool( Dash ) )
 				Rigidbody.MovePosition( Vector2.MoveTowards( Rigidbody.position, _targetPoint, Time.fixedDeltaTime * _statistics.DashSpeed ) );
 			else
 			{
@@ -112,7 +112,7 @@ namespace GwambaPrimeAdventure.Enemy
 			}
 			_originCast = Rigidbody.position + _selfCollider.offset + ( _targetPoint - _originCast ).normalized;
 			_dashSize = (ushort) Physics2D.CircleCast( _originCast, _selfCollider.radius, ( _targetPoint - _originCast ).normalized, _dashFilter, _dashCheck, 5E-1F );
-			if ( _isDashing && Vector2.Distance( Rigidbody.position, _targetPoint ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT || 0 < _dashSize )
+			if ( Animator.GetBool( Dash ) && Vector2.Distance( Rigidbody.position, _targetPoint ) <= WorldBuild.MINIMUM_TIME_SPACE_LIMIT || 0 < _dashSize )
 				if ( _statistics.DetectionStop )
 				{
 					Animator.SetBool( Move, false );
@@ -123,7 +123,7 @@ namespace GwambaPrimeAdventure.Enemy
 				}
 				else
 				{
-					Animator.SetBool( Dash, _isDashing = !( _returnDash = true ) );
+					Animator.SetBool( Dash, !( _returnDash = true ) );
 					Animator.SetBool( Chase, true );
 				}
 		}
@@ -152,7 +152,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stunned ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.DetectionStop && Animator.GetBool( Stop ) )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
@@ -161,14 +161,14 @@ namespace GwambaPrimeAdventure.Enemy
 					Animator.SetBool( Chase, false );
 					Animator.SetBool( Dash, false );
 					Animator.SetBool( Stop, false );
-					(_isDashing, _afterDash) = (!_afterDash, false);
-					Animator.SetBool( Dash, _isDashing );
+					Animator.SetBool( Dash, !_afterDash );
+					_afterDash = false;
 				}
 		}
 		private new void FixedUpdate()
 		{
 			base.FixedUpdate();
-			if ( Animator.GetBool( Stop ) || IsStunned || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stop ) || Animator.GetBool( Stunned ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.Target )
 			{
@@ -190,9 +190,9 @@ namespace GwambaPrimeAdventure.Enemy
 				transform.TurnScaleX( CharacterExporter.GwambaLocalization().x < Rigidbody.position.x );
 				return;
 			}
-			if ( !_isDashing )
+			if ( !Animator.GetBool( Dash ) )
 				_detected = false;
-			if ( _statistics.LookPerception && !_isDashing && CharacterExporter.GwambaLocalization().InsideCircleCast( _pointOrigin, _statistics.LookDistance ) )
+			if ( _statistics.LookPerception && !Animator.GetBool( Dash ) && CharacterExporter.GwambaLocalization().InsideCircleCast( _pointOrigin, _statistics.LookDistance ) )
 			{
 				_movementDirection = ( CharacterExporter.GwambaLocalization() - ( Rigidbody.position + _selfCollider.offset ) ).normalized;
 				_detectionObject.rotation = Quaternion.AngleAxis( Mathf.Atan2( _movementDirection.y, _movementDirection.x ) * Mathf.Rad2Deg - 90F, Vector3.forward );
