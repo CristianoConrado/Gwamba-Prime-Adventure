@@ -105,19 +105,30 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				_cancelTask = false;
 			}
 			bool onFirst = false;
+			void CancelTask()
+			{
+				if ( _otherPlace && !onFirst )
+					if ( !_otherPlace._appearFirst && _otherPlace._activation )
+						_otherPlace._activation = false;
+					else if ( !_otherPlace._fadeFirst && !_otherPlace._activation )
+						_otherPlace._activation = true;
+				_taskOnGoing = false;
+			}
 			_taskOnGoing = true;
-			if ( _otherPlace )
+			if ( _otherPlace && !_cancelTask )
 				if ( onFirst = _otherPlace._appearFirst && _otherPlace._activation )
 					await _otherPlace.Fade( true ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
 				else if ( onFirst = _otherPlace._fadeFirst && !_otherPlace._activation )
 					await _otherPlace.Fade( false ).AttachExternalCancellation( _destroyToken ).SuppressCancellationThrow();
-			if ( _destroyToken.IsCancellationRequested || _cancelTask )
-			{
-				_taskOnGoing = false;
+			if ( _destroyToken.IsCancellationRequested )
 				return;
-			}
 			if ( _isReceptor )
 				_activation = !_activation;
+			if ( _cancelTask )
+			{
+				CancelTask();
+				return;
+			}
 			if ( appear )
 				EffectsController.OffGlobalLight( _selfLight );
 			else
@@ -135,20 +146,14 @@ namespace GwambaPrimeAdventure.Item.EventItem
 			async UniTask OpacityLevel( float alpha )
 			{
 				await UniTask.WaitUntil( () => isActiveAndEnabled, PlayerLoopTiming.Update, _destroyToken, true ).SuppressCancellationThrow();
-				if ( _destroyToken.IsCancellationRequested )
+				if ( _destroyToken.IsCancellationRequested || _cancelTask )
 					return;
-				if ( _cancelTask )
-				{
-					_taskOnGoing = false;
-					return;
-				}
 				Color color = _tilemap.color;
 				color.a = alpha;
 				_tilemap.color = color;
 			}
 			if ( appear )
 			{
-				Occlusion();
 				_tilemapRenderer.enabled = true;
 				if ( _instantly )
 				{
@@ -162,13 +167,16 @@ namespace GwambaPrimeAdventure.Item.EventItem
 						await OpacityLevel( i ).SuppressCancellationThrow();
 						if ( _destroyToken.IsCancellationRequested || _cancelTask )
 						{
-							_taskOnGoing = false;
+							if ( _cancelTask )
+								CancelTask();
 							return;
 						}
 					}
+				Occlusion();
 			}
 			else
 			{
+				Occlusion();
 				if ( _instantly )
 				{
 					Color color = _tilemap.color;
@@ -181,16 +189,16 @@ namespace GwambaPrimeAdventure.Item.EventItem
 						await OpacityLevel( i ).SuppressCancellationThrow();
 						if ( _destroyToken.IsCancellationRequested || _cancelTask )
 						{
-							_taskOnGoing = false;
+							if ( _cancelTask )
+								CancelTask();
 							return;
 						}
 					}
 				_tilemapRenderer.enabled = false;
-				Occlusion();
 			}
 			if ( _haveColliders )
 				_tilemapCollider.enabled = appear;
-			if ( _otherPlace && !onFirst )
+			if ( _otherPlace && !onFirst && !_cancelTask)
 				if ( !_otherPlace._appearFirst && _otherPlace._activation )
 					_otherPlace.Fade( true ).Forget();
 				else if ( !_otherPlace._fadeFirst && !_otherPlace._activation )
