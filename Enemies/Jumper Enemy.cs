@@ -18,7 +18,7 @@ namespace GwambaPrimeAdventure.Enemy
 			_targetPosition = Vector2.zero,
 			_direction = Vector2.zero;
 		private readonly RaycastHit2D[]
-			_perceptionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+			_perceptionRaycasts = new RaycastHit2D[ (byte) WorldBuild.PIXELS_PER_UNIT ];
 		private readonly int
 			Jump = Animator.StringToHash( nameof( Jump ) );
 		private byte
