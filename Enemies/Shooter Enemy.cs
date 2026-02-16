@@ -15,7 +15,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private
 			InstantiateParameters _projectileParameters;
 		private readonly RaycastHit2D[]
-			_detectionRaycasts = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+			_detectionRaycasts = new RaycastHit2D[ (byte) WorldBuild.PIXELS_PER_UNIT ];
 		private readonly int
 			Shoot = Animator.StringToHash( nameof( Shoot ) );
 		private float
