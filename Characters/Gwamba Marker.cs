@@ -533,8 +533,6 @@ namespace GwambaPrimeAdventure.Character
 				}
 				if ( _isOnGround )
 				{
-					if ( Mathf.Abs( _rigidbody.linearVelocityY ) <= MINIMUM_VELOCITY )
-						_offGround = !( _isOnGround = false );
 					if ( 0 == _walkValue )
 					{
 						_localAtAny.x = Mathf.Min( Mathf.Abs( _rigidbody.linearVelocityX ), Mathf.Abs( FrictionAmount ) ) * Mathf.Sign( _rigidbody.linearVelocityX );
@@ -550,6 +548,8 @@ namespace GwambaPrimeAdventure.Character
 						_animator.SetBool( Walk, true );
 					else if ( _animator.GetBool( Walk ) && 0 == _walkValue && MINIMUM_VELOCITY >= Mathf.Abs( _rigidbody.linearVelocityX ) )
 						_animator.SetBool( Walk, false );
+					if ( 0 >= _collider.GetContacts( _groundContacts ) )
+						_offGround = !( _isOnGround = false );
 				}
 			}
 			if ( !_isJumping && 0F < _lastJumpTime && 0F < _lastGroundedTime )
