@@ -83,7 +83,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Jumping( InputAction.CallbackContext jump )
 		{
-			if ( isActiveAndEnabled && !IsStunned && 0F >= _jumpTime )
+			if ( isActiveAndEnabled && !Animator.GetBool( Stunned ) && 0F >= _jumpTime )
 			{
 				_jumpTime = _statistics.TimeToJump;
 				_targetPosition = CharacterExporter.GwambaLocalization();
@@ -137,7 +137,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned || Animator.GetBool( Stop ) || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stunned ) || Animator.GetBool( Stop ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( 0F < _stopTime )
 				if ( 0F >= ( _stopTime -= Time.deltaTime ) )
@@ -169,7 +169,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void FixedUpdate()
 		{
 			base.FixedUpdate();
-			if ( IsStunned || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stunned ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( _isJumping )
 				if ( !Animator.GetBool( Jump ) && 0F < Rigidbody.linearVelocityY )
@@ -230,7 +230,8 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public async void OnJump( byte jumpIndex )
 		{
-			( _isTimeout, _waitResult ) = await UniTask.WaitWhile( () => !OnGround || _detected || !isActiveAndEnabled || IsStunned, PlayerLoopTiming.Update, _destroyToken, true )
+			( _isTimeout, _waitResult ) =
+				await UniTask.WaitWhile( () => !OnGround || _detected || !isActiveAndEnabled || Animator.GetBool( Stunned ), PlayerLoopTiming.Update, _destroyToken, true )
 				.SuppressCancellationThrow().TimeoutWithoutException( TimeSpan.FromSeconds( _statistics.TimeToCancel ), DelayType.DeltaTime, PlayerLoopTiming.Update );
 			if ( _destroyToken.IsCancellationRequested || _isTimeout && !_waitResult )
 				return;
