@@ -7,7 +7,7 @@ namespace GwambaPrimeAdventure.Enemy
 	internal sealed class RunnerEnemy : MovingEnemy, IConnector, IDestructible
 	{
 		private readonly RaycastHit2D[]
-			_detections = new RaycastHit2D[ (uint) WorldBuild.PIXELS_PER_UNIT ];
+			_detections = new RaycastHit2D[ (byte) WorldBuild.PIXELS_PER_UNIT ];
 		private readonly int
 			Retreat = Animator.StringToHash( nameof( Retreat ) );
 		private byte
