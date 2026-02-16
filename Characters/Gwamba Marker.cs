@@ -533,6 +533,8 @@ namespace GwambaPrimeAdventure.Character
 				}
 				if ( _isOnGround )
 				{
+					if ( Mathf.Abs( _rigidbody.linearVelocityY ) <= MINIMUM_VELOCITY )
+						_offGround = !( _isOnGround = false );
 					if ( 0 == _walkValue )
 					{
 						_localAtAny.x = Mathf.Min( Mathf.Abs( _rigidbody.linearVelocityX ), Mathf.Abs( FrictionAmount ) ) * Mathf.Sign( _rigidbody.linearVelocityX );
