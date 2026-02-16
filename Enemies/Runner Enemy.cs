@@ -25,7 +25,6 @@ namespace GwambaPrimeAdventure.Enemy
 			_wayBlocked = false,
 			_invencibility = false,
 			_canRetreat = true,
-			_retreat = false,
 			_runTowards = false;
 		[SerializeField, Tooltip( "The runner statitics of this enemy." ), Header( "Runner Enemy" )]
 		private
@@ -47,14 +46,13 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( _statistics.InvencibleDash )
 			{
 				_sender.SetFormat( MessageFormat.Event );
-				_sender.SetToggle( _isDashing );
+				_sender.SetToggle( Animator.GetBool( Dash ) );
 				_sender.Send( MessagePath.Enemy );
 			}
 		}
 		private void RetreatUse()
 		{
-			Animator.SetBool( Retreat, false );
-			_invencibility = _retreat = false;
+			Animator.SetBool( Retreat, _invencibility = false );
 			if ( _statistics.DetectionStop )
 			{
 				Animator.SetBool( Stop, _stopRunning = true );
@@ -75,7 +73,7 @@ namespace GwambaPrimeAdventure.Enemy
 			{
 				Animator.SetBool( Stop, _stopRunning = false );
 				Animator.SetBool( Move, false );
-				Animator.SetBool( Dash, _isDashing = true );
+				Animator.SetBool( Dash, true );
 				_retreatTime = _statistics.TimeToRetreat;
 				_dashedTime = _statistics.TimeDashing;
 				_sender.SetFormat( MessageFormat.State );
@@ -86,14 +84,14 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stunned ) || SceneInitiator.IsInTransition() )
 				return;
 			if ( _statistics.DetectionStop && _stopRunning )
 				if ( 0F >= ( _stoppedTime -= Time.deltaTime ) )
 				{
 					Animator.SetBool( Stop, _stopRunning = false );
 					Animator.SetBool( Move, false );
-					Animator.SetBool( Dash, _isDashing = true );
+					Animator.SetBool( Dash, true );
 					_retreatTime = _statistics.TimeToRetreat;
 					_dashedTime = _statistics.TimeDashing;
 					_sender.SetFormat( MessageFormat.State );
@@ -103,22 +101,22 @@ namespace GwambaPrimeAdventure.Enemy
 				}
 			if ( Animator.GetBool( Stop ) )
 				return;
-			if ( _statistics.TimedDash && !_isDashing )
+			if ( _statistics.TimedDash && !Animator.GetBool( Dash ) )
 				if ( 0F >= ( _dashTime -= Time.deltaTime ) )
 				{
 					Animator.SetBool( Move, false );
-					Animator.SetBool( Dash, _isDashing = true );
+					Animator.SetBool( Dash, true );
 					_dashedTime = _statistics.TimeDashing;
 					InvencibleDash();
 				}
 			if ( _statistics.RunFromTarget )
 			{
-				if ( 0F < _timeRun && !_isDashing )
+				if ( 0F < _timeRun && !Animator.GetBool( Dash ) )
 				{
-					Animator.SetBool( Dash, _isDashing = true );
+					Animator.SetBool( Dash, true );
 					InvencibleDash();
 				}
-				if ( 0F >= ( _timeRun -= Time.deltaTime ) && _isDashing )
+				if ( 0F >= ( _timeRun -= Time.deltaTime ) && Animator.GetBool( Dash ) )
 				{
 					if ( _statistics.RunTowardsAfter && _runnedTimes >= _statistics.TimesToRun )
 					{
@@ -127,18 +125,18 @@ namespace GwambaPrimeAdventure.Enemy
 					}
 					else if ( _statistics.RunTowardsAfter )
 						_runnedTimes++;
-					Animator.SetBool( Dash, _isDashing = false );
+					Animator.SetBool( Dash, false );
 					Animator.SetBool( Move, true );
 					InvencibleDash();
 				}
 			}
-			if ( !_retreat && 0F < _retreatTime )
+			if ( !Animator.GetBool( Retreat ) && 0F < _retreatTime )
 				if ( 0F >= ( _retreatTime -= Time.deltaTime ) )
 					_canRetreat = true;
-			if ( _isDashing )
+			if ( Animator.GetBool( Dash ) )
 				if ( 0F >= ( _dashedTime -= Time.deltaTime ) )
 				{
-					Animator.SetBool( Dash, _detected = _isDashing = false );
+					Animator.SetBool( Dash, _detected = false );
 					Animator.SetBool( Move, true );
 					_dashTime = _statistics.TimeToDash;
 					_sender.SetFormat( MessageFormat.State );
@@ -150,9 +148,9 @@ namespace GwambaPrimeAdventure.Enemy
 		private new void FixedUpdate()
 		{
 			base.FixedUpdate();
-			if ( IsStunned || SceneInitiator.IsInTransition() )
+			if ( Animator.GetBool( Stunned ) || SceneInitiator.IsInTransition() )
 				return;
-			if ( _statistics.DetectionStop && _detected && !_isDashing && OnGround && !_retreat )
+			if ( _statistics.DetectionStop && _detected && !Animator.GetBool( Dash ) && OnGround && !Animator.GetBool( Retreat ) )
 				Rigidbody.linearVelocityX = 0F;
 			if ( Animator.GetBool( Stop ) )
 				return;
@@ -173,14 +171,14 @@ namespace GwambaPrimeAdventure.Enemy
 				else
 					_movementSide *= -1;
 			}
-			if ( _retreat )
+			if ( Animator.GetBool( Retreat ) )
 			{
 				Rigidbody.linearVelocityX = ( transform.right * _movementSide ).x * -_statistics.RetreatSpeed;
 				if ( Mathf.Abs( transform.position.x - _retreatLocation ) >= _statistics.RetreatDistance )
 					RetreatUse();
 				return;
 			}
-			if ( _detected && !_isDashing )
+			if ( _detected && !Animator.GetBool( Dash ) )
 				if ( _statistics.DetectionStop )
 				{
 					Animator.SetBool( Move, false );
@@ -196,7 +194,7 @@ namespace GwambaPrimeAdventure.Enemy
 				{
 					Animator.SetBool( Stop, _stopRunning = false );
 					Animator.SetBool( Move, false );
-					Animator.SetBool( Dash, _isDashing = true );
+					Animator.SetBool( Dash, true );
 					_dashedTime = _statistics.TimeDashing;
 					_sender.SetFormat( MessageFormat.State );
 					_sender.SetToggle( _statistics.JumpDash );
@@ -204,14 +202,14 @@ namespace GwambaPrimeAdventure.Enemy
 					InvencibleDash();
 				}
 			transform.TurnScaleX( _movementSide );
-			Rigidbody.linearVelocityX = transform.right.x * _movementSide * ( _isDashing ? _statistics.DashSpeed : _statistics.MovementSpeed );
-			if ( !Animator.GetBool( Move ) && !_isDashing )
+			Rigidbody.linearVelocityX = transform.right.x * _movementSide * ( Animator.GetBool( Dash ) ? _statistics.DashSpeed : _statistics.MovementSpeed );
+			if ( !Animator.GetBool( Move ) && !Animator.GetBool( Dash ) )
 				Animator.SetBool( Move, true );
-			else if ( Animator.GetBool( Move ) && _isDashing )
+			else if ( Animator.GetBool( Move ) && Animator.GetBool( Dash ) )
 				Animator.SetBool( Move, false );
-			if ( !Animator.GetBool( Dash ) && _isDashing )
+			if ( !Animator.GetBool( Dash ) && Animator.GetBool( Dash ) )
 				Animator.SetBool( Dash, true );
-			else if ( Animator.GetBool( Dash ) && !_isDashing )
+			else if ( Animator.GetBool( Dash ) && !Animator.GetBool( Dash ) )
 				Animator.SetBool( Dash, false );
 		}
 		private new void OnCollisionStay2D( Collision2D collision )
@@ -229,14 +227,14 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( !_statistics.TurnOffEdge )
 			{
 				_originCast = Rigidbody.position + _collider.offset;
-				_originCast.x += _collider.bounds.extents.x * ( _retreat ? -1F : 1F ) * _movementSide * transform.right.x;
+				_originCast.x += _collider.bounds.extents.x * ( Animator.GetBool( Retreat ) ? -1F : 1F ) * _movementSide * transform.right.x;
 				_originCast.y -= _collider.bounds.extents.y * transform.up.y;
 				_castSize = (ushort) Physics2D.RaycastNonAlloc( _originCast, -transform.up, _detections, WorldBuild.SNAP_LENGTH, WorldBuild.SCENE_LAYER_MASK );
 			}
 			else
 				_castSize = 1;
 			if ( 0 >= _castSize && OnGround || _wayBlocked && Mathf.Abs( Rigidbody.linearVelocityX ) <= MINIMUM_VELOCITY )
-				if ( _retreat )
+				if ( Animator.GetBool( Retreat ) )
 					RetreatUse();
 				else
 					_movementSide *= -1;
@@ -247,7 +245,7 @@ namespace GwambaPrimeAdventure.Enemy
 				return false;
 			if ( _statistics.ReactToDamage && _canRetreat )
 			{
-				Animator.SetBool( Stop, _stopRunning = _canRetreat = !( _invencibility = _retreat = true ) );
+				Animator.SetBool( Stop, _stopRunning = _canRetreat = !( _invencibility = true ) );
 				Animator.SetBool( Move, false );
 				Animator.SetBool( Retreat, true );
 				_stoppedTime = 0F;
@@ -271,7 +269,7 @@ namespace GwambaPrimeAdventure.Enemy
 							Rigidbody.linearVelocityX = 0F;
 						if ( MessageFormat.Event == message.Format && _statistics.ReactToDamage && _canRetreat )
 						{
-							Animator.SetBool( Stop, _stopRunning = _canRetreat = !( _invencibility = _retreat = true ) );
+							Animator.SetBool( Stop, _stopRunning = _canRetreat = !( _invencibility = true ) );
 							Animator.SetBool( Move, false );
 							Animator.SetBool( Retreat, true );
 							_stoppedTime = 0F;
