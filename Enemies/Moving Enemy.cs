@@ -7,7 +7,7 @@ namespace GwambaPrimeAdventure.Enemy
 	internal abstract class MovingEnemy : EnemyProvider, IConnector
 	{
 		protected readonly List<ContactPoint2D>
-			_groundContacts = new List<ContactPoint2D>( (int) WorldBuild.PIXELS_PER_UNIT );
+			_groundContacts = new List<ContactPoint2D>( (byte) WorldBuild.PIXELS_PER_UNIT );
 		protected Vector2
 			_originCast = Vector2.zero,
 			_sizeCast = Vector2.zero;
