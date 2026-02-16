@@ -45,11 +45,6 @@ namespace GwambaPrimeAdventure.Enemy
 			get => _stunTimer;
 			set => _stunTimer = value;
 		}
-		internal bool IsStunned
-		{
-			get => _stunned;
-			set => _stunned = value;
-		}
 		public bool Occlude =>
 			!ProvidenceStatistics.FadeOverTime;
 		private new void Awake()
@@ -142,10 +137,10 @@ namespace GwambaPrimeAdventure.Enemy
 						enemy.enabled = false;
 					Animator.SetTrigger( Fade );
 				}
-			if ( _stunned )
+			if ( Animator.GetBool( Stunned ) )
 				if ( 0F >= ( _stunTimer -= Time.deltaTime ) )
 				{
-					Animator.SetBool( Stunned, _stunned = false );
+					Animator.SetBool( Stunned, false );
 					OnEnable();
 				}
 		}
@@ -161,7 +156,7 @@ namespace GwambaPrimeAdventure.Enemy
 		public bool Hurt( byte damage ) => !ProvidenceStatistics.NoDamage && 0 < damage && _destructibleEnemy.Hurt( damage );
 		public void Stun( byte stunStength, float stunTime )
 		{
-			if ( ProvidenceStatistics.NoStun || _stunned )
+			if ( ProvidenceStatistics.NoStun || Animator.GetBool( Stunned ) )
 				return;
 			_destructibleEnemy.Stun( stunStength, stunTime );
 		}
