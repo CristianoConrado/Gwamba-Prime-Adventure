@@ -28,7 +28,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		private void Update()
 		{
-			if ( IsStunned )
+			if ( Animator.GetBool( Stunned ) )
 				return;
 			if ( 0F < _teleportTime )
 				_canTeleport = 0F >= ( _teleportTime -= Time.deltaTime );
