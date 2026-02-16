@@ -669,8 +669,8 @@ namespace GwambaPrimeAdventure.Character
 				}
 				else if ( 0F >= _lastJumpTime )
 				{
-					_localAtAny.x = _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * DownStairsDistance / 2F + WorldBuild.SNAP_LENGTH / 2F;
-					_localAtStart.Set( Local.x - _localAtAny.x * transform.localScale.x.CompareTo( 0F ), Local.y - _collider.bounds.extents.y );
+					_localAtAny.x = _normalColliderSize.x / 2F - WorldBuild.SNAP_LENGTH * DownStairsDistance / 2F + WorldBuild.SNAP_LENGTH / 2F;
+					_localAtStart.Set( Local.x - _localAtAny.x * transform.localScale.x.CompareTo( 0F ), Local.y - _normalColliderSize.y / 2F );
 					_localAtEnd.Set( WorldBuild.SNAP_LENGTH * DownStairsDistance + WorldBuild.SNAP_LENGTH, WorldBuild.SNAP_LENGTH );
 					if ( _groundContacts.Exists( contact =>
 					{
@@ -678,7 +678,7 @@ namespace GwambaPrimeAdventure.Character
 						&& ( contact.point - contact.relativeVelocity * Time.fixedDeltaTime ).OutsideBoxCast( _localAtStart, _localAtEnd );
 					} ) )
 						return;
-					_localAtStart.x = Local.x - ( _collider.bounds.extents.x - WorldBuild.SNAP_LENGTH * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
+					_localAtStart.x = Local.x - ( _normalColliderSize.x / 2F - WorldBuild.SNAP_LENGTH * DownStairsDistance ) * transform.localScale.x.CompareTo( 0F );
 					if ( _downStairs = 0 < Physics2D.RaycastNonAlloc( _localAtStart, -transform.up, _castHits, WorldBuild.SNAP_LENGTH + 1F, WorldBuild.SCENE_LAYER_MASK ) )
 					{
 						_localAtSurface.x = transform.position.x + WorldBuild.SNAP_LENGTH * DownStairsDistance * _localAtAny.x;
