@@ -13,7 +13,7 @@ namespace GwambaPrimeAdventure.Enemy
 		private
 			CapsuleCollider2D _detectionCollider;
 		private readonly RaycastHit2D[]
-			_dashCheck = new RaycastHit2D[ (ushort) WorldBuild.PIXELS_PER_UNIT ];
+			_dashCheck = new RaycastHit2D[ (byte) WorldBuild.PIXELS_PER_UNIT ];
 		private
 			Vector2[] _trail;
 		private
