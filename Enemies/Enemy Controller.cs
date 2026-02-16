@@ -123,9 +123,8 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public async UniTask Load()
 		{
-			foreach ( EnemyProvider enemy in _selfEnemies )
-				if (enemy.TryGetComponent<IEnemyLoader>( out var enemyLoader ) )
-					enemyLoader.Load();
+			foreach ( IEnemyLoader enemyLoader in GetComponents<IEnemyLoader>() )
+				enemyLoader.Load();
 			CancellationToken destroyToken = this.GetCancellationTokenOnDestroy();
 			await UniTask.Yield( PlayerLoopTiming.EarlyUpdate, destroyToken, true ).SuppressCancellationThrow();
 			if ( destroyToken.IsCancellationRequested )
