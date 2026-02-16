@@ -23,8 +23,6 @@ namespace GwambaPrimeAdventure.Enemy.Supply
 		protected float
 			_fadeTime = 0F,
 			_stunTimer = 0F;
-		protected bool
-			_stunned = false;
 	};
 	[DisallowMultipleComponent, RequireComponent( typeof( SpriteRenderer ), typeof( Collider2D ) )]
 	public abstract class Projectile : StateController
