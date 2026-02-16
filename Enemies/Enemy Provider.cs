@@ -32,8 +32,6 @@ namespace GwambaPrimeAdventure.Enemy
 		public IDestructible Source => this;
 		public MessagePath Path =>
 			MessagePath.Enemy;
-		protected bool IsStunned =>
-			_controller.IsStunned;
 		public byte Health =>
 			_controller.Health;
 		protected new void Awake()
@@ -49,7 +47,7 @@ namespace GwambaPrimeAdventure.Enemy
 			if ( !_controller.ProvidenceStatistics.IsLevelBoss )
 				return;
 			SaveController.Load( out SaveFile saveFile );
-			ushort bossIndex = (ushort) ( int.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 );
+			byte bossIndex = (byte) ( byte.Parse( $"{gameObject.scene.name[ ^1 ]}" ) - 1 );
 			if ( !saveFile.DeafetedBosses[ bossIndex ] )
 				saveFile.DeafetedBosses[ bossIndex ] = true;
 		}
@@ -68,7 +66,7 @@ namespace GwambaPrimeAdventure.Enemy
 		}
 		public void Stun( byte stunStength, float stunTime )
 		{
-			if ( _controller.IsStunned = !_controller.ProvidenceStatistics.NoHitStun )
+			if ( !_controller.ProvidenceStatistics.NoHitStun )
 			{
 				Animator.SetBool( Stunned, true );
 				_controller.OnDisable();
