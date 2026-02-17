@@ -1,5 +1,5 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Off%20Enviroment/Scripts/Story%20Scene%20Hud.uss?fileID=7433441132597879392&amp;guid=0aa35c0df0bf40f4082232f00ea12718&amp;type=3#Story Scene Hud" />
+    <Style src="project://database/Assets/Story/Designs/Story%20Scene%20Hud.uss?fileID=7433441132597879392&amp;guid=0aa35c0df0bf40f4082232f00ea12718&amp;type=3#Story Scene Hud" />
     <engine:VisualElement name="RootElement">
         <engine:VisualElement name="SceneImage" />
     </engine:VisualElement >
