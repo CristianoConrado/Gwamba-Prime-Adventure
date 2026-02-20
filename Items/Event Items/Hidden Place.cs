@@ -48,6 +48,12 @@ namespace GwambaPrimeAdventure.Item.EventItem
 		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If this place won't use his own collider." )]
 		private
 			bool _useOtherCollider;
+		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If this hidden place will turn off it light on appear." )]
+		private
+			bool _appearLightsOff;
+		[SerializeField, ShowIf( nameof( _isReceptor ) ), Tooltip( "If this hidden place will turn off it light on appear." )]
+		private
+			bool _fadeLightsOff;
 		[SerializeField, Tooltip( "If the other hidden place will appear first." )]
 		private
 			bool _appearFirst;
@@ -129,9 +135,9 @@ namespace GwambaPrimeAdventure.Item.EventItem
 				CancelTask();
 				return;
 			}
-			if ( appear )
+			if ( appear && !_fadeLightsOff )
 				EffectsController.OffGlobalLight( _selfLight );
-			else
+			else if ( !_appearLightsOff )
 				EffectsController.OnGlobalLight( _selfLight );
 			if ( _hasFollowLight )
 				_follow = !appear;
